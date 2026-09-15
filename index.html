@@ -561,6 +561,7 @@
   <div class="keypad-card">
     <div class="keypad-label" id="keypadLabel">Cantidad</div>
     <div class="keypad-display" id="keypadDisplay">0</div>
+    <button type="button" id="keypadPasteBtn" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1.5px dashed #b7c7c3;background:#f5faf8;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;">📋 Pegar del portapapeles</button>
     <div class="keypad-grid">
       <button data-k="1">1</button><button data-k="2">2</button><button data-k="3">3</button>
       <button data-k="4">4</button><button data-k="5">5</button><button data-k="6">6</button>
@@ -822,6 +823,21 @@ $('keypadCancel').onclick = ()=>{
   const cancelCb = keypadCancelCallback;
   closeKeypad();
   if(cancelCb) cancelCb();
+};
+$('keypadPasteBtn').onclick = async ()=>{
+  try{
+    const text = await navigator.clipboard.readText();
+    const digits = (text || '').replace(/[^\d]/g, '');
+    if(!digits){
+      openConfirm('El portapapeles no tiene un número que se pueda pegar aquí.', ()=>{});
+      return;
+    }
+    const val = digits.length > 20 ? digits.slice(0,20) : digits;
+    keypadOverlay.dataset.value = val;
+    keypadDisplay.textContent = val;
+  }catch(e){
+    openConfirm('No se pudo leer el portapapeles. Puede que el navegador te pida permiso — intenta de nuevo, o captura el número con los botones.', ()=>{});
+  }
 };
 $('keypadConfirm').onclick = ()=>{
   const val = keypadOverlay.dataset.value || '';
@@ -1598,7 +1614,15 @@ function renderSeqList(){
     const val = existing ? existing.cantidad : '';
     const barLabel = it.barcode ? it.barcode : 'sin código de barras';
     const barClass = it.barcode ? '' : 'missing';
-    return `<div class="seq-row ${existing?'filled':''}" data-codigo="${it.codigo}">
+    const prevPrefix = i>0 ? getPrefix(list[i-1].codigo) : null;
+    const thisPrefix = getPrefix(it.codigo);
+    let groupHeader = '';
+    if(categoriaActiva === 'todas' && thisPrefix !== prevPrefix){
+      const catInfo = CATEGORIAS.find(c=>c.prefix===thisPrefix);
+      const label = catInfo ? catInfo.label : thisPrefix;
+      groupHeader = `<div class="seq-group-header" style="font-weight:800;font-size:13px;color:#57706b;text-transform:uppercase;letter-spacing:.4px;margin:${i>0?'16px':'0'} 0 6px;padding-bottom:4px;border-bottom:1.5px solid var(--line);">${thisPrefix} · ${label}</div>`;
+    }
+    return `${groupHeader}<div class="seq-row ${existing?'filled':''}" data-codigo="${it.codigo}">
       <div class="seq-info">
         <div class="seq-cod">${it.codigo} <button class="edit-codigo-btn" data-editcodigo="${it.codigo}" title="Corregir código interno" style="font-size:12px;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;">✎ código</button></div>
         <button class="edit-bar-btn ${barClass}" data-editcod="${it.codigo}">✎ ${barLabel}</button>
