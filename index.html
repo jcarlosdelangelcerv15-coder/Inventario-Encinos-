@@ -459,6 +459,211 @@
   .lock-pad button:active{background:rgba(255,255,255,.14);transform:scale(.94);}
   .lock-pad button.lock-del{font-size:15px;font-weight:500;}
   .lock-pad button.lock-empty{visibility:hidden;box-shadow:none;background:none;}
+  /* ================= DISEÑO LIMPIO (oct 2026) ================= */
+  body{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
+  header{padding:14px 16px 12px;border-radius:0 0 18px 18px;}
+  .hd-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .hd-titles{min-width:0;}
+  header h1{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .hd-sync{font-size:12px;font-weight:700;margin-top:2px;color:#9aa1c4;}
+  .hd-user{flex:0 0 auto;max-width:44%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:#fff;border-radius:999px;padding:8px 14px;font:inherit;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;cursor:pointer;}
+  .cat-picker{margin:0;}
+  .cat-picker select{width:100%;min-width:0;}
+  .audit-banner{margin-top:10px;background:rgba(217,84,42,.18);border:1.5px solid rgba(217,84,42,.5);color:#ffd9c2;border-radius:12px;padding:8px 12px;font-size:12.5px;font-weight:700;}
+  .bottom-nav{position:fixed;left:0;right:0;bottom:0;z-index:90;display:flex;gap:2px;background:#fff;border-top:1px solid var(--line);border-radius:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom));margin:0;box-shadow:0 -6px 20px rgba(21,26,46,.06);overflow:visible;}
+  .bottom-nav .tab,.nav-mas{flex:1 1 0;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 2px;border-radius:12px;background:none;border:none;color:#7a7f95;font:inherit;font-size:11px;font-weight:700;cursor:pointer;}
+  .bottom-nav .tab .ti,.nav-mas .ti{font-size:20px;line-height:1;}
+  .bottom-nav .tab.active,.nav-mas.on{color:var(--brand-dark);background:#fbeee8;box-shadow:none;}
+  .bottom-nav .tab.tab-sec{display:none;}
+  .wrap{padding:14px 16px;}
+
+  .sheet-overlay{position:fixed;inset:0;background:rgba(15,18,38,.45);display:none;align-items:flex-end;justify-content:center;z-index:1000;}
+  #elegirOverlay{z-index:1250;}
+  .sheet{background:var(--paper);width:100%;max-width:560px;border-radius:20px 20px 0 0;padding:8px 14px calc(14px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto;}
+  .sheet-handle{width:40px;height:5px;border-radius:3px;background:#d8d2c4;margin:4px auto 10px;}
+  .sheet-group{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;margin-bottom:10px;}
+  .sheet-item{display:flex;align-items:center;gap:12px;width:100%;padding:12px 14px;background:none;border:none;border-bottom:1px solid var(--line);text-align:left;font:inherit;color:var(--ink);cursor:pointer;}
+  .sheet-item:last-child{border-bottom:none;}
+  .sheet-item>span{font-size:22px;width:28px;text-align:center;flex:0 0 28px;}
+  .sheet-item>div{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .sheet-item b{font-size:15px;}
+  .sheet-item small{font-size:12.5px;color:#7a7466;}
+  .sheet-toggle .seg{display:flex;flex:0 0 auto;flex-direction:row;gap:4px;}
+  .seg .mode-btn{padding:7px 14px;font-size:13px;}
+  .sheet-close{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;}
+  .elegir-titulo{font-weight:800;font-size:16px;margin:2px 4px 10px;}
+
+  .nip-overlay{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#232a4d 0%,#0f1226 70%);display:none;align-items:center;justify-content:center;z-index:1150;padding:20px;}
+  .nip-card{width:100%;max-width:320px;text-align:center;color:#fff;}
+  .nip-titulo{font-size:20px;font-weight:800;}
+  .nip-sub{color:#9aa1c4;font-size:14px;margin:4px 0 20px;}
+  .nip-dots{display:flex;gap:16px;justify-content:center;margin-bottom:8px;}
+  .nip-dots span{width:16px;height:16px;border-radius:50%;border:2px solid #9aa1c4;}
+  .nip-dots span.on{background:#fff;border-color:#fff;}
+  .nip-dots.shake{animation:nipShake .4s;}
+  @keyframes nipShake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+  .nip-error{min-height:20px;color:#ff9d8a;font-size:13px;font-weight:700;margin-bottom:14px;}
+  .nip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .nip-grid button{height:62px;border-radius:18px;background:rgba(255,255,255,.1);border:none;color:#fff;font-size:26px;font-weight:600;font-family:inherit;cursor:pointer;}
+  .nip-grid button:active{background:rgba(255,255,255,.22);}
+  .nip-grid .nip-x{font-size:14px;background:none;}
+
+  .mini-btn{flex:0 0 auto;padding:8px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font:inherit;font-size:13px;font-weight:700;color:var(--ink);cursor:pointer;white-space:nowrap;}
+  .mini-btn.off{color:#9a5b5b;}
+  .eq-rol.gris{background:#eef0f4;color:#4b5268;}
+  .cierre-acc{display:flex;gap:6px;}
+  .cierre-acc .edit-bar-btn{flex:0 0 auto;margin:0;width:auto;padding-left:12px;padding-right:12px;}
+  .cierre-acc .edit-bar-btn:first-child{flex:1;}
+  .edit-bar-btn.danger{background:#fbeaea;border-color:var(--red);color:var(--red);}
+
+  details.ayuda{margin:0 0 12px;}
+  details.ayuda>summary{cursor:pointer;font-size:13px;font-weight:700;color:#7a7466;list-style:none;padding:6px 2px;}
+  details.ayuda>summary::-webkit-details-marker{display:none;}
+  details.mas-opciones{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:12px;}
+  details.mas-opciones>summary{font-weight:800;font-size:14px;cursor:pointer;}
+  details.mas-opciones[open]>summary{margin-bottom:10px;}
+  .sis-principal{width:100%;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:16px;border-radius:16px;border:none;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;font:inherit;font-size:16px;font-weight:800;text-align:left;margin-bottom:12px;box-shadow:var(--shadow-sm);cursor:pointer;}
+  .sis-principal small{font-size:12.5px;font-weight:600;opacity:.85;}
+
+  #panel-conteo .modes{grid-template-columns:repeat(4,1fr);gap:6px;}
+  #panel-conteo .modes .mode-btn{font-size:12px;padding:10px 4px;line-height:1.2;}
+  #summary{grid-template-columns:repeat(4,1fr);gap:6px;}
+  #summary .sum-card{padding:9px 4px;}
+  #summary .sum-card .n{font-size:18px;}
+  #summary .sum-card .l{font-size:10px;letter-spacing:0;}
+
+  .eti-card{margin-bottom:32px;padding:16px 14px;}
+  .eti-barcode{padding:14px 8px;margin-top:12px;}
+
+  .pron-pregunta{text-align:center;padding:10px 6px;}
+  .pron-num{font-size:46px;font-weight:800;color:var(--brand-dark);line-height:1.1;}
+  .pron-nota{font-size:12.5px;color:#7a7466;}
+  .pron-fila{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .pron-fila .info{flex:1;min-width:0;}
+  .pron-fila .desc{font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .pron-fila .meta{font-size:12px;color:#7a7466;font-family:var(--mono);}
+  .pron-precio{display:flex;align-items:center;gap:4px;font-weight:700;}
+  .pron-precio input{width:96px;padding:10px;border:1.5px solid var(--line);border-radius:10px;font-size:16px;font-family:inherit;text-align:right;}
+  .pron-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .pron-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px;}
+  .pron-card:first-child{grid-column:1/-1;}
+  .pron-card span{display:block;font-size:12px;font-weight:700;color:#7a7466;}
+  .pron-card b{font-size:19px;}
+  .pron-card.rojo b{color:var(--red);font-size:30px;}
+  .pron-card.azul b{color:var(--blue);}
+  .pron-card.rojo.cero b{color:var(--accent);}
+  .caja-top .cv-back{color:var(--ink);background:#f1eee6;border:none;border-radius:999px;padding:9px 14px;font:inherit;font-weight:700;}
+  .rec-input,.rec-input::placeholder{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;}
+  .pron-card.verde b{color:var(--accent);}
+  .pron-linea{font-size:12.5px;color:#7a7466;margin:8px 2px;}
+  .pron-tabla{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:12px;overflow:hidden;}
+  .pron-tabla th,.pron-tabla td{padding:8px;border-bottom:1px solid var(--line);text-align:right;}
+  .pron-tabla th{font-size:11.5px;color:#7a7466;}
+  .pron-tabla th:first-child,.pron-tabla td:first-child{text-align:left;font-family:var(--mono);}
+  .pron-valor{font-weight:800;font-size:14px;white-space:nowrap;}
+  .t-red{color:var(--red);} .t-blue{color:var(--blue);}
+
+  .caja-overlay{position:fixed;inset:0;background:#fff;z-index:1100;display:none;flex-direction:column;}
+  .caja-top{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--line);}
+  .caja-pos{font-weight:800;color:#7a7466;}
+  .caja-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;text-align:center;gap:6px;}
+  .caja-desc{font-size:20px;font-weight:800;}
+  .caja-cod{font-family:var(--mono);color:#7a7466;}
+  .caja-bc{width:100%;padding:28px 0;}
+  .caja-bc svg{width:100%;height:auto;max-height:260px;}
+  .caja-cant b{font-size:42px;font-weight:800;color:var(--brand-dark);}
+  .caja-sinbc{font-size:16px;margin-bottom:10px;}
+  .caja-nav{display:flex;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));}
+  .caja-nav button{flex:1;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:16px;color:var(--ink);}
+  .caja-nav button.on{background:var(--ink);color:#fff;border-color:var(--ink);}
+  .caja-nav button:disabled{opacity:.35;}
+
+  .rec-opciones{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
+  .rec-op{display:flex;flex-direction:column;align-items:flex-start;gap:4px;padding:16px 14px;background:#fff;border:1px solid var(--line);border-radius:16px;font:inherit;text-align:left;box-shadow:var(--shadow-sm);cursor:pointer;color:var(--ink);}
+  .rec-op span{font-size:30px;}
+  .rec-op b{font-size:15px;}
+  .rec-op small{font-size:12px;color:#7a7466;}
+  .rec-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px;}
+  .rec-head b{display:block;font-size:17px;}
+  .rec-head small{color:#7a7466;font-size:12.5px;}
+  .rec-input{width:100%;padding:13px;border:1.5px solid var(--line);border-radius:12px;font-size:16px;font-family:inherit;background:#fff;}
+  .rec-res{display:flex;flex-direction:column;align-items:flex-start;width:100%;padding:10px 12px;margin-top:6px;border:1px solid var(--line);border-radius:10px;background:#fff;font:inherit;text-align:left;color:var(--ink);cursor:pointer;}
+  .rec-res small{font-family:var(--mono);color:#7a7466;font-size:12px;}
+  .rec-qty{margin-top:12px;padding:14px;border-radius:14px;background:#f6f3ec;text-align:center;}
+  .rec-qty .desc{font-weight:800;}
+  .rec-qty .meta{font-family:var(--mono);font-size:12px;color:#7a7466;}
+  .rec-qty-num{font-size:52px;font-weight:800;line-height:1.1;margin:6px 0;}
+  .rec-quick{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
+  .rec-quick button{min-width:56px;padding:12px 10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:16px;color:var(--ink);cursor:pointer;}
+  .rec-quick button.on{border-color:var(--brand);color:var(--brand-dark);background:#fbeee8;}
+  .rec-danado{display:flex;align-items:center;justify-content:center;gap:8px;margin:12px 0 4px;font-size:14px;}
+  .rec-acciones{display:flex;gap:8px;justify-content:center;margin-top:8px;}
+  .rec-agregar{flex:1;padding:14px;border-radius:12px;border:none;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;font:inherit;font-weight:800;font-size:16px;cursor:pointer;}
+  .rec-total{display:flex;gap:10px;margin:14px 0 6px;}
+  .rec-total>div,.rec-total>button{flex:1;display:flex;flex-direction:column;align-items:flex-start;padding:12px 14px;border-radius:14px;background:#fff;border:1px solid var(--line);font:inherit;color:var(--ink);text-align:left;}
+  .rec-total span{font-size:12px;font-weight:700;color:#7a7466;}
+  .rec-total b{font-size:28px;line-height:1.15;}
+  .rec-total small{font-size:12px;color:#7a7466;}
+  .rec-nota{border-style:dashed !important;cursor:pointer;}
+  .rec-estado{margin:4px 0 10px;font-weight:800;font-size:16px;}
+  .rec-ok{color:var(--accent);} .rec-mal{color:var(--red);}
+  .rec-botones{display:flex;gap:8px;margin-top:14px;}
+  .rec-botones .btn{flex:1;}
+  .rec-botones .btn:disabled{opacity:.45;}
+  .cerv-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-bottom:10px;}
+  .cerv-top{display:flex;justify-content:space-between;gap:8px;}
+  .cerv-top .desc{font-weight:800;}
+  .cerv-top .meta{font-size:12px;color:#7a7466;}
+  .cerv-top a,.cerv-debe a{color:var(--blue);}
+  .cerv-top .del{border:none;background:none;color:#c98a8a;font-size:18px;}
+  .cerv-debe{font-size:14px;margin:8px 0;padding:8px 10px;background:#f6f3ec;border-radius:10px;}
+  .cerv-cont{display:flex;gap:10px;}
+  .cerv-cont>div{flex:1;}
+  .cerv-cont span{display:block;font-size:12px;font-weight:700;color:#7a7466;margin-bottom:4px;}
+  .stepper{display:flex;align-items:center;justify-content:space-between;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;}
+  .stepper button{width:46px;height:44px;border:none;background:#f6f3ec;font-size:22px;font-weight:800;color:var(--ink);cursor:pointer;}
+  .stepper b{font-size:20px;}
+  .cerv-est{margin-top:8px;font-weight:800;font-size:14px;}
+  .keypad-cajas{background:#f6f3ec;border-radius:12px;padding:10px;margin-bottom:8px;}
+  .kc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:800;}
+  .kc-row .stepper{width:150px;}
+  .kc-total{text-align:center;margin-top:6px;font-size:14px;}
+  .kc-t{font-weight:800;text-align:center;margin-bottom:6px;}
+  .kc-ops{display:flex;gap:6px;justify-content:center;}
+  .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
+  .kc-s{font-size:12px;text-align:center;color:#7a7466;margin-top:6px;}
+
+  /* ---------- Impresión ---------- */
+  #printArea{display:none;}
+  @media print{
+    body.imprimiendo > *:not(#printArea){display:none !important;}
+    body.imprimiendo{background:#fff !important;padding:0 !important;}
+    body.imprimiendo #printArea{display:block !important;}
+  }
+  #printArea .ph{font-family:-apple-system,Helvetica,Arial,sans-serif;color:#000;}
+  #printArea .ph-t{font-size:20pt;font-weight:800;}
+  #printArea .ph-s{font-size:12pt;margin-bottom:8pt;}
+  #printArea h3{font-size:12pt;margin:12pt 0 4pt;border-bottom:1pt solid #000;padding-bottom:2pt;}
+  #printArea .pt{width:100%;border-collapse:collapse;font-size:10pt;}
+  #printArea .pt td,#printArea .pt th{padding:3pt 4pt;text-align:left;vertical-align:top;}
+  #printArea .pt.grid td,#printArea .pt.grid th{border:.5pt solid #555;}
+  #printArea .pt .r{text-align:right;}
+  #printArea .pt.meta td:first-child{width:35%;color:#333;}
+  #printArea .pn{font-size:10pt;margin:4pt 0;}
+  #printArea .firmas{display:grid;grid-template-columns:1fr 1fr;gap:28pt 24pt;margin-top:36pt;page-break-inside:avoid;}
+  #printArea .firmas div{font-size:10pt;text-align:center;}
+  #printArea .firmas span{display:block;border-bottom:1pt solid #000;height:34pt;margin-bottom:3pt;}
+  #printArea .firmas .sello span{height:60pt;border:1pt dashed #000;border-radius:6pt;}
+  #printArea .pie{margin-top:18pt;font-size:8pt;color:#444;text-align:center;}
+  #printArea .salto{page-break-before:always;break-before:page;}
+  #printArea.print-ticket .ph{font-family:'Courier New',monospace;}
+  #printArea.print-ticket .ph-t{font-size:13pt;}
+  #printArea.print-ticket .ph-s{font-size:10pt;}
+  #printArea.print-ticket h3{font-size:10pt;}
+  #printArea.print-ticket .pt{font-size:8pt;}
+  #printArea.print-ticket .pt.grid td:nth-child(2),#printArea.print-ticket .pt.grid th:nth-child(2){display:none;}
+  #printArea.print-ticket .firmas{grid-template-columns:1fr;gap:18pt;}
+  #printArea.print-ticket .firmas .sello span{height:44pt;}
 </style>
 
 </head>
@@ -512,6 +717,7 @@
       <form id="equipoForm" class="equipo-form">
         <input id="equipoNombre" type="text" placeholder="Nombre (ej. Juan)" autocomplete="off">
         <input id="equipoEmail" type="email" placeholder="Correo de esa persona" autocomplete="off" inputmode="email">
+        <select id="equipoPuesto" class="cv-select" style="margin:0;"><option value="auxiliar">Auxiliar de piso</option><option value="turno">Encargado de turno</option></select>
         <button type="submit" class="auth-btn" style="margin:0;">➕ Dar acceso</button>
       </form>
       <div class="section-title"><span>Con acceso</span></div>
@@ -535,8 +741,8 @@
         <div class="section-title" style="margin-top:0;"><span>Dar de alta una tienda</span></div>
         <input id="tdNombre" type="text" placeholder="Nombre de la tienda (ej. Las Quintas 1234)" autocomplete="off">
         <input id="tdClave" type="text" placeholder="Clave interna (se llena sola)" autocomplete="off" autocapitalize="off">
-        <input id="tdEncNombre" type="text" placeholder="Nombre del encargado" autocomplete="off">
-        <input id="tdEncEmail" type="email" placeholder="Correo del encargado" autocomplete="off" inputmode="email">
+        <input id="tdEncNombre" type="text" placeholder="Nombre del aliado" autocomplete="off">
+        <input id="tdEncEmail" type="email" placeholder="Correo del aliado" autocomplete="off" inputmode="email">
         <label class="td-label">Pagado hasta <input id="tdHasta" type="date"></label>
         <label class="td-check"><input id="tdBase" type="checkbox"> Empezar con el catálogo base (productos de Encinos)</label>
         <button type="submit" id="tdCrear" class="auth-btn" style="margin:0;">➕ Crear tienda</button>
@@ -551,39 +757,56 @@
 <div id="appRoot" style="display:none;">
 
 <header>
-  <h1 id="tiendaTitulo">Inventario</h1>
-  <p>Conteo físico, existencias de sistema y comparativo</p>
-  <p id="fsSyncBadge" style="margin-top:-8px;font-weight:600;">☁️ Conectando…</p>
-  <div class="cat-picker">
-    <label for="categoriaSelect">Categoría</label>
-    <select id="categoriaSelect"></select>
-  </div>
-  <div class="cat-picker" id="userBadgeWrap" style="cursor:pointer;">
-    <label>Capturando como</label>
-    <div id="userBadge" style="font-weight:700;font-size:15px;padding:8px 10px;border:1.5px solid var(--line);border-radius:8px;background:#fff;color:var(--ink);">—</div>
-  </div>
-  <button type="button" id="equipoBtn" style="display:none;margin:0 0 10px;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:700;font-size:13px;font-family:inherit;">👥 Equipo</button>
-  <button type="button" id="tiendasBtn" style="display:none;margin:0 0 10px 6px;padding:9px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.08);color:#fff;font-weight:700;font-size:13px;font-family:inherit;">🏪 Tiendas</button>
-  <div class="cat-picker">
-    <label>Modo</label>
-    <div style="display:flex;gap:6px;flex:1;">
-      <button type="button" id="auditModeOffBtn" class="mode-btn" style="flex:1;padding:9px 4px;font-size:12.5px;">Normal</button>
-      <button type="button" id="auditModeOnBtn" class="mode-btn" style="flex:1;padding:9px 4px;font-size:12.5px;">🕵️ Auditoría</button>
+  <div class="hd-row">
+    <div class="hd-titles">
+      <h1 id="tiendaTitulo">Inventario</h1>
+      <div id="fsSyncBadge" class="hd-sync">● Conectando…</div>
     </div>
+    <button type="button" class="hd-user" id="userBadgeWrap" aria-label="Mi sesión"><span id="userBadge">—</span></button>
   </div>
-  <div id="auditModeBanner" style="display:none;background:rgba(217,84,42,.18);border:1.5px solid rgba(217,84,42,.5);color:#ffd9c2;border-radius:12px;padding:9px 12px;font-size:12.5px;font-weight:700;margin-bottom:12px;">
-    🕵️ Modo Auditoría activo — Conteo Físico, Existencias Sistema y Comparativo trabajan sobre el conteo paralelo, separado de tu inventario normal.
+  <div class="cat-picker">
+    <select id="categoriaSelect" aria-label="Categoría"></select>
   </div>
-  <div class="tabs">
-    <div class="tab active" data-tab="conteo">Conteo Físico</div>
-    <div class="tab" data-tab="sistema">Existencias Sistema</div>
-    <div class="tab" data-tab="comparativo">Comparativo</div>
-    <div class="tab" data-tab="cobertura">🚚 Cobertura</div>
-    <div class="tab" data-tab="caducidades">Caducidades</div>
-    <div class="tab" data-tab="etiquetas">Etiquetas</div>
-    <div class="tab" data-tab="dashboard">Dashboard</div>
+  <div id="auditModeBanner" class="audit-banner" style="display:none;">
+    🕵️ Modo Auditoría — trabajas sobre el conteo paralelo. Se apaga en ☰ Más.
   </div>
 </header>
+
+<nav class="tabs bottom-nav" id="mainTabs">
+  <div class="tab active" data-tab="conteo"><span class="ti">🔢</span><span class="tl">Contar</span></div>
+  <div class="tab" data-tab="sistema"><span class="ti">🖥️</span><span class="tl">Sistema</span></div>
+  <div class="tab" data-tab="comparativo"><span class="ti">⚖️</span><span class="tl">Comparar</span></div>
+  <div class="tab" data-tab="cobertura"><span class="ti">🚚</span><span class="tl">Cobertura</span></div>
+  <div class="tab tab-sec" data-tab="recepcion"><span class="tl">Recepción</span></div>
+  <div class="tab tab-sec" data-tab="etiquetas"><span class="tl">Etiquetas</span></div>
+  <div class="tab tab-sec" data-tab="caducidades"><span class="tl">Caducidades</span></div>
+  <div class="tab tab-sec" data-tab="dashboard"><span class="tl">Dashboard</span></div>
+  <button type="button" class="nav-mas" id="masBtn"><span class="ti">☰</span><span class="tl">Más</span></button>
+</nav>
+
+<div class="sheet-overlay" id="masSheet">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="sheet-group">
+      <button type="button" class="sheet-item" data-ir="recepcion"><span>📦</span><div><b>Recepción</b><small>Recibe mercancía de cualquier proveedor</small></div></button>
+      <button type="button" class="sheet-item" data-ir="etiquetas"><span>🏷️</span><div><b>Etiquetas</b><small>Códigos para escanear en caja</small></div></button>
+      <button type="button" class="sheet-item" data-ir="caducidades"><span>📅</span><div><b>Caducidades</b><small>Lotes y semáforo</small></div></button>
+      <button type="button" class="sheet-item" data-ir="dashboard"><span>📈</span><div><b>Dashboard</b><small>Cobertura de conteo</small></div></button>
+    </div>
+    <div class="sheet-group">
+      <button type="button" class="sheet-item" id="equipoBtn" style="display:none;"><span>👥</span><div><b>Equipo</b><small>Quién entra a la tienda</small></div></button>
+      <button type="button" class="sheet-item" id="nipBtn" style="display:none;"><span>🔐</span><div><b>NIP de la tienda</b><small>Protege borrar conteos e historial</small></div></button>
+      <button type="button" class="sheet-item" id="papeleraBtn"><span>🗑️</span><div><b>Papelera</b><small>Lo borrado se guarda 30 días</small></div></button>
+      <button type="button" class="sheet-item" id="tiendasBtn" style="display:none;"><span>🏪</span><div><b>Tiendas</b><small>Altas, pagos y suspensiones</small></div></button>
+    </div>
+    <div class="sheet-group">
+      <div class="sheet-item sheet-toggle"><span>🕵️</span><div><b>Modo auditoría</b><small>Conteo paralelo con el auditor</small></div>
+        <div class="seg"><button type="button" id="auditModeOffBtn" class="mode-btn">No</button><button type="button" id="auditModeOnBtn" class="mode-btn">Sí</button></div></div>
+      <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
+    </div>
+    <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
+  </div>
+</div>
 
 <div class="wrap">
 
@@ -606,7 +829,7 @@
 
     <div class="capture">
       <div class="field-label" id="barcodeLabel">Escanea o escribe el código de barras / código interno</div>
-      <input type="text" id="barcodeInput" inputmode="text" autocomplete="off" placeholder="Escanea, o escribe código / código de barras / descripción…" autofocus>
+      <input type="text" id="barcodeInput" inputmode="text" autocomplete="off" placeholder="Escanea o escribe…" autofocus>
       <div id="lookupResult"></div>
 
       <div class="qty-block" id="qtyBlock" style="display:none;">
@@ -615,7 +838,7 @@
         <button type="button" id="qtyRegisterBtn" style="margin-top:8px;width:100%;padding:14px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;border:none;border-radius:8px;font-weight:800;font-size:16px;font-family:inherit;">✓ Registrar cantidad</button>
         <button type="button" id="qtyCancelBtn" style="margin-top:8px;width:100%;padding:10px;background:none;color:#57706b;border:1.5px solid var(--line);border-radius:8px;font-weight:600;font-size:14px;font-family:inherit;">Cancelar · omitir este producto</button>
       </div>
-      <div class="hint">Escanea → escribe la cantidad → toca <b>Registrar</b> (o Enter). Vuelve solo al siguiente escaneo.</div>
+      <div class="hint">Escanea → cantidad → Registrar.</div>
     </div>
 
     <div class="summary" id="summary"></div>
@@ -634,32 +857,32 @@
   </div>
 
   <div class="panel" id="panel-sistema">
-    <div class="catalog-note" id="sisCatalogNote">
-      Captura en el <b>mismo orden de tu reporte en papel</b> (alfanumérico por código interno: FA…, SE…, etc.). Escribe la cantidad y da Enter — pasa sola a la siguiente fila. No necesitas escanear ni buscar nada aquí.
+    <div id="sisImportBlock">
+      <button class="sis-principal" id="sisImportCantBtn">📊 Cargar existencias del sistema<small>Excel o CSV de tu POS · antes de guardar ves el cotejo</small></button>
+      <input type="file" id="sisImportCantFile" accept=".xlsx,.xls,.csv" style="display:none;">
     </div>
 
     <div class="filter-row">
-      <input type="text" id="sisFilter" placeholder="Busca por código interno, código de barras o descripción…" autocomplete="off">
+      <input type="text" id="sisFilter" placeholder="Busca por código, código de barras o descripción…" autocomplete="off">
     </div>
 
-    <button class="add-missing-btn" id="sisAddMissingBtn">+ Agregar producto que no está en la lista</button>
-    <button class="add-missing-btn" id="sisSoloContadosBtn" style="margin-top:8px;">🔎 Mostrar solo lo que escaneé (recomendado)</button>
-    <button class="add-missing-btn" id="sisSoloManualesBtn" style="margin-top:8px;background:#eef6f3;border-color:#0f7a5c;color:#0f7a5c;">📋 Ver solo lo que agregué yo a mano (revisar códigos)</button>
-    <div id="sisManualesCount" class="catalog-note" style="display:none;"></div>
-
-    <div id="sisImportBlock">
-      <button class="add-missing-btn" id="sisImportBtn" style="margin-top:8px;background:#eaf1fb;border-color:#2a6fb8;color:#2a6fb8;">📥 Importar varios productos de un Excel/CSV</button>
+    <details class="mas-opciones">
+      <summary>Más opciones</summary>
+      <button class="add-missing-btn" id="sisSoloContadosBtn">🔎 Mostrar solo lo que escaneé</button>
+      <button class="add-missing-btn" id="sisAddMissingBtn" style="margin-top:8px;">+ Agregar producto que no está en la lista</button>
+      <button class="add-missing-btn" id="sisSoloManualesBtn" style="margin-top:8px;">📋 Ver solo lo que agregué a mano</button>
+      <button class="add-missing-btn" id="sisImportBtn" style="margin-top:8px;">📥 Agregar productos al catálogo (Excel/CSV)</button>
       <input type="file" id="sisImportFile" accept=".xlsx,.xls,.csv" style="display:none;">
-      <div class="catalog-note" style="margin-top:6px;">
-        El archivo debe tener columnas: <b>Codigo</b> (o <b>Alfanumerico</b>), <b>Descripcion</b> y opcionalmente <b>Codigo de Barras</b> (o <b>UPC</b>) — en cualquier orden, con o sin acentos. Puedes subir tal cual el reporte de tu POS (ReporteExistenciasPos); las demás columnas del reporte (existencia, categoría, proveedor, etc.) se ignoran. Así agregas 20, 50 o los que sean de un jalón, sin tocar el formulario uno por uno.
-      </div>
-
-      <button class="add-missing-btn" id="sisImportCantBtn" style="margin-top:8px;background:#eef6f3;border-color:#0f7a5c;color:#0f7a5c;">📊 Cargar existencias de sistema (Excel/CSV semanal)</button>
-      <input type="file" id="sisImportCantFile" accept=".xlsx,.xls,.csv" style="display:none;">
-      <div class="catalog-note" style="margin-top:6px;">
-        El archivo debe tener columnas: <b>Codigo</b> y <b>Existencia</b> (también sirven "Exis", "Cantidad", "Stock" o "Disponible"); si trae <b>Descripcion</b> y <b>Codigo de Barras</b>, los productos nuevos se dan de alta solos. Antes de guardar verás una <b>pantalla de cotejo</b>: nuevos, faltantes en el ticket, negativos y repetidos. Solo se reemplaza la existencia de los códigos que vengan en el archivo.
-      </div>
-    </div>
+      <details class="ayuda">
+        <summary>ℹ️ ¿Qué columnas necesita el Excel?</summary>
+        <div class="catalog-note" id="sisCatalogNote" style="margin-top:8px;">
+          <b>Existencias:</b> columnas <b>Codigo</b> y <b>Existencia</b> (también sirven Exis, Cantidad, Stock o Disponible). Si trae Descripcion y Codigo de Barras, los productos nuevos se dan de alta solos. Solo se reemplaza la existencia de los códigos que vengan en el archivo.<br><br>
+          <b>Catálogo:</b> columnas <b>Codigo</b> (o Alfanumerico), <b>Descripcion</b> y opcional <b>Codigo de Barras</b>. Puedes subir tal cual el reporte de tu POS.<br><br>
+          <b>Captura a mano:</b> escribe la cantidad en la lista y da Enter, pasa sola a la siguiente fila, en el mismo orden de tu reporte en papel.
+        </div>
+      </details>
+    </details>
+    <div id="sisManualesCount" class="catalog-note" style="display:none;"></div>
     <div id="auditSheetNote" class="catalog-note" style="display:none;background:#fdf3e7;border-color:#f0d9b5;">
       🕵️ Estás capturando la <b>hoja del equipo de auditoría</b> — escribe aquí la cantidad que ellos anotaron para cada producto, tal como viene en su papel.
     </div>
@@ -677,18 +900,20 @@
 
   <div class="panel" id="panel-comparativo">
     <div class="summary" id="compSummary"></div>
+    <button class="sis-principal" id="compPronBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);">💰 Pronóstico en pesos<small>Faltante y sobrante compensados por familia de código</small></button>
     <div class="section-title"><span id="compSectionTitle">Físico vs. sistema</span><span id="compCountLabel"></span></div>
     <div id="compLog"></div>
-    <div class="actions">
-      <button class="btn btn-export" id="compExportBtn">Exportar CSV (Comparativo)</button>
-      <button class="btn btn-export blue" id="compExportXlsxBtn">📊 Exportar Excel · Reporte completo</button>
+    <div class="actions" style="flex-wrap:wrap;">
+      <button class="btn btn-export" id="compPrintBtn">🖨️ Imprimir hoja</button>
+      <button class="btn btn-export" id="compExportXlsxBtn">📊 Excel</button>
+      <button class="btn btn-export" id="compExportBtn" style="display:none;">CSV</button>
     </div>
   </div>
 
   <div class="panel" id="panel-caducidades">
-    <div class="catalog-note">
+    <details class="ayuda"><summary>ℹ️ ¿Cómo funciona?</summary><div class="catalog-note">
       Cada lote se guarda por separado — un mismo producto puede tener varias fechas de caducidad a la vez (mercancía nueva y vieja conviviendo). El semáforo depende de qué tan crítica sea la categoría.
-    </div>
+    </div></details>
 
     <div class="summary" id="capSummary"></div>
 
@@ -716,9 +941,9 @@
   </div>
 
   <div class="panel" id="panel-etiquetas">
-    <div class="catalog-note">
+    <details class="ayuda"><summary>ℹ️ ¿Cómo funciona?</summary><div class="catalog-note">
       Escanea los productos que necesitan etiqueta nueva mientras recorres el piso de venta — se agregan solos a la lista, sin traer el producto al mostrador. Si un mismo producto necesita varias etiquetas, escanéalo esa cantidad de veces. Al terminar, exporta la lista y llévala una sola vez al punto de venta para reimprimir todo junto.
-    </div>
+    </div></details>
 
     <div class="capture">
       <div class="field-label">Escanea el producto a etiquetar</div>
@@ -729,6 +954,7 @@
 
     <div class="summary" id="etiSummary"></div>
 
+    <button type="button" class="btn btn-export blue" id="etiCajaBtn" style="width:100%;margin:4px 0 12px;">📲 Escanear en caja (uno por uno)</button>
     <div class="section-title"><span>Etiquetas pendientes de imprimir</span><span id="etiCountLabel"></span></div>
     <div id="etiList"></div>
 
@@ -737,13 +963,11 @@
   </div>
 
   <div class="panel" id="panel-cobertura">
-    <div class="catalog-note">
-      <b>Lo que deberías tener y no tienes.</b> Cruza tus existencias contra lo que te manda Cedis y lo que surte cada proveedor directo — para detectar faltantes sin esperar a que un cliente lo pida.
-    </div>
     <div class="cob-cards" id="cobCards"></div>
     <div class="catalog-note" id="cobAyuda" style="margin-top:8px;"></div>
     <div class="filter-row" style="flex-wrap:wrap;">
-      <select id="cobProveedor" class="cv-select" style="margin:0;flex:1 1 100%;"></select>
+      <div style="display:flex;gap:8px;flex:1 1 100%;"><select id="cobProveedor" class="cv-select" style="margin:0;flex:1;min-width:0;"></select>
+      <button type="button" class="mini-btn" id="cobProvBtn" title="Proveedores directos">🏷️ Proveedores</button></div>
       <input type="text" id="cobBuscar" placeholder="Buscar producto o código…" autocomplete="off" style="flex:1 1 100%;font-family:inherit;font-size:15px;">
     </div>
     <div class="section-title"><span>Productos</span><span id="cobCount"></span></div>
@@ -756,18 +980,30 @@
     <button class="add-missing-btn" id="cobImportBtn" style="margin-top:12px;background:#eaf1fb;border-color:#2a6fb8;color:#2a6fb8;">📥 Cargar datos de cobertura (Excel)</button>
     <input type="file" id="cobImportFile" accept=".xlsx,.xls,.csv" style="display:none;">
     <div class="catalog-note" id="cobDatos" style="margin-top:6px;"></div>
-    <div class="catalog-note" style="margin-top:6px;">
+    <details class="ayuda"><summary>ℹ️ ¿Qué archivos acepta?</summary><div class="catalog-note" style="margin-top:6px;">
       Acepta: el Excel de cobertura (hojas "Catálogo maestro" e "Historial entregas"), tu <b>reporte de existencias del POS</b> (trae Proveedor y Distribución) o un Excel de entregas Cedis con <b>Fecha, Código y Unidades</b>. Cada carga suma; nunca borra.
+    </div></details>
+  </div>
+
+  <div class="panel" id="panel-recepcion">
+    <div id="recInicio">
+      <div class="rec-opciones">
+        <button type="button" class="rec-op" id="recNuevaEscaneo"><span>📷</span><b>Por escaneo</b><small>Escaneas cada producto y pones sus piezas</small></button>
+        <button type="button" class="rec-op" id="recNuevaCerveza"><span>📦</span><b>Por cajas</b><small>Sin escanear: cuentas cajas contra lo que dice el sistema</small></button>
+      </div>
+      <div class="section-title"><span>Recepciones anteriores</span><span id="recHistCount"></span></div>
+      <div id="recHistorial"></div>
     </div>
+    <div id="recActiva" style="display:none;"></div>
   </div>
 
   <div class="panel" id="panel-dashboard">
     <div class="actions" style="margin-bottom:10px;">
       <button class="btn btn-export" id="dashResetBtn" style="background:#b8202a;border-color:#b8202a;color:#fff;">🔄 Reiniciar Dashboard</button>
     </div>
-    <div class="catalog-note">
+    <details class="ayuda"><summary>ℹ️ ¿Cómo funciona?</summary><div class="catalog-note">
       Cobertura = productos distintos que ya escaneaste en Conteo Físico, aunque después vacíes la pantalla — el historial nunca se borra. Meta: 95% de cobertura mensual.
-    </div>
+    </div></details>
 
     <div class="dash-card">
       <div class="dash-card-title">Cobertura — últimos 14 días</div>
@@ -798,6 +1034,7 @@
 <div class="keypad-overlay" id="keypadOverlay">
   <div class="keypad-card">
     <div class="keypad-label" id="keypadLabel">Cantidad</div>
+    <div class="keypad-cajas" id="keypadCajasBox" style="display:none;"></div>
     <div class="keypad-display" id="keypadDisplay">0</div>
     <button type="button" id="keypadPasteBtn" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1.5px dashed #b7c7c3;background:#f5faf8;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;">📋 Pegar del portapapeles</button>
     <div class="keypad-grid">
@@ -830,7 +1067,9 @@
   <div class="cv-top">
     <button class="cv-back" id="cvCerrar">← Volver</button>
     <div class="cv-titles"><div id="cvTitulo" class="cv-title"></div><div id="cvSub" class="cv-sub"></div></div>
-    <button class="cv-exp" id="cvExportar">⬇️ Exportar</button>
+    <button class="cv-exp" id="cvPron" title="Pronóstico en pesos">💰</button>
+    <button class="cv-exp" id="cvPrint" title="Imprimir">🖨️</button>
+    <button class="cv-exp" id="cvExportar">⬇️</button>
   </div>
   <div class="cv-resumen" id="cvResumen"></div>
   <div class="cv-tabs" id="cvTabs"></div>
@@ -964,9 +1203,9 @@ const tCol = (nombre)=> fsTiendasCol.doc(TIENDA_ID).collection(nombre);
 function fsSyncBadge(estado){
   const el = document.getElementById('fsSyncBadge');
   if(!el) return;
-  if(estado === 'ok'){ el.textContent = '☁️ Sincronizado con el equipo'; el.style.color = '#0f7a5c'; }
-  else if(estado === 'espera'){ el.textContent = '☁️ Conectando…'; el.style.color = '#9db8ae'; }
-  else { el.textContent = '⚠️ Sin conexión — se guarda local y sincroniza al reconectar'; el.style.color = '#b8722a'; }
+  if(estado === 'ok'){ el.textContent = '● En línea con el equipo'; el.style.color = '#4fd1a1'; }
+  else if(estado === 'espera'){ el.textContent = '● Conectando…'; el.style.color = '#9aa1c4'; }
+  else { el.textContent = '● Sin conexión · se guarda y sube al volver'; el.style.color = '#f0b45c'; }
 }
 fsSyncBadge('espera');
 
@@ -1093,6 +1332,7 @@ function iniciarDatos(){
   fsListenCobertura();
   fsMigrateOldCatalogoExtraDoc().then(fsListenCatalogoExtra);
   fsListenAuditoria();
+  if(typeof iniciarDatosNuevos === 'function') iniciarDatosNuevos();
   Object.keys(fsPendingWrites).forEach(fsFlush);
 }
 
@@ -1270,6 +1510,7 @@ async function authRevisarAcceso(user, forzar){
   currentUser = nombre; persistUser(); renderUserBadge();
   byId('equipoBtn').style.display = esEncargado() ? '' : 'none';
   byId('tiendasBtn').style.display = esAdmin() ? '' : 'none';
+  byId('nipBtn').style.display = esEncargado() ? '' : 'none';
   authOcultar();
 
   // Primera vez con la versión multi-tienda: los datos de Encinos todavía
@@ -1309,7 +1550,7 @@ function abrirEquipo(){
       (a.rol === 'encargado' ? 0 : 1) - (b.rol === 'encargado' ? 0 : 1) || String(a.nombre||'').localeCompare(String(b.nombre||'')));
     byId('equipoLista').innerHTML = lista.length ? lista.map(p=>{
       const quitar = (p.rol !== 'encargado' || esAdmin()) && p.email !== sesionEmail;
-      return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(p.nombre||'—')}${p.rol === 'encargado' ? ' <span class="eq-rol">Encargado</span>' : ''}${p.activo === false ? ' <span class="eq-rol off">Sin acceso</span>' : ''}</div><div class="meta">${cvEsc(p.email)}</div></div>
+      return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(p.nombre||'—')} <span class="eq-rol${p.rol === 'encargado' ? '' : ' gris'}">${rolTexto(p)}</span>${p.activo === false ? ' <span class="eq-rol off">Sin acceso</span>' : ''}</div><div class="meta">${cvEsc(p.email)}</div></div>
       ${quitar ? `<button class="del" data-quitar="${cvEsc(p.email)}" title="Quitar acceso">✕</button>` : ''}</div>`;
     }).join('')
       : '<div class="empty">Aún no hay nadie. Agrega a tu equipo arriba.</div>';
@@ -1328,12 +1569,13 @@ byId('equipoForm').addEventListener('submit', (e)=>{
   const nombre = byId('equipoNombre').value.trim();
   const email = byId('equipoEmail').value.trim().toLowerCase();
   if(!nombre || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)){ openConfirm('Escribe el nombre y un correo válido.', ()=>{}); return; }
-  fsUsuariosCol.doc(email).set({email, nombre, tienda: TIENDA_ID, rol:'capturista', activo:true, agregado: new Date().toISOString(), agregadoPor: sesionEmail})
+  const puesto = byId('equipoPuesto').value === 'turno' ? 'turno' : 'auxiliar';
+  fsUsuariosCol.doc(email).set({email, nombre, tienda: TIENDA_ID, rol:'capturista', puesto, activo:true, agregado: new Date().toISOString(), agregadoPor: sesionEmail})
     .then(()=>{ byId('equipoNombre').value=''; byId('equipoEmail').value='';
       openConfirm(`✅ ${nombre} ya tiene acceso a ${TIENDA_NOMBRE}.\n\nDile que abra la app, toque "¿Primera vez? Crear mi cuenta" y use el correo ${email}.`, ()=>{}, {yesLabel:'Entendido'}); })
     .catch(err=>{
       if(err && err.code === 'permission-denied')
-        openConfirm(`⚠️ No se pudo dar acceso a ${email}.\n\nEse correo ya pertenece a otra tienda (o a un encargado). Cada correo solo puede estar en una tienda. Pide al administrador que lo cambie.`, ()=>{}, {yesLabel:'Entendido'});
+        openConfirm(`⚠️ No se pudo dar acceso a ${email}.\n\nEse correo ya pertenece a otra tienda (o es de un aliado). Cada correo solo puede estar en una tienda. Pide al administrador que lo cambie.`, ()=>{}, {yesLabel:'Entendido'});
       else avisarErrorGuardado(err, {descripcion:'el nuevo integrante'});
     });
 });
@@ -1373,7 +1615,7 @@ function renderTiendas(){
     const actual = t.id === TIENDA_ID;
     return `<div class="tienda-item${actual ? ' actual' : ''}">
       <div class="info"><div class="desc">${cvEsc(t.nombre || t.id)} ${estado}${actual ? ' <span class="eq-rol">Estás aquí</span>' : ''}</div>
-      <div class="meta">Encargado: ${cvEsc(t.encargadoNombre || '')} ${cvEsc(t.encargadoEmail || '—')}<br>Pagado hasta: ${hasta ? fechaLarga(hasta) : 'sin vencimiento'}${t.catalogoBase ? ' · con catálogo base' : ''}</div></div>
+      <div class="meta">Aliado: ${cvEsc(t.encargadoNombre || '')} ${cvEsc(t.encargadoEmail || '—')}<br>Pagado hasta: ${hasta ? fechaLarga(hasta) : 'sin vencimiento'}${t.catalogoBase ? ' · con catálogo base' : ''}</div></div>
       <div class="tienda-acciones">
         ${actual ? '' : `<button type="button" data-entrar="${cvEsc(t.id)}">Entrar</button>`}
         <button type="button" data-mas30="${cvEsc(t.id)}">+30 días</button>
@@ -1910,10 +2152,32 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
   keypadCallback = onConfirm;
   keypadCancelCallback = opts.onCancel || null;
   keypadAsString = !!opts.asString;
+  keypadCajas = opts.cajas ? {n: opts.cajas.n || 0, cajas: 0, codigo: opts.cajas.codigo, item: opts.cajas.item} : null;
+  pintarKeypadCajas();
   keypadOverlay.style.display = 'flex';
+}
+// Conteo de cerveza por cajas: "8 cajas + 5 sueltas" → 197 piezas.
+let keypadCajas = null;
+function pintarKeypadCajas(){
+  const box = $('keypadCajasBox');
+  if(!keypadCajas){ box.style.display = 'none'; box.innerHTML = ''; return; }
+  box.style.display = 'block';
+  const k = keypadCajas;
+  if(!k.n){
+    box.innerHTML = `<div class="kc-t">📦 ¿De cuántas viene la caja?</div><div class="kc-ops">${[6,12,18,24,30].map(n=>`<button type="button" data-kcn="${n}">${n}</button>`).join('')}</div><div class="kc-s">O escribe abajo las piezas sueltas, como siempre.</div>`;
+    box.querySelectorAll('[data-kcn]').forEach(b=> b.onclick = ()=>{ k.n = Number(b.dataset.kcn); if(typeof guardarCartonaje === 'function') guardarCartonaje(k.codigo, k.n); pintarKeypadCajas(); });
+    keypadLabel.textContent = 'Piezas';
+    return;
+  }
+  const sueltas = Number(keypadOverlay.dataset.value || 0);
+  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n}</span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
+    <div class="kc-total">Total: <b>${k.cajas * k.n + sueltas}</b> piezas</div>`;
+  box.querySelectorAll('[data-kc]').forEach(b=> b.onclick = ()=>{ k.cajas = Math.max(0, k.cajas + Number(b.dataset.kc)); pintarKeypadCajas(); });
+  keypadLabel.textContent = 'Sueltas (piezas fuera de caja)';
 }
 function closeKeypad(){
   keypadOverlay.style.display = 'none';
+  keypadCajas = null; pintarKeypadCajas();
   keypadCallback = null;
   keypadCancelCallback = null;
   refocusFilterIfActive();
@@ -1929,6 +2193,7 @@ document.querySelectorAll('.keypad-grid button').forEach(btn=>{
     else if(val.length < 20) val += k;
     keypadOverlay.dataset.value = val;
     keypadDisplay.textContent = val === '' ? '0' : val;
+    if(keypadCajas && keypadCajas.n) pintarKeypadCajas();
   };
 });
 $('keypadCancel').onclick = ()=>{
@@ -1952,7 +2217,8 @@ $('keypadPasteBtn').onclick = async ()=>{
   }
 };
 $('keypadConfirm').onclick = ()=>{
-  const val = keypadOverlay.dataset.value || '';
+  let val = keypadOverlay.dataset.value || '';
+  if(keypadCajas && keypadCajas.n && keypadCajas.cajas) val = String(keypadCajas.cajas * keypadCajas.n + Number(val || 0));
   const cb = keypadCallback;
   const asString = keypadAsString;
   closeKeypad();
@@ -2596,8 +2862,12 @@ function renderLog(){
   logEl.querySelectorAll('.del').forEach(btn=>{
     btn.onclick = ()=>{
       const idx = Number(btn.dataset.idx);
-      const rec = records[idx];
-      records.splice(idx,1);
+      const rec0 = records[idx];
+      // Tu propio escaneo lo corriges libre; el de otra persona necesita NIP.
+      const borrar = ()=>{
+      const i2 = records.findIndex(r=> r === rec0 || (rec0 && rec0.id && r.id === rec0.id)); if(i2 < 0) return;
+      const rec = records[i2];
+      records.splice(i2,1);
       persistRecordsLocal();
       if(rec && rec.id){
         fsDeleteRecord(rec.id);
@@ -2605,6 +2875,9 @@ function renderLog(){
         persistHistorialItemRemove(rec.id);
       }
       renderSummary(); renderLog(); renderDashboard();
+      };
+      if(rec0 && rec0.capturista && rec0.capturista !== (currentUser || '')) pedirNip(`borrar un escaneo de ${rec0.capturista}`, borrar);
+      else borrar();
     };
   });
 }
@@ -2693,10 +2966,11 @@ function confirmQtyEntryInner(qty){
 }
 
 function openQtyKeypad(){
+  const esCerveza = !auditModeActive && pendingItem && getPrefix(pendingItem.codigo) === 'CE';
   openKeypad(auditModeActive ? 'Cantidad · Auditoría' : `Cantidad · ${mode}`, qtyInput.value, (val)=>{
     qtyInput.value = val;
     confirmQtyEntry(val);
-  }, {onCancel: resetBarcodeStage});
+  }, {onCancel: resetBarcodeStage, cajas: esCerveza ? {n: (typeof piezasPorCaja === 'function' ? piezasPorCaja(pendingItem.codigo) : 0), codigo: pendingItem.codigo} : null});
 }
 
 function selectFoundProduct(item, raw){
@@ -2844,7 +3118,6 @@ $('exportBtn').onclick = ()=>{
   });
   downloadCsv([header.join(','), ...rows].join('\n'), 'escaneo_conteo');
 };
-const CIERRE_DELETE_PIN = '111315'; // clave para borrar conteos anteriores del historial
 
 // Escaneos que pertenecen a la categoría seleccionada (o todos, si está en
 // "Todas"). Terminar inventario SOLO cierra estos: antes cerraba y borraba
@@ -2911,6 +3184,11 @@ function finalizarConteo(estado){
   persistRecordsLocal();
   fsDeleteRecordsBatch(idsToDelete);
   renderSummary(); renderLog(); resetBarcodeStage(); renderDashboard(); renderCierresList();
+  const conDif = (cierre.comparativo || []).some(x=> x.sistema !== null && x.diferencia);
+  setTimeout(()=>{
+    if(conDif) openConfirm('✅ Inventario guardado en Conteos anteriores.\n\n¿Quieres ver el pronóstico en pesos de este inventario?', ()=> abrirPronostico(cierre), {yesLabel:'💰 Ver pronóstico', noLabel:'Ahora no'});
+    else openConfirm('✅ Inventario guardado en Conteos anteriores. Desde ahí lo puedes imprimir para firmar y sellar.', ()=>{}, {yesLabel:'Entendido'});
+  }, 250);
 }
 
 $('resetBtn').onclick = ()=>{
@@ -2977,7 +3255,7 @@ function renderCierresList(){
     ? `<select id="cierresFiltroSel" class="cv-select">${['todas',...cats].map(c=>`<option value="${cvEsc(c)}" ${c===cierresFiltroCat?'selected':''}>${c==='todas'?'Todas las categorías':cvEsc(c)}</option>`).join('')}</select>`
     : '';
   const visibles = cierresConteo.filter(c=> cierresFiltroCat==='todas' || (c.categoriaNombre || 'Sin categoría') === cierresFiltroCat);
-  box.innerHTML = filtroHtml + visibles.map(c=>{
+  box.innerHTML = `<button type="button" class="add-missing-btn" id="cierresUlt7" style="margin:0 0 10px;">🗂️ Imprimir los últimos 7 (expediente)</button>` + filtroHtml + visibles.map(c=>{
     const badge = c.estado === 'incompleto'
       ? '<span class="chip status-faltante">⚠️ Incompleto</span>'
       : '<span class="chip status-ok">✅ Completo</span>';
@@ -2994,9 +3272,11 @@ function renderCierresList(){
         ${badge}
       </div>
       <div class="meta">${c.registros.length} escaneo(s) · ${areasResumen || 'sin detalle por área'} · Total: ${c.totales.total}${difResumen}</div>
-      <div style="display:flex;gap:8px;">
-        <button type="button" class="edit-bar-btn" data-verlote="${c.id}" style="flex:1;">Ver detalle</button>
-        <button type="button" class="edit-bar-btn" data-dellote="${c.id}" style="flex:1;background:#fbeaea;border-color:var(--red);color:var(--red);">🔒 Borrar (clave)</button>
+      <div class="cierre-acc">
+        <button type="button" class="edit-bar-btn" data-verlote="${c.id}">Ver detalle</button>
+        <button type="button" class="edit-bar-btn" data-pronlote="${c.id}" title="Pronóstico en pesos">💰</button>
+        <button type="button" class="edit-bar-btn" data-printlote="${c.id}" title="Imprimir hoja">🖨️</button>
+        <button type="button" class="edit-bar-btn danger" data-dellote="${c.id}" title="Borrar con NIP">🔒</button>
       </div>
     </div>`;
   }).join('');
@@ -3008,18 +3288,24 @@ function renderCierresList(){
   if(fsel) fsel.onchange = ()=>{ cierresFiltroCat = fsel.value; renderCierresList(); };
   box.querySelectorAll('[data-dellote]').forEach(btn=>{
     btn.onclick = ()=>{
-      openTextKeypad('Clave para borrar este conteo', '', (val)=>{
-        if(val !== CIERRE_DELETE_PIN){
-          openConfirm('Clave incorrecta. No se borró nada.', ()=>{});
-          return;
-        }
-        const delId = btn.dataset.dellote;
-        cierresConteo = cierresConteo.filter(c=>c.id !== delId);
+      const delId = btn.dataset.dellote;
+      pedirNip('borrar este conteo', ()=>{
+        const c = cierresConteo.find(x=> x.id === delId);
+        if(c) moverAPapelera('cierre', `${c.categoriaNombre || 'Conteo'} · ${fechaLabel(c.fecha)}`, c);
+        cierresConteo = cierresConteo.filter(x=> x.id !== delId);
         persistCierreRemove(delId);
         renderCierresList();
+        openConfirm('Se movió a la 🗑️ Papelera. Ahí se guarda 30 días por si hay que regresarlo.', ()=>{}, {yesLabel:'Entendido'});
       });
     };
   });
+  box.querySelectorAll('[data-printlote]').forEach(btn=>{
+    btn.onclick = ()=>{ const c = cierresConteo.find(x=> x.id === btn.dataset.printlote); if(c) imprimirCierre(c); };
+  });
+  box.querySelectorAll('[data-pronlote]').forEach(btn=>{
+    btn.onclick = ()=>{ const c = cierresConteo.find(x=> x.id === btn.dataset.pronlote); if(c) abrirPronostico(c); };
+  });
+  const b7 = $('cierresUlt7'); if(b7) b7.onclick = ()=> imprimirUltimos7();
 }
 /* ============ VISOR DE CONTEOS ANTERIORES ============
    Pantalla completa con scroll: resumen, diferencias, comparativo completo
@@ -3132,6 +3418,8 @@ function exportarCierreViewer(){
 }
 $('cvCerrar').onclick = cerrarCierreViewer;
 $('cvExportar').onclick = exportarCierreViewer;
+$('cvPron').onclick = ()=>{ const c = cierresConteo.find(x=> x.id === cierreViendoId); if(c) abrirPronostico(c); };
+$('cvPrint').onclick = ()=>{ const c = cierresConteo.find(x=> x.id === cierreViendoId); if(c) imprimirCierre(c); };
 $('cvBuscar').addEventListener('input', ()=>{ cierreBusqueda = $('cvBuscar').value; renderCierreViewer(); });
 /* ============ COBERTURA (abasto Cedis vs proveedor directo) ============
    Detecta lo que DEBERÍAS tener y no tienes, sin esperar a que un cliente
@@ -3237,7 +3525,7 @@ function cobEstado(c){
     else estado = 'sindist';
   } else if(dist === 'CEDIS' && ex <= 2 && ultimaEnt && dias >= 28) estado = 'riesgo';
   return {codigo:c.codigo, descripcion: c.descripcion || cob.descripcion || '', barcode: c.barcode || cob.upc || '',
-    proveedor: cob.proveedor || '', dist, ex, negativo: ex !== null && ex < 0,
+    proveedor: cob.proveedor || '', prov: provEfectivo(cob), ultimaRec: cob.ultimaRecepcion || '', dist, ex, negativo: ex !== null && ex < 0,
     entregas: fechasEnt.length, ultimaEnt, dias, ultimaConEx: cob.ultimaConExistencia || '', estado};
 }
 function cobLista(){
@@ -3266,17 +3554,21 @@ function renderCobertura(){
     </button>`).join('');
   $('cobCards').querySelectorAll('[data-cobf]').forEach(b=> b.onclick = ()=>{ cobFiltro = b.dataset.cobf; renderCobertura(); });
 
-  const provs = [...new Set(lista.filter(x=>x.proveedor).map(x=>x.proveedor))].sort();
+  // Solo "Cedis" y los proveedores que de verdad llegan a la tienda
+  // (no el proveedor del corporativo que le vende a Cedis).
+  const hayCedis = lista.some(x=> x.prov === 'Cedis');
+  const provs = [...new Set(lista.map(x=> x.prov).filter(p=> p && p !== 'Cedis'))].sort();
   const sel = $('cobProveedor');
-  sel.innerHTML = `<option value="todos">Todos los proveedores</option>` + provs.map(p=>`<option value="${cvEsc(p)}" ${p===cobProveedor?'selected':''}>${cvEsc(p)}</option>`).join('');
-  if(cobProveedor !== 'todos' && !provs.includes(cobProveedor)) cobProveedor = 'todos';
+  sel.innerHTML = `<option value="todos">Todos</option>` + (hayCedis ? `<option value="Cedis">Cedis</option>` : '') +
+    (provs.length ? `<optgroup label="Proveedores directos">${provs.map(p=>`<option value="${cvEsc(p)}">${cvEsc(p)}</option>`).join('')}</optgroup>` : '');
+  if(cobProveedor !== 'todos' && cobProveedor !== 'Cedis' && !provs.includes(cobProveedor)) cobProveedor = 'todos';
   sel.value = cobProveedor;
 
   const q = cobBusqueda.trim().toLowerCase();
   let vis = lista.filter(x=> cobFiltro === 'negativo' ? x.negativo : x.estado === cobFiltro);
-  if(cobProveedor !== 'todos') vis = vis.filter(x=> x.proveedor === cobProveedor);
+  if(cobProveedor !== 'todos') vis = vis.filter(x=> x.prov === cobProveedor);
   if(q) vis = vis.filter(x=> x.codigo.toLowerCase().includes(q) || x.descripcion.toLowerCase().includes(q) || String(x.barcode).includes(q));
-  vis.sort((a,b)=> cobFiltro==='negativo' ? a.ex-b.ex : cobFiltro==='directo' ? (a.proveedor.localeCompare(b.proveedor) || codigoCompare(a.codigo,b.codigo)) : (b.entregas-a.entregas) || codigoCompare(a.codigo,b.codigo));
+  vis.sort((a,b)=> cobFiltro==='negativo' ? a.ex-b.ex : cobFiltro==='directo' ? (a.prov.localeCompare(b.prov) || codigoCompare(a.codigo,b.codigo)) : (b.entregas-a.entregas) || codigoCompare(a.codigo,b.codigo));
 
   const est = COB_ESTADOS[cobFiltro];
   $('cobAyuda').textContent = est.ayuda;
@@ -3288,9 +3580,9 @@ function renderCobertura(){
     : `⚠️ Aún no hay datos de cobertura. Toca <b>"📥 Cargar datos de cobertura"</b> y sube el Excel de cobertura o tu reporte de existencias del POS.`;
 
   $('cobList').innerHTML = vis.length ? vis.map(x=>{
-    const meta = [x.codigo, x.proveedor ? cvEsc(x.proveedor) : ''].filter(Boolean).join(' · ');
+    const meta = [x.codigo, x.prov ? cvEsc(x.prov) : ''].filter(Boolean).join(' · ');
     const ent = x.entregas ? `Última entrega Cedis: ${fechaCorta(x.ultimaEnt)} (${x.dias} días) · llegó ${x.entregas} vez/veces` : (x.dist==='CEDIS' ? 'Sin entregas registradas' : '');
-    const conEx = x.ultimaConEx ? ` · tuvo existencia: ${fechaCorta(x.ultimaConEx)}` : '';
+    const conEx = (x.ultimaConEx ? ` · tuvo existencia: ${fechaCorta(x.ultimaConEx)}` : '') + (x.ultimaRec ? ` · recibido: ${fechaCorta(x.ultimaRec)}` : '');
     return `<div class="log-item cob-item">
       <div class="info"><div class="desc">${cvEsc(x.descripcion||'—')}</div>
         <div class="meta">${meta}</div>
@@ -3404,13 +3696,14 @@ $('cobImportFile').addEventListener('change', (e)=>{
   reader.readAsArrayBuffer(file);
 });
 
+$('cobProvBtn').onclick = ()=> abrirProveedores();
 $('cobProveedor').onchange = ()=>{ cobProveedor = $('cobProveedor').value; renderCobertura(); };
 $('cobBuscar').addEventListener('input', ()=>{ cobBusqueda = $('cobBuscar').value; renderCobertura(); });
 
 function cobVisibles(){
   const q = cobBusqueda.trim().toLowerCase();
   let vis = cobLista().filter(x=> cobFiltro === 'negativo' ? x.negativo : x.estado === cobFiltro);
-  if(cobProveedor !== 'todos') vis = vis.filter(x=> x.proveedor === cobProveedor);
+  if(cobProveedor !== 'todos') vis = vis.filter(x=> x.prov === cobProveedor);
   if(q) vis = vis.filter(x=> x.codigo.toLowerCase().includes(q) || x.descripcion.toLowerCase().includes(q));
   return vis;
 }
@@ -3440,13 +3733,13 @@ $('cobExportBtn').onclick = ()=>{
 $('cobSurtidoBtn').onclick = async ()=>{
   if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu conexión.', ()=>{}); return; }
   let lista = cobLista();
-  if(cobProveedor !== 'todos') lista = lista.filter(x=> x.proveedor === cobProveedor);
+  if(cobProveedor !== 'todos') lista = lista.filter(x=> x.prov === cobProveedor);
   const hoy = hoyISO();
   const fila = x => ({
     'Código': x.codigo,
     'Código de barras': x.barcode || '',
     'Descripción': x.descripcion,
-    'Proveedor': x.proveedor,
+    'Proveedor': x.prov || x.proveedor,
     'Existencia sistema': x.ex,
     'Última entrega Cedis': x.ultimaEnt ? fechaCorta(x.ultimaEnt) : '',
     'Días sin llegar': x.dias === null ? '' : x.dias,
@@ -3492,11 +3785,7 @@ $('cobSurtidoBtn').onclick = async ()=>{
 };
 
 $('dashResetBtn').onclick = ()=>{
-  openTextKeypad('Clave para reiniciar el Dashboard (borra el % de cobertura acumulado)', '', (val)=>{
-    if(val !== CIERRE_DELETE_PIN){
-      openConfirm('Clave incorrecta. No se reinició nada.', ()=>{});
-      return;
-    }
+  pedirNip('reiniciar el Dashboard (borra el % de cobertura acumulado)', ()=>{
     historialConteo = [];
     persistHistorial();
     renderDashboard();
@@ -3561,6 +3850,7 @@ function renderEtiSummary(){
     <div class="sum-card"><div class="n" style="color:var(--blue)">${totalProductos}</div><div class="l">Productos</div></div>
     <div class="sum-card"><div class="n" style="color:var(--accent)">${totalEtiquetas}</div><div class="l">Etiquetas a imprimir</div></div>`;
 }
+$('etiCajaBtn').onclick = ()=> abrirCaja(etiquetas.map(e=>({descripcion:e.descripcion, codigo:e.codigo, barcode:e.barcode, cantidadTxt: e.cantidad > 1 ? `${e.cantidad} etiquetas` : ''})));
 function renderEtiList(){
   $('etiCountLabel').textContent = etiquetas.length ? `${etiquetas.length} productos` : '';
   const listEl = $('etiList');
@@ -3590,7 +3880,7 @@ function renderEtiList(){
                     : ['CODE128'];
     for(const formato of intentos){
       try{
-        JsBarcode(svg, e.barcode, {format:formato, displayValue:true, height:44, fontSize:13, margin:6});
+        JsBarcode(svg, e.barcode, {format:formato, displayValue:true, height:56, fontSize:14, margin:14});
         break;
       }catch(err){ /* intenta el siguiente formato */ }
     }
@@ -3734,11 +4024,7 @@ function renderSeqList(){
         });
         return;
       }
-      openTextKeypad(`Clave para eliminar "${nombre}" (${codigo}) del catálogo`, '', (val)=>{
-        if(val !== CIERRE_DELETE_PIN){
-          openConfirm('Clave incorrecta. No se eliminó nada.', ()=>{});
-          return;
-        }
+      pedirNip(`eliminar "${nombre}" (${codigo}) del catálogo`, ()=>{
         if(!deletedCodigos.includes(codigo)) deletedCodigos.push(codigo);
         persistDeleted();
         const exIdx = extraCatalog.findIndex(x=>x.codigo===codigo);
@@ -4201,7 +4487,7 @@ $('sisResetBtn').onclick = ()=>{
     });
     return;
   }
-  openConfirm('¿Vaciar todas las existencias de sistema registradas?', ()=>{
+  pedirNip('vaciar todas las existencias de sistema', ()=>{
     existenciasMap = {}; persistSistema(); renderSeqList();
   });
 };
@@ -4221,7 +4507,7 @@ function renderComparativo(){
 
   const otroMap = auditModeActive ? auditoriaExterna : existenciasMap;
   const keys = new Set([...Object.keys(propioPorCodigo), ...Object.keys(otroMap)]);
-  const labelPropio = auditModeActive ? 'Mi conteo' : 'Físico (suma de todas las ubicaciones)';
+  const labelPropio = auditModeActive ? 'Mi conteo' : 'Físico';
   const labelOtro = auditModeActive ? 'Auditor' : 'Sistema';
 
   const rows = Array.from(keys).map(key=>{
@@ -4280,6 +4566,14 @@ function renderComparativo(){
     </div>`;
   }).join('');
 }
+$('compPronBtn').onclick = ()=>{
+  if(auditModeActive){ openConfirm('El pronóstico se hace con tu inventario normal. Apaga el Modo auditoría en ☰ Más.', ()=>{}); return; }
+  abrirPronostico(cierreActual());
+};
+$('compPrintBtn').onclick = ()=>{
+  if(auditModeActive){ openConfirm('Apaga el Modo auditoría en ☰ Más para imprimir tu hoja de inventario.', ()=>{}); return; }
+  imprimirCierre(cierreActual());
+};
 $('compExportBtn').onclick = ()=>{
   const {all} = buildIndexes();
   if(auditModeActive){
@@ -4933,6 +5227,858 @@ loadState();
 </script>
 
 </div><!-- /appRoot -->
+<!-- ============ NUEVAS PANTALLAS (v. octubre) ============ -->
+<div class="nip-overlay" id="nipOverlay">
+  <div class="nip-card">
+    <div class="nip-titulo" id="nipTitulo">NIP de la tienda</div>
+    <div class="nip-sub" id="nipSub">Escribe el NIP</div>
+    <div class="nip-dots" id="nipDots"><span></span><span></span><span></span><span></span></div>
+    <div class="nip-error" id="nipError"></div>
+    <div class="nip-grid" id="nipGrid">
+      <button type="button" data-n="1">1</button><button type="button" data-n="2">2</button><button type="button" data-n="3">3</button>
+      <button type="button" data-n="4">4</button><button type="button" data-n="5">5</button><button type="button" data-n="6">6</button>
+      <button type="button" data-n="7">7</button><button type="button" data-n="8">8</button><button type="button" data-n="9">9</button>
+      <button type="button" class="nip-x" data-n="cancel">Cancelar</button><button type="button" data-n="0">0</button><button type="button" class="nip-x" data-n="back">⌫</button>
+    </div>
+  </div>
+</div>
+
+<div class="sheet-overlay" id="elegirOverlay">
+  <div class="sheet">
+    <div class="sheet-handle"></div>
+    <div class="elegir-titulo" id="elegirTitulo"></div>
+    <div class="sheet-group" id="elegirOpciones"></div>
+    <button type="button" class="sheet-close" id="elegirCerrar">Cancelar</button>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="pronOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head"><span id="pronTitulo">💰 Pronóstico de inventario</span><small id="pronSub"></small></div>
+    <div class="cotejo-body" id="pronBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions" id="pronFoot"></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="papeleraOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">🗑️ Papelera<small>Lo que se borra con NIP se guarda aquí 30 días. Puedes regresarlo.</small></div>
+    <div class="cotejo-body" id="papeleraLista"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="papeleraCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="provOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">🏷️ Proveedores directos<small>Los que llegan a tu tienda. Asígnales sus productos para filtrar la cobertura.</small></div>
+    <div class="cotejo-body" id="provBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="provCerrar">Listo</button></div></div>
+  </div>
+</div>
+
+<div class="caja-overlay" id="cajaOverlay">
+  <div class="caja-top">
+    <button type="button" class="cv-back" id="cajaCerrar">← Volver</button>
+    <div class="caja-pos" id="cajaPos"></div>
+  </div>
+  <div class="caja-body">
+    <div class="caja-desc" id="cajaDesc"></div>
+    <div class="caja-cod" id="cajaCod"></div>
+    <div class="caja-bc"><svg id="cajaSvg"></svg></div>
+    <div class="caja-cant" id="cajaCant"></div>
+  </div>
+  <div class="caja-nav">
+    <button type="button" id="cajaAnt">‹ Anterior</button>
+    <button type="button" id="cajaSig" class="on">Siguiente ›</button>
+  </div>
+</div>
+
+<div id="printArea"></div>
+
+<script>
+/* =====================================================================
+   MEJORAS DE OCTUBRE: NIP del aliado, papelera, menú "Más", pronóstico
+   en pesos, impresión (carta / ticket), expediente de los últimos 7,
+   proveedores directos, recepción de proveedor, cerveza por cajas y
+   modo "uno por uno" para escanear en caja.
+   ===================================================================== */
+
+/* ---------- Utilidades ---------- */
+const dinero = (n)=> (Number(n) < 0 ? '-$' : '$') + Math.abs(Number(n||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
+const piezasTxt = (n)=> Number(n||0).toLocaleString('es-MX') + ' pz';
+function horaCorta(ms){ const d = new Date(ms); return d.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
+function rolTexto(u){
+  if(!u) return '';
+  if(u.rol === 'encargado') return 'Aliado';
+  return u.puesto === 'turno' ? 'Encargado de turno' : 'Auxiliar';
+}
+function dibujarBarcode(svg, code, opts={}){
+  if(!svg || !code || typeof JsBarcode === 'undefined') return false;
+  const digits = String(code).replace(/\D/g,'');
+  const intentos = digits.length===13 ? ['EAN13','CODE128'] : digits.length===12 ? ['UPC','CODE128'] : digits.length===8 ? ['EAN8','CODE128'] : ['CODE128'];
+  for(const formato of intentos){
+    try{ JsBarcode(svg, code, Object.assign({format:formato, displayValue:true, height:44, fontSize:13, margin:10}, opts)); return true; }catch(e){}
+  }
+  return false;
+}
+
+// Búsqueda por palabras: "victoria 355" encuentra "CERVEZA VICTORIA BOTELLA 355ML"
+function buscarPalabras(q, max=8){
+  const pal = String(q||'').toLowerCase().split(/\s+/).filter(Boolean);
+  if(!pal.length) return [];
+  const {all} = buildIndexes();
+  return all.filter(it=>{ const t = `${it.codigo} ${it.barcode||''} ${it.descripcion||''}`.toLowerCase(); return pal.every(w=> t.includes(w)); }).slice(0, max);
+}
+
+/* ---------- Elegir entre opciones (hoja inferior) ---------- */
+function elegir(titulo, opciones){
+  byId('elegirTitulo').textContent = titulo;
+  byId('elegirOpciones').innerHTML = opciones.map((o,i)=>`<button type="button" class="sheet-item" data-op="${i}"><span>${o.icono||''}</span><div><b>${cvEsc(o.label)}</b>${o.sub?`<small>${cvEsc(o.sub)}</small>`:''}</div></button>`).join('');
+  byId('elegirOpciones').querySelectorAll('[data-op]').forEach(b=> b.onclick = ()=>{ byId('elegirOverlay').style.display = 'none'; const o = opciones[Number(b.dataset.op)]; if(o && o.fn) o.fn(); });
+  byId('elegirOverlay').style.display = 'flex';
+}
+byId('elegirCerrar').onclick = ()=>{ byId('elegirOverlay').style.display = 'none'; };
+byId('elegirOverlay').addEventListener('click', (e)=>{ if(e.target.id === 'elegirOverlay') byId('elegirOverlay').style.display = 'none'; });
+
+/* ---------- Menú "Más" ---------- */
+function cerrarMas(){ byId('masSheet').style.display = 'none'; }
+function actualizarSesionSheet(){
+  byId('sesionNombre').textContent = currentUser || 'Mi sesión';
+  byId('sesionDetalle').textContent = `${rolTexto(miUsuario) || (esAdmin() ? 'Administrador' : '')}${TIENDA_NOMBRE ? ' · ' + TIENDA_NOMBRE : ''} · Cerrar sesión`;
+}
+byId('masBtn').onclick = ()=>{ actualizarSesionSheet(); byId('masSheet').style.display = 'flex'; };
+byId('masCerrar').onclick = cerrarMas;
+byId('masSheet').addEventListener('click', (e)=>{ if(e.target.id === 'masSheet') cerrarMas(); });
+document.querySelectorAll('#masSheet [data-ir]').forEach(b=> b.onclick = ()=>{
+  cerrarMas();
+  const t = document.querySelector(`.tab[data-tab="${b.dataset.ir}"]`); if(t) t.click();
+});
+['equipoBtn','tiendasBtn'].forEach(id=> byId(id).addEventListener('click', cerrarMas));
+byId('sesionBtn').onclick = ()=>{ cerrarMas(); abrirMenuSesion(); };
+byId('nipBtn').onclick = ()=>{ cerrarMas(); configurarNip(); };
+byId('papeleraBtn').onclick = ()=>{ cerrarMas(); abrirPapelera(); };
+// "Más" se resalta cuando estás en una pantalla secundaria
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
+  byId('masBtn').classList.toggle('on', t.classList.contains('tab-sec'));
+  window.scrollTo(0,0);
+}));
+
+/* ============ NIP DE LA TIENDA ============
+   Un solo NIP de 4 números por tienda. Lo crea y lo cambia el aliado.
+   Se guarda cifrado (hash), nunca el número tal cual. */
+let nipConfig = {};
+const fsConfigCol = tCol('config');
+function fsListenConfig(){
+  fsConfigCol.doc('seguridad').onSnapshot((d)=>{ nipConfig = d.exists ? (d.data() || {}) : {}; }, ()=>{});
+}
+async function hashNip(pin){
+  const txt = TIENDA_ID + ':' + pin + ':inventario';
+  try{
+    if(window.crypto && crypto.subtle){
+      const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(txt));
+      return Array.from(new Uint8Array(buf)).map(b=> b.toString(16).padStart(2,'0')).join('');
+    }
+  }catch(e){}
+  let h = 5381; for(const ch of txt) h = ((h<<5) + h + ch.charCodeAt(0)) | 0;
+  return 'x' + (h>>>0).toString(16);
+}
+let nipCb = null, nipIngresado = '';
+function abrirNipPad(titulo, sub, cb){
+  nipCb = cb; nipIngresado = '';
+  byId('nipTitulo').textContent = titulo;
+  byId('nipSub').textContent = sub;
+  byId('nipError').textContent = '';
+  pintarNipDots();
+  byId('nipOverlay').style.display = 'flex';
+}
+function cerrarNipPad(){ byId('nipOverlay').style.display = 'none'; nipCb = null; nipIngresado = ''; }
+function pintarNipDots(){ byId('nipDots').querySelectorAll('span').forEach((s,i)=> s.classList.toggle('on', i < nipIngresado.length)); }
+function nipError(msg){
+  byId('nipError').textContent = msg;
+  nipIngresado = ''; pintarNipDots();
+  const d = byId('nipDots'); d.classList.add('shake');
+  setTimeout(()=> d.classList.remove('shake'), 450);
+}
+byId('nipGrid').addEventListener('click', (e)=>{
+  const b = e.target.closest('button'); if(!b) return;
+  const n = b.dataset.n;
+  if(n === 'cancel'){ cerrarNipPad(); return; }
+  if(n === 'back'){ nipIngresado = nipIngresado.slice(0,-1); pintarNipDots(); return; }
+  if(nipIngresado.length >= 4) return;
+  nipIngresado += n; pintarNipDots();
+  if(nipIngresado.length === 4){ const v = nipIngresado, cb = nipCb; setTimeout(()=>{ if(cb) cb(v); }, 120); }
+});
+// Pide el NIP antes de una acción delicada. Si es correcto, ejecuta onOk.
+function pedirNip(motivo, onOk){
+  if(!nipConfig.nipHash){
+    if(esEncargado()){
+      openConfirm(`Para ${motivo} se necesita el NIP de la tienda y todavía no lo creas.\n\nCréalo ahora: son 4 números que solo tú y quien tú decidas van a saber.`, ()=> configurarNip(onOk), {yesLabel:'Crear NIP'});
+    } else {
+      openConfirm(`Para ${motivo} se necesita el NIP de la tienda. El aliado todavía no lo crea: pídele que lo haga en ☰ Más → NIP de la tienda.`, ()=>{}, {yesLabel:'Entendido'});
+    }
+    return;
+  }
+  abrirNipPad('🔐 NIP de la tienda', `Para ${motivo}`, async (v)=>{
+    if(await hashNip(v) === nipConfig.nipHash){ cerrarNipPad(); onOk(); }
+    else nipError('NIP incorrecto. No se hizo nada.');
+  });
+}
+function configurarNip(despues){
+  if(!esEncargado()){ openConfirm('Solo el aliado puede crear o cambiar el NIP de la tienda.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  const pedirNuevo = ()=>{
+    abrirNipPad('Nuevo NIP', 'Escribe 4 números', (v1)=>{
+      abrirNipPad('Nuevo NIP', 'Escríbelo otra vez para confirmar', async (v2)=>{
+        if(v1 !== v2){ nipError('No coinciden. Empieza de nuevo.'); setTimeout(pedirNuevo, 800); return; }
+        const h = await hashNip(v1);
+        cerrarNipPad();
+        nipConfig = {nipHash: h};
+        fsConfigCol.doc('seguridad').set({nipHash: h, actualizado: new Date().toISOString(), por: sesionEmail})
+          .catch(err=> avisarErrorGuardado(err, {descripcion:'el NIP'}));
+        openConfirm('✅ NIP guardado.\n\nCompártelo solo con quien deba poder borrar conteos o historial. Si alguien se va, cámbialo aquí mismo.', ()=>{ if(despues) despues(); }, {yesLabel:'Entendido'});
+      });
+    });
+  };
+  if(nipConfig.nipHash && !esAdmin()){
+    abrirNipPad('Cambiar NIP', 'Primero escribe el NIP actual', async (v)=>{
+      if(await hashNip(v) === nipConfig.nipHash) pedirNuevo(); else nipError('NIP incorrecto.');
+    });
+  } else pedirNuevo();
+}
+
+/* ============ PAPELERA (30 días) ============ */
+const fsPapeleraCol = tCol('inventario_papelera_items');
+let papelera = [], papeleraPurgada = false;
+function fsListenPapelera(){
+  fsPapeleraCol.onSnapshot((snap)=>{
+    papelera = snap.docs.map(d=> d.data()).filter(Boolean).sort((a,b)=> (b.borradoEn||0) - (a.borradoEn||0));
+    if(byId('papeleraOverlay').style.display === 'flex') renderPapelera();
+    if(!papeleraPurgada && esEncargado()){
+      papeleraPurgada = true;
+      papelera.filter(p=> p.expira && p.expira < Date.now()).forEach(p=> fsPapeleraCol.doc(p.id).delete().catch(()=>{}));
+    }
+  }, ()=>{});
+}
+function moverAPapelera(tipo, titulo, datos){
+  const id = uid();
+  fsPapeleraCol.doc(id).set({id, tipo, titulo, datos, borradoPor: currentUser || sesionEmail, borradoEn: Date.now(), expira: Date.now() + 30*DIA_MS})
+    .catch(err=> avisarErrorGuardado(err, {descripcion:'la copia en papelera'}));
+}
+function abrirPapelera(){ byId('papeleraOverlay').style.display = 'flex'; renderPapelera(); }
+byId('papeleraCerrar').onclick = ()=>{ byId('papeleraOverlay').style.display = 'none'; };
+function renderPapelera(){
+  const vivos = papelera.filter(p=> !p.expira || p.expira >= Date.now());
+  byId('papeleraLista').innerHTML = vivos.length ? vivos.map(p=>{
+    const dias = Math.max(0, Math.ceil((p.expira - Date.now()) / DIA_MS));
+    return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(p.titulo || 'Elemento')}</div>
+      <div class="meta">Borró: ${cvEsc(p.borradoPor || '—')} · ${horaCorta(p.borradoEn)} · se elimina en ${dias} día(s)</div></div>
+      <button type="button" class="mini-btn" data-restaurar="${cvEsc(p.id)}">↩️ Regresar</button></div>`;
+  }).join('') : '<div class="empty">La papelera está vacía.</div>';
+  byId('papeleraLista').querySelectorAll('[data-restaurar]').forEach(b=> b.onclick = ()=>{
+    const p = papelera.find(x=> x.id === b.dataset.restaurar); if(!p) return;
+    if(p.tipo === 'cierre' && p.datos){
+      if(!cierresConteo.find(c=> c.id === p.datos.id)){ cierresConteo.unshift(p.datos); cierresConteo.sort((a,b)=> String(b.fecha||'').localeCompare(String(a.fecha||''))); }
+      persistCierresLocal(); fsSaveCierre(p.datos); renderCierresList();
+    }
+    fsPapeleraCol.doc(p.id).delete().catch(()=>{});
+    papelera = papelera.filter(x=> x.id !== p.id); renderPapelera();
+    openConfirm('✅ Listo, regresó a Conteos anteriores.', ()=>{}, {yesLabel:'Entendido'});
+  });
+}
+
+/* ============ PRONÓSTICO DE INVENTARIO EN PESOS ============
+   Diferencia = físico − sistema. Los sobrantes solo compensan faltantes
+   de la misma familia (primeros 5 caracteres del código: CE101 con CE101,
+   no con CE102). Precio = venta al público, que es como cobran. */
+const fsPreciosCol = tCol('inventario_precios_items');
+let preciosMap = null;
+async function cargarPrecios(){
+  if(preciosMap) return preciosMap;
+  preciosMap = {};
+  try{ const s = await fsPreciosCol.get(); s.docs.forEach(d=>{ const x = d.data(); if(x && x.codigo) preciosMap[x.codigo] = x; }); }catch(e){}
+  return preciosMap;
+}
+// Comparativo de la categoría activa (lo que se ve en la pestaña Comparar)
+function comparativoActual(){
+  const {all} = buildIndexes();
+  const fisico = {};
+  records.forEach(r=>{ const k = r.codigo || r.barcode; fisico[k] = (fisico[k]||0) + Number(r.cantidad); });
+  const keys = new Set([...Object.keys(fisico), ...Object.keys(existenciasMap)]);
+  return Array.from(keys).filter(k=> categoriaActiva === 'todas' || getPrefix(k) === categoriaActiva).map(k=>{
+    const cat = all.find(i=> i.codigo === k) || existenciasMap[k] || {};
+    const sis = existenciasMap[k] ? Number(existenciasMap[k].cantidad) : null;
+    const f = fisico[k] || 0;
+    const dif = sis === null ? null : f - sis;
+    return {codigo:k, descripcion: cat.descripcion || '', barcode: cat.barcode || '', fisico:f, sistema:sis, diferencia:dif,
+      estatus: dif === null ? 'Pendiente' : dif === 0 ? 'OK' : dif > 0 ? 'Sobrante' : 'Faltante'};
+  }).sort((a,b)=> codigoCompare(a.codigo, b.codigo));
+}
+function cierreActual(){
+  const regs = recordsDeCategoriaActiva();
+  const totales = {}; MODES.forEach(m=> totales[m] = 0);
+  regs.forEach(r=>{ totales[r.area] = (totales[r.area]||0) + Number(r.cantidad); });
+  totales.total = regs.reduce((s,r)=> s + Number(r.cantidad), 0);
+  return {id:'actual', fecha: new Date().toISOString(), estado:'en curso', categoria: categoriaActiva, categoriaNombre: nombreCategoriaActiva(), registros: regs, totales, comparativo: comparativoActual()};
+}
+function calcPronostico(difs, precios){
+  const fam = {}, sinPrecio = [], items = [];
+  difs.forEach(f=>{
+    const p = precios ? Number(precios[f.codigo]) : 1;
+    if(precios && !(p > 0)){ sinPrecio.push(f); return; }
+    const valor = f.diferencia * p;
+    const k = String(f.codigo).slice(0,5).toUpperCase();
+    const F = fam[k] || (fam[k] = {familia:k, falt:0, sobr:0, n:0});
+    if(valor < 0) F.falt += -valor; else F.sobr += valor;
+    F.n++;
+    items.push(Object.assign({}, f, {precio: precios ? p : null, valor, familia:k}));
+  });
+  const familias = Object.values(fam).map(F=> Object.assign(F, {neto: F.sobr - F.falt, comp: Math.min(F.falt, F.sobr)}))
+    .sort((a,b)=> a.neto - b.neto);
+  const t = {faltBruto:0, sobrBruto:0, comp:0, faltNeto:0, sobrNeto:0};
+  familias.forEach(F=>{ t.faltBruto += F.falt; t.sobrBruto += F.sobr; t.comp += F.comp; if(F.neto < 0) t.faltNeto += -F.neto; else t.sobrNeto += F.neto; });
+  const top = items.slice().sort((a,b)=> Math.abs(b.valor) - Math.abs(a.valor)).slice(0,10);
+  return {familias, totales:t, sinPrecio, items, top, enPesos: !!precios};
+}
+let pron = null; // {cierre, difs, precios, res}
+function abrirPronostico(cierre){
+  const filas = (cierre.comparativo || []).filter(f=> f.sistema !== null && f.sistema !== undefined);
+  const difs = filas.filter(f=> f.diferencia);
+  if(!filas.length){ openConfirm('Este conteo no tiene existencias de sistema para comparar. Carga las existencias en la pestaña Sistema y vuelve a intentar.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  if(!difs.length){ openConfirm('✅ Sin diferencias contra sistema: el pronóstico es $0.00.', ()=>{}, {yesLabel:'Excelente'}); return; }
+  pron = {cierre, difs, precios:null, res:null};
+  byId('pronSub').textContent = `${cierre.categoriaNombre || 'Inventario'} · ${fechaLabel(cierre.fecha)}`;
+  const nF = difs.filter(f=> f.diferencia < 0).length, nS = difs.length - nF;
+  byId('pronBody').innerHTML = `<div class="pron-pregunta">
+      <div class="pron-num">${difs.length}</div>
+      <p>productos con diferencia: <b>${nF}</b> faltante(s) y <b>${nS}</b> sobrante(s).</p>
+      <p><b>¿Quieres agregar precios para ver la compensación de tu inventario en pesos?</b></p>
+      <p class="pron-nota">Precio de venta al público. Solo te pide los productos con diferencia, y recuerda el último precio que usaste.</p>
+    </div>`;
+  byId('pronFoot').innerHTML = `<button class="confirm-no" id="pronOmitir">Omitir</button><button class="confirm-yes" id="pronAgregar">Agregar precios</button>`;
+  byId('pronOmitir').onclick = ()=>{ pron.res = calcPronostico(difs, null); pintarResultadoPron(); };
+  byId('pronAgregar').onclick = pintarPreciosPron;
+  byId('pronOverlay').style.display = 'flex';
+}
+async function pintarPreciosPron(){
+  const precios = await cargarPrecios();
+  const filas = pron.difs.slice().sort((a,b)=> codigoCompare(a.codigo, b.codigo));
+  byId('pronBody').innerHTML = `<div class="catalog-note" style="margin-bottom:10px;">Escribe el <b>precio de venta</b> de cada producto. Los que ya tenían precio vienen llenos; cámbialos si subieron o bajaron.</div>` +
+    filas.map(f=>{
+      const prev = precios[f.codigo] ? precios[f.codigo].precio : '';
+      return `<div class="pron-fila">
+        <div class="info"><div class="desc">${cvEsc(f.descripcion || f.codigo)}</div><div class="meta">${cvEsc(f.codigo)} · <span class="${f.diferencia<0?'t-red':'t-blue'}">${f.diferencia>0?'+':''}${f.diferencia}</span></div></div>
+        <label class="pron-precio">$<input type="number" inputmode="decimal" step="0.01" min="0" data-precio="${cvEsc(f.codigo)}" value="${prev}"></label>
+      </div>`;
+    }).join('');
+  byId('pronFoot').innerHTML = `<button class="confirm-no" id="pronAtras">Cancelar</button><button class="confirm-yes" id="pronCalcular">Calcular</button>`;
+  byId('pronAtras').onclick = cerrarPron;
+  byId('pronCalcular').onclick = ()=>{
+    const p = {}, cambios = [];
+    byId('pronBody').querySelectorAll('[data-precio]').forEach(inp=>{
+      const cod = inp.dataset.precio, v = Number(String(inp.value).replace(',', '.'));
+      if(v > 0){ p[cod] = v; if(!preciosMap[cod] || Number(preciosMap[cod].precio) !== v) cambios.push({codigo:cod, precio:v}); }
+    });
+    if(cambios.length && fsReady){
+      const batch = fsDb.batch();
+      cambios.forEach(c=>{ const doc = {codigo:c.codigo, precio:c.precio, actualizado:new Date().toISOString(), por: currentUser || ''}; preciosMap[c.codigo] = doc; batch.set(fsPreciosCol.doc(c.codigo), doc); });
+      batch.commit().catch(()=>{});
+    }
+    pron.precios = p;
+    pron.res = calcPronostico(pron.difs, p);
+    pintarResultadoPron();
+  };
+}
+function pintarResultadoPron(){
+  const r = pron.res, t = r.totales, fmt = r.enPesos ? dinero : piezasTxt;
+  const tarjetas = `<div class="pron-cards">
+      <div class="pron-card ${t.faltNeto > 0 ? 'rojo' : 'rojo cero'}"><span>${r.enPesos ? 'Te cobrarían (faltante neto)' : 'Faltante neto'}</span><b>${fmt(t.faltNeto)}</b></div>
+      <div class="pron-card azul"><span>Sobrante neto (no compensa)</span><b>${fmt(t.sobrNeto)}</b></div>
+      <div class="pron-card verde"><span>Compensado en la misma familia</span><b>${fmt(t.comp)}</b></div>
+    </div>
+    <div class="pron-linea">Faltante bruto ${fmt(t.faltBruto)} · Sobrante bruto ${fmt(t.sobrBruto)}${r.enPesos ? '' : ' · <b>sin precios: cuenta en piezas</b>'}</div>
+    ${r.sinPrecio.length ? `<div class="catalog-note" style="margin-top:8px;">⚠️ ${r.sinPrecio.length} producto(s) sin precio no entraron al cálculo.</div>` : ''}`;
+  const fams = `<div class="section-title"><span>Por familia</span><span>${r.familias.length}</span></div>
+    <table class="pron-tabla"><thead><tr><th>Familia</th><th>Faltante</th><th>Sobrante</th><th>Neto</th></tr></thead><tbody>
+    ${r.familias.map(F=>`<tr><td>${cvEsc(F.familia)}</td><td class="t-red">${fmt(F.falt)}</td><td class="t-blue">${fmt(F.sobr)}</td><td class="${F.neto<0?'t-red':F.neto>0?'t-blue':''}"><b>${fmt(F.neto)}</b></td></tr>`).join('')}
+    </tbody></table>`;
+  const top = `<div class="section-title"><span>Los que más pesan · vuélvelos a contar</span></div>` +
+    r.top.map(x=>`<div class="pron-fila"><div class="info"><div class="desc">${cvEsc(x.descripcion || x.codigo)}</div>
+      <div class="meta">${cvEsc(x.codigo)} · Sistema ${x.sistema} · Físico ${x.fisico}${x.precio ? ' · ' + dinero(x.precio) : ''}</div></div>
+      <div class="pron-valor ${x.valor<0?'t-red':'t-blue'}">${fmt(x.valor)}</div></div>`).join('');
+  byId('pronBody').innerHTML = tarjetas + fams + top;
+  byId('pronFoot').innerHTML = `<button class="confirm-no" id="pronCerrar">Cerrar</button><button class="confirm-no" id="pronExcel">📊 Excel</button><button class="confirm-yes" id="pronImprimir">🖨️ Imprimir</button>`;
+  byId('pronCerrar').onclick = cerrarPron;
+  byId('pronImprimir').onclick = ()=> preguntarFormato((f)=> imprimirHTML(hojaInventarioHTML(pron.cierre, pron.res, f), f));
+  byId('pronExcel').onclick = exportarPronExcel;
+  byId('pronBody').scrollTop = 0;
+}
+function cerrarPron(){ byId('pronOverlay').style.display = 'none'; }
+function exportarPronExcel(){
+  if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu conexión.', ()=>{}); return; }
+  const r = pron.res, t = r.totales, u = r.enPesos ? 'Pesos' : 'Piezas';
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet([
+    {Concepto:'Tienda', Valor: TIENDA_NOMBRE}, {Concepto:'Inventario', Valor: `${pron.cierre.categoriaNombre||''} ${fechaLabel(pron.cierre.fecha)}`},
+    {Concepto:'Unidad', Valor:u}, {Concepto:'Faltante neto (te cobrarían)', Valor: Number(t.faltNeto.toFixed(2))},
+    {Concepto:'Sobrante neto', Valor: Number(t.sobrNeto.toFixed(2))}, {Concepto:'Compensado', Valor: Number(t.comp.toFixed(2))},
+    {Concepto:'Faltante bruto', Valor: Number(t.faltBruto.toFixed(2))}, {Concepto:'Sobrante bruto', Valor: Number(t.sobrBruto.toFixed(2))}
+  ]), 'Resumen');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(r.familias.map(F=>({Familia:F.familia, Faltante:Number(F.falt.toFixed(2)), Sobrante:Number(F.sobr.toFixed(2)), Neto:Number(F.neto.toFixed(2))}))), 'Por familia');
+  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(r.items.map(x=>({Codigo:x.codigo, Descripcion:x.descripcion, Familia:x.familia, Sistema:x.sistema, Fisico:x.fisico, Diferencia:x.diferencia, Precio:x.precio||'', Importe:Number(x.valor.toFixed(2))}))), 'Productos');
+  XLSX.writeFile(wb, `Pronostico_${nombreArchivoTienda()}_${hoyISO()}.xlsx`);
+}
+
+/* ============ IMPRESIÓN: hoja carta o ticket ============ */
+function preguntarFormato(cb){
+  elegir('¿Cómo vas a imprimir?', [
+    {icono:'📄', label:'Hoja carta', sub:'Impresora con AirPrint. Para firmar, sellar, engrapar y archivar.', fn:()=> cb('carta')},
+    {icono:'🧾', label:'Ticket 80 mm', sub:'Impresora térmica. Ojo: el papel térmico se borra con los meses.', fn:()=> cb('ticket')}
+  ]);
+}
+function imprimirHTML(html, formato){
+  const area = byId('printArea');
+  area.className = 'print-' + formato;
+  area.innerHTML = html;
+  let st = byId('printPageStyle');
+  if(!st){ st = document.createElement('style'); st.id = 'printPageStyle'; document.head.appendChild(st); }
+  st.textContent = formato === 'ticket' ? '@page{size:80mm auto;margin:3mm;}' : '@page{size:letter;margin:12mm;}';
+  document.body.classList.add('imprimiendo');
+  const fin = ()=>{ document.body.classList.remove('imprimiendo'); window.removeEventListener('afterprint', fin); };
+  window.addEventListener('afterprint', fin);
+  setTimeout(()=>{ try{ window.print(); }catch(e){} setTimeout(fin, 1500); }, 100);
+}
+function hojaInventarioHTML(c, res, formato){
+  const ticket = formato === 'ticket';
+  const regs = c.registros || [];
+  const quienes = [...new Set(regs.map(r=> r.capturista).filter(Boolean))].join(', ') || '—';
+  const comp = (c.comparativo || []).filter(x=> x.sistema !== null && x.sistema !== undefined);
+  const difs = comp.filter(x=> x.diferencia);
+  const nF = difs.filter(x=> x.diferencia < 0).length, nS = difs.length - nF;
+  const precio = (cod)=> res && res.enPesos && pron && pron.precios ? pron.precios[cod] : null;
+  const corto = (s)=> ticket ? String(s||'').slice(0,22) : String(s||'');
+  const areas = MODES.filter(m=> c.totales && c.totales[m]).map(m=> `<tr><td>${m}</td><td class="r">${c.totales[m]}</td></tr>`).join('');
+  const filas = difs.map(x=>{
+    const p = precio(x.codigo);
+    return `<tr><td>${cvEsc(x.codigo)}</td><td>${cvEsc(corto(x.descripcion))}</td><td class="r">${x.sistema}</td><td class="r">${x.fisico}</td><td class="r"><b>${x.diferencia>0?'+':''}${x.diferencia}</b></td>${res && res.enPesos ? `<td class="r">${p ? dinero(p*x.diferencia) : '—'}</td>` : ''}</tr>`;
+  }).join('');
+  const pronHtml = res ? `<h3>Pronóstico ${res.enPesos ? 'en pesos' : 'en piezas'}</h3>
+    <table class="pt"><tr><td>Faltante neto (te cobrarían)</td><td class="r"><b>${(res.enPesos?dinero:piezasTxt)(res.totales.faltNeto)}</b></td></tr>
+    <tr><td>Sobrante neto</td><td class="r">${(res.enPesos?dinero:piezasTxt)(res.totales.sobrNeto)}</td></tr>
+    <tr><td>Compensado por familia</td><td class="r">${(res.enPesos?dinero:piezasTxt)(res.totales.comp)}</td></tr></table>` : '';
+  return `<div class="ph">
+    <div class="ph-t">Hoja de inventario</div>
+    <div class="ph-s">${cvEsc(TIENDA_NOMBRE)}</div>
+    <table class="pt meta">
+      <tr><td>Fecha</td><td>${fechaLabel(c.fecha)}</td></tr>
+      <tr><td>Categoría</td><td>${cvEsc(c.categoriaNombre || 'Todas')}</td></tr>
+      <tr><td>Estado</td><td>${c.estado === 'incompleto' ? 'Incompleto' : c.estado === 'en curso' ? 'En curso' : 'Completo'}</td></tr>
+      <tr><td>Contaron</td><td>${cvEsc(quienes)}</td></tr>
+      <tr><td>Escaneos / piezas</td><td>${regs.length} / ${c.totales ? c.totales.total : 0}</td></tr>
+    </table>
+    ${areas ? `<h3>Piezas por área</h3><table class="pt">${areas}</table>` : ''}
+    <h3>Diferencias contra sistema · ${difs.length}</h3>
+    ${comp.length ? (difs.length ? `<table class="pt grid"><thead><tr><th>Código</th><th>Descripción</th><th class="r">Sist.</th><th class="r">Fís.</th><th class="r">Dif.</th>${res && res.enPesos ? '<th class="r">Importe</th>' : ''}</tr></thead><tbody>${filas}</tbody></table>
+      <p class="pn">${comp.length - difs.length} sin diferencia · ${nF} faltante(s) · ${nS} sobrante(s)</p>` : '<p class="pn">Sin diferencias contra sistema.</p>')
+      : '<p class="pn">No se capturó existencia de sistema para este conteo.</p>'}
+    ${pronHtml}
+    <div class="firmas">
+      <div><span></span>Contó</div><div><span></span>Encargado de turno</div><div><span></span>Aliado</div><div class="sello"><span></span>Sello de la tienda</div>
+    </div>
+    <div class="pie">Impreso ${fechaLabel(new Date().toISOString())} · Respaldo digital en la app</div>
+  </div>`;
+}
+function imprimirCierre(c){
+  preguntarFormato((f)=> imprimirHTML(hojaInventarioHTML(c, null, f), f));
+}
+function imprimirUltimos7(){
+  const ult = cierresConteo.slice().sort((a,b)=> String(b.fecha||'').localeCompare(String(a.fecha||''))).slice(0,7);
+  if(!ult.length){ openConfirm('Todavía no hay conteos terminados.', ()=>{}); return; }
+  preguntarFormato((f)=>{
+    const portada = `<div class="ph"><div class="ph-t">Expediente de inventarios</div><div class="ph-s">${cvEsc(TIENDA_NOMBRE)}</div>
+      <p class="pn">Últimos ${ult.length} inventarios guardados en la app, del más reciente al más antiguo:</p>
+      <table class="pt">${ult.map((c,i)=> `<tr><td>${i+1}.</td><td>${cvEsc(c.categoriaNombre || 'Todas')}</td><td>${fechaLabel(c.fecha)}</td></tr>`).join('')}</table></div>`;
+    imprimirHTML(portada + ult.map(c=> '<div class="salto"></div>' + hojaInventarioHTML(c, null, f)).join(''), f);
+  });
+}
+
+/* ============ PROVEEDORES DIRECTOS ============
+   El filtro de Cobertura solo muestra "Cedis" y los proveedores que de
+   verdad llegan a la tienda. El aliado puede dar de alta proveedores
+   locales y asignarles productos. */
+function provEfectivo(cob){
+  if(!cob) return '';
+  if(cob.provLocal) return cob.provLocal;
+  if(cob.distribucion === 'CEDIS') return 'Cedis';
+  if(cob.distribucion === 'DIRECTO') return cob.proveedor || '';
+  return '';
+}
+function proveedoresDirectos(){
+  const cuenta = {};
+  Object.values(coberturaMap).forEach(c=>{ if(c.descatalogado) return; const p = provEfectivo(c); if(p && p !== 'Cedis') cuenta[p] = (cuenta[p]||0) + 1; });
+  provLocalesNuevos.forEach(p=>{ if(!cuenta[p]) cuenta[p] = 0; });
+  return Object.entries(cuenta).sort((a,b)=> a[0].localeCompare(b[0])).map(([nombre, n])=>({nombre, n}));
+}
+let provLocalesNuevos = [], provEditando = null, provBusqueda = '';
+function abrirProveedores(){ provEditando = null; provBusqueda = ''; byId('provOverlay').style.display = 'flex'; renderProveedores(); }
+byId('provCerrar').onclick = ()=>{ byId('provOverlay').style.display = 'none'; renderCobertura(); };
+function renderProveedores(){
+  const body = byId('provBody');
+  if(!provEditando){
+    const lista = proveedoresDirectos();
+    body.innerHTML = `<button type="button" class="add-missing-btn" id="provNuevo" style="margin:0 0 12px;">➕ Agregar proveedor local</button>` +
+      (lista.length ? lista.map(p=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(p.nombre)}</div><div class="meta">${p.n} producto(s)</div></div>
+        <button type="button" class="mini-btn" data-provedit="${cvEsc(p.nombre)}">Productos</button></div>`).join('')
+      : '<div class="empty">Aún no hay proveedores directos. Se llenan solos al cargar tu reporte del POS, o agrégalos aquí.</div>');
+    byId('provNuevo').onclick = ()=>{
+      openTextKeypad('Nombre del proveedor (ej. Tortillas Doña Mary)', '', (val)=>{
+        const nombre = String(val||'').trim(); if(!nombre) return;
+        if(!provLocalesNuevos.includes(nombre)) provLocalesNuevos.push(nombre);
+        provEditando = nombre; renderProveedores();
+      });
+    };
+    body.querySelectorAll('[data-provedit]').forEach(b=> b.onclick = ()=>{ provEditando = b.dataset.provedit; provBusqueda = ''; renderProveedores(); });
+    return;
+  }
+  const {all} = buildIndexes();
+  const asignados = all.filter(i=> provEfectivo(coberturaMap[i.codigo]) === provEditando);
+  const q = provBusqueda.trim().toLowerCase();
+  const resultados = q.length >= 2 ? buscarPalabras(q, 30) : [];
+  const fila = (i, asignado)=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(i.descripcion||i.codigo)}</div><div class="meta">${cvEsc(i.codigo)}${!asignado && provEfectivo(coberturaMap[i.codigo]) ? ' · hoy: '+cvEsc(provEfectivo(coberturaMap[i.codigo])) : ''}</div></div>
+    <button type="button" class="mini-btn ${asignado?'off':''}" data-asig="${cvEsc(i.codigo)}" data-on="${asignado?'0':'1'}">${asignado?'Quitar':'Asignar'}</button></div>`;
+  body.innerHTML = `<button type="button" class="cv-back" id="provVolver" style="margin-bottom:8px;">← Proveedores</button>
+    <div class="desc" style="font-weight:800;font-size:17px;margin-bottom:6px;">${cvEsc(provEditando)}</div>
+    <input type="search" id="provBuscar" class="cv-buscar" style="margin:0 0 10px;width:100%;" placeholder="Busca producto para asignar…" value="${cvEsc(provBusqueda)}" autocomplete="off">
+    ${resultados.length ? `<div class="section-title"><span>Resultados</span></div>${resultados.map(i=> fila(i, provEfectivo(coberturaMap[i.codigo]) === provEditando)).join('')}` : ''}
+    <div class="section-title"><span>Asignados</span><span>${asignados.length}</span></div>
+    ${asignados.length ? asignados.map(i=> fila(i, true)).join('') : '<div class="empty">Busca arriba y toca "Asignar".</div>'}`;
+  byId('provVolver').onclick = ()=>{ provEditando = null; renderProveedores(); };
+  const inp = byId('provBuscar');
+  inp.oninput = ()=>{ provBusqueda = inp.value; const pos = inp.selectionStart; renderProveedores(); const n = byId('provBuscar'); n.focus(); try{ n.setSelectionRange(pos,pos); }catch(e){} };
+  body.querySelectorAll('[data-asig]').forEach(b=> b.onclick = ()=>{
+    const cod = b.dataset.asig, on = b.dataset.on === '1';
+    cobGuardar({[cod]: on ? {provLocal: provEditando, distribucion:'DIRECTO'} : {provLocal: ''}});
+    renderProveedores();
+  });
+}
+
+/* ============ CARTONAJE (piezas por caja / paquete) ============ */
+const fsCartonajeCol = tCol('inventario_cartonaje_items');
+let cartonajeMap = {};
+try{ const c = lsGet('cartonaje'); if(c) cartonajeMap = JSON.parse(c); }catch(e){}
+function fsListenCartonaje(){
+  fsCartonajeCol.onSnapshot((snap)=>{
+    const m = {}; snap.docs.forEach(d=>{ const x = d.data(); if(x && x.codigo) m[x.codigo] = x; });
+    cartonajeMap = m; lsSet('cartonaje', JSON.stringify(m));
+  }, ()=>{});
+}
+function piezasPorCaja(codigo){ return Number((cartonajeMap[codigo] || {}).piezas) || 0; }
+function guardarCartonaje(codigo, piezas){
+  const doc = {codigo, piezas:Number(piezas), actualizado:new Date().toISOString()};
+  cartonajeMap[codigo] = doc; lsSet('cartonaje', JSON.stringify(cartonajeMap));
+  if(fsReady) fsCartonajeCol.doc(codigo).set(doc).catch(()=>{});
+}
+function preguntarCartonaje(item, cb){
+  elegir(`¿De cuántas piezas viene la caja de ${item.descripcion || item.codigo}?`,
+    [6,12,18,24,30].map(n=>({icono:'📦', label:`Caja de ${n}`, fn:()=>{ guardarCartonaje(item.codigo, n); cb(n); }}))
+    .concat([{icono:'✏️', label:'Otra cantidad', fn:()=> openKeypad('Piezas por caja', '', (v)=>{ const n = Number(v); if(n > 0){ guardarCartonaje(item.codigo, n); cb(n); } })}]));
+}
+
+/* ============ MODO "UNO POR UNO" PARA ESCANEAR EN CAJA ============ */
+let cajaItems = [], cajaIdx = 0;
+function abrirCaja(items){
+  cajaItems = items.filter(Boolean); cajaIdx = 0;
+  if(!cajaItems.length){ openConfirm('No hay productos para mostrar.', ()=>{}); return; }
+  byId('cajaOverlay').style.display = 'flex'; document.body.style.overflow = 'hidden';
+  pintarCaja();
+}
+function cerrarCaja(){ byId('cajaOverlay').style.display = 'none'; document.body.style.overflow = ''; }
+function pintarCaja(){
+  const it = cajaItems[cajaIdx];
+  byId('cajaPos').textContent = `${cajaIdx+1} de ${cajaItems.length}`;
+  byId('cajaDesc').textContent = it.descripcion || 'Sin descripción';
+  byId('cajaCod').textContent = it.codigo || '';
+  const svg = byId('cajaSvg');
+  svg.innerHTML = '';
+  const ok = it.barcode ? dibujarBarcode(svg, it.barcode, {height:120, fontSize:18, margin:24, width:2.4}) : false;
+  svg.style.display = ok ? '' : 'none';
+  byId('cajaCant').innerHTML = (ok ? '' : `<div class="caja-sinbc">Sin código de barras · teclea <b>${cvEsc(it.codigo||'')}</b></div>`) + (it.cantidadTxt ? `<b>${cvEsc(it.cantidadTxt)}</b>` : '');
+  byId('cajaAnt').disabled = cajaIdx === 0;
+  byId('cajaSig').textContent = cajaIdx === cajaItems.length - 1 ? 'Terminar ✓' : 'Siguiente ›';
+}
+byId('cajaCerrar').onclick = cerrarCaja;
+byId('cajaAnt').onclick = ()=>{ if(cajaIdx > 0){ cajaIdx--; pintarCaja(); } };
+byId('cajaSig').onclick = ()=>{ if(cajaIdx < cajaItems.length - 1){ cajaIdx++; pintarCaja(); } else cerrarCaja(); };
+(function(){
+  let x0 = null;
+  const el = byId('cajaOverlay');
+  el.addEventListener('touchstart', (e)=>{ x0 = e.touches[0].clientX; }, {passive:true});
+  el.addEventListener('touchend', (e)=>{
+    if(x0 === null) return; const dx = e.changedTouches[0].clientX - x0; x0 = null;
+    if(dx < -60) byId('cajaSig').click(); else if(dx > 60) byId('cajaAnt').click();
+  });
+})();
+
+/* ============ RECEPCIÓN DE PROVEEDOR ============ */
+const fsRecepcionesCol = tCol('inventario_recepciones_items');
+let recepcionesHist = [];
+let recActiva = null;
+try{ const r = lsGet('recepcion_activa'); if(r) recActiva = JSON.parse(r); }catch(e){}
+let recPend = null, recQty = 0, recDanado = false, recResultados = [];
+function guardarRecLocal(){ lsSet('recepcion_activa', recActiva ? JSON.stringify(recActiva) : ''); }
+function fsListenRecepciones(){
+  fsRecepcionesCol.onSnapshot((snap)=>{
+    recepcionesHist = snap.docs.map(d=> d.data()).filter(Boolean).sort((a,b)=> String(b.fecha||'').localeCompare(String(a.fecha||'')));
+    if(!recActiva) renderRecepcion();
+  }, ()=>{});
+}
+function nuevaRecepcion(tipo){
+  recActiva = {id: uid(), tipo, proveedor: '', inicio: Date.now(), items: [], notaTotal: null};
+  recPend = null; recQty = 0; recDanado = false; recResultados = [];
+  guardarRecLocal(); renderRecepcion();
+}
+function totalRec(){
+  if(!recActiva) return {recibido:0, danadas:0, esperado:0};
+  let recibido = 0, danadas = 0, esperado = 0;
+  recActiva.items.forEach(it=>{
+    if(recActiva.tipo === 'cerveza'){ recibido += (it.cajas||0) * (it.porCaja||0) + (it.sueltas||0); esperado += it.esperado || 0; }
+    else { recibido += it.piezas || 0; danadas += it.danadas || 0; }
+  });
+  return {recibido, danadas, esperado};
+}
+function renderRecepcion(){
+  const ini = byId('recInicio'), act = byId('recActiva');
+  if(!ini) return;
+  if(!recActiva){
+    ini.style.display = ''; act.style.display = 'none';
+    byId('recHistCount').textContent = recepcionesHist.length ? `${recepcionesHist.length}` : '';
+    byId('recHistorial').innerHTML = recepcionesHist.length ? recepcionesHist.slice(0,25).map(r=>{
+      const ok = r.cuadra === true ? '✅ cuadró' : r.cuadra === false ? `⚠️ ${r.difTexto||'con diferencia'}` : '';
+      return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(r.proveedor || 'Sin proveedor')} · ${r.tipo==='cerveza' ? 'por cajas' : 'por escaneo'}</div>
+        <div class="meta">${fechaLabel(r.fecha)} · ${piezasTxt(r.totalPiezas)} · ${r.items ? r.items.length : 0} producto(s) · recibió ${cvEsc(r.recibio||'—')} ${ok}</div></div>
+        ${r.tipo !== 'cerveza' ? `<button type="button" class="mini-btn" data-reccaja="${cvEsc(r.id)}">📲 Caja</button>` : ''}</div>`;
+    }).join('') : '<div class="empty">Aún no hay recepciones guardadas.</div>';
+    byId('recHistorial').querySelectorAll('[data-reccaja]').forEach(b=> b.onclick = ()=>{
+      const r = recepcionesHist.find(x=> x.id === b.dataset.reccaja); if(r) abrirCaja(itemsParaCaja(r));
+    });
+    return;
+  }
+  ini.style.display = 'none'; act.style.display = '';
+  if(recActiva.tipo === 'cerveza') renderRecCerveza(); else renderRecEscaneo();
+}
+function itemsParaCaja(r){
+  return (r.items || []).filter(it=> (it.piezas||0) > 0).map(it=>({descripcion: it.descripcion, codigo: it.codigo, barcode: it.barcode, cantidadTxt: `${it.piezas} piezas`}));
+}
+function recCabecera(titulo){
+  return `<div class="rec-head"><div><b>${titulo}</b><small>Empezó ${horaCorta(recActiva.inicio)}</small></div>
+    <button type="button" class="mini-btn off" id="recCancelar">Descartar</button></div>`;
+}
+function recNotaHtml(){
+  const t = totalRec();
+  const nota = recActiva.notaTotal;
+  let estado = '';
+  if(nota !== null && nota !== undefined && nota !== ''){
+    const d = t.recibido - Number(nota);
+    estado = d === 0 ? '<span class="rec-ok">✅ Cuadra</span>' : d < 0 ? `<span class="rec-mal">⚠️ Faltan ${-d} pz</span>` : `<span class="rec-mal">⚠️ Sobran ${d} pz</span>`;
+  }
+  return `<div class="rec-total"><div><span>Total recibido</span><b>${t.recibido}</b><small>piezas${t.danadas ? ` · ${t.danadas} dañada(s) aparte` : ''}</small></div>
+    <button type="button" class="rec-nota" id="recNotaBtn"><span>Dice la nota</span><b>${nota === null || nota === undefined || nota === '' ? '—' : nota}</b><small>toca para escribir</small></button></div>
+    ${estado ? `<div class="rec-estado">${estado}</div>` : ''}`;
+}
+function wireRecComun(){
+  byId('recCancelar').onclick = ()=> openConfirm('¿Descartar esta recepción? Lo capturado aquí no se guarda.', ()=>{ recActiva = null; guardarRecLocal(); renderRecepcion(); }, {yesLabel:'Descartar'});
+  byId('recNotaBtn').onclick = ()=> openKeypad('Piezas que dice la nota del repartidor', recActiva.notaTotal || '', (v)=>{ recActiva.notaTotal = v === '' ? null : Number(v); guardarRecLocal(); renderRecepcion(); });
+  byId('recTerminar').onclick = terminarRecepcion;
+}
+function renderRecEscaneo(){
+  const act = byId('recActiva');
+  const provs = proveedoresDirectos().map(p=> p.nombre).concat(recepcionesHist.map(r=> r.proveedor).filter(Boolean)).filter((v,i,a)=> a.indexOf(v) === i);
+  const porCaja = recPend ? piezasPorCaja(recPend.codigo) : 0;
+  act.innerHTML = recCabecera('📷 Recepción por escaneo') + `
+    <div class="field-label">Proveedor</div>
+    <input type="text" id="recProv" class="rec-input" list="recProvList" placeholder="Nombre del proveedor" value="${cvEsc(recActiva.proveedor||'')}" autocomplete="off">
+    <datalist id="recProvList">${provs.map(p=>`<option value="${cvEsc(p)}">`).join('')}</datalist>
+    <div class="capture" style="margin-top:12px;">
+      <div class="field-label">Escanea el producto</div>
+      <input type="text" id="recInput" class="rec-input" inputmode="text" autocomplete="off" placeholder="Escanea o escribe…">
+      <div id="recResultados">${recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}</small></button>`).join('')}</div>
+      ${recPend ? `<div class="rec-qty">
+        <div class="desc">${cvEsc(recPend.descripcion || recPend.codigo)}</div>
+        <div class="meta">${cvEsc(recPend.codigo)}</div>
+        <div class="rec-qty-num" id="recQtyNum">${recQty}</div>
+        <div class="rec-quick">
+          <button type="button" data-q="-1">−1</button><button type="button" data-q="1">+1</button>
+          ${porCaja && ![6,12,24].includes(porCaja) ? `<button type="button" class="on" data-q="${porCaja}">+${porCaja}</button>` : ''}
+          ${[6,12,24].map(n=>`<button type="button" class="${porCaja===n?'on':''}" data-q="${n}">+${n}</button>`).join('')}
+          <button type="button" data-q="teclado">✏️</button>
+        </div>
+        <label class="rec-danado"><input type="checkbox" id="recDanado" ${recDanado?'checked':''}> Viene dañado (se anota aparte)</label>
+        <div class="rec-acciones"><button type="button" class="mini-btn off" id="recQtyCancel">Cancelar</button><button type="button" class="rec-agregar" id="recAgregar">Agregar ✓</button></div>
+      </div>` : ''}
+    </div>
+    ${recNotaHtml()}
+    <div class="section-title"><span>Productos recibidos</span><span>${recActiva.items.length}</span></div>
+    ${recActiva.items.length ? recActiva.items.slice().reverse().map(it=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div>
+      <div class="meta">${cvEsc(it.codigo)}${it.danadas ? ` · ${it.danadas} dañada(s)` : ''}</div></div>
+      <div class="qty">${it.piezas}</div><button class="del" data-recdel="${cvEsc(it.codigo)}">✕</button></div>`).join('') : '<div class="empty">Escanea el primer producto.</div>'}
+    <div class="rec-botones">
+      <button type="button" class="btn btn-export" id="recCaja" ${recActiva.items.length?'':'disabled'}>📲 Pasar a caja</button>
+      <button type="button" class="btn btn-export blue" id="recTerminar" ${recActiva.items.length?'':'disabled'}>✅ Terminar y guardar</button>
+    </div>
+    <div class="hint">En caja: la app te muestra cada código en grande con sus piezas. Escanea la pantalla, captura y desliza al siguiente.</div>`;
+  wireRecComun();
+  byId('recProv').onchange = ()=>{ recActiva.proveedor = byId('recProv').value.trim(); guardarRecLocal(); };
+  const inp = byId('recInput');
+  inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); buscarRec(inp.value); } });
+  let t = null; inp.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(()=>{ const v = inp.value.trim(); if(/^\d{8,14}$/.test(v)) buscarRec(v); }, 250); });
+  if(!recPend) setTimeout(()=> inp.focus(), 60);
+  act.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> elegirRecItem(recResultados[Number(b.dataset.rres)]));
+  act.querySelectorAll('[data-q]').forEach(b=> b.onclick = ()=>{
+    if(b.dataset.q === 'teclado'){ openKeypad('Piezas', recQty || '', (v)=>{ recQty = Math.max(0, Number(v)||0); renderRecEscaneo(); }); return; }
+    recQty = Math.max(0, recQty + Number(b.dataset.q)); byId('recQtyNum').textContent = recQty;
+  });
+  if(byId('recDanado')) byId('recDanado').onchange = (e)=>{ recDanado = e.target.checked; };
+  if(byId('recQtyCancel')) byId('recQtyCancel').onclick = ()=>{ recPend = null; recQty = 0; renderRecEscaneo(); };
+  if(byId('recAgregar')) byId('recAgregar').onclick = ()=>{
+    if(!recQty){ openConfirm('Pon cuántas piezas recibiste de este producto.', ()=>{}); return; }
+    let it = recActiva.items.find(x=> x.codigo === recPend.codigo);
+    if(!it){ it = {codigo: recPend.codigo, descripcion: recPend.descripcion, barcode: recPend.barcode || '', piezas:0, danadas:0}; recActiva.items.push(it); }
+    if(recDanado) it.danadas += recQty; else it.piezas += recQty;
+    if(!piezasPorCaja(recPend.codigo) && [6,12,24].includes(recQty)) guardarCartonaje(recPend.codigo, recQty);
+    recPend = null; recQty = 0; recDanado = false;
+    guardarRecLocal(); renderRecEscaneo();
+  };
+  act.querySelectorAll('[data-recdel]').forEach(b=> b.onclick = ()=>{
+    recActiva.items = recActiva.items.filter(x=> x.codigo !== b.dataset.recdel); guardarRecLocal(); renderRecEscaneo();
+  });
+  byId('recCaja').onclick = ()=> abrirCaja(itemsParaCaja(recActiva));
+}
+function buscarRec(raw){
+  const v = String(raw||'').trim(); if(!v) return;
+  const item = findProduct(v);
+  if(item){ elegirRecItem(item); return; }
+  recResultados = buscarPalabras(v, 6);
+  if(!recResultados.length) openConfirm(`No encontré "${v}" en tu catálogo. Agrégalo en la pestaña Sistema y vuelve a escanear.`, ()=>{});
+  renderRecEscaneo();
+}
+function elegirRecItem(item){
+  if(!item) return;
+  recPend = {codigo:item.codigo, descripcion:item.descripcion, barcode:item.barcode || ''};
+  recResultados = [];
+  const n = piezasPorCaja(item.codigo);
+  recQty = n || 0; recDanado = false;
+  renderRecEscaneo();
+}
+function renderRecCerveza(){
+  const act = byId('recActiva');
+  const t = totalRec();
+  act.innerHTML = recCabecera('📦 Recepción por cajas') + `
+    <div class="capture">
+      <div class="field-label">Proveedor</div>
+      <input type="text" id="recProvCajas" class="rec-input" list="recProvList2" placeholder="Nombre del proveedor" value="${cvEsc(recActiva.proveedor||'')}" autocomplete="off" style="margin-bottom:12px;">
+      <datalist id="recProvList2">${proveedoresDirectos().map(p=> p.nombre).concat(recepcionesHist.map(r=> r.proveedor).filter(Boolean)).filter((v,i,a)=> a.indexOf(v) === i).map(p=>`<option value="${cvEsc(p)}">`).join('')}</datalist>
+      <div class="field-label">Agrega cada producto que dice el sistema</div>
+      <input type="text" id="recCervBuscar" class="rec-input" autocomplete="off" placeholder="Busca por nombre o código">
+      <div id="recResultados">${recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}${piezasPorCaja(i.codigo)?' · caja de '+piezasPorCaja(i.codigo):''}</small></button>`).join('')}</div>
+    </div>
+    <div class="rec-total"><div><span>Debe llegar</span><b>${t.esperado}</b><small>piezas según sistema</small></div>
+      <div><span>Recibido</span><b>${t.recibido}</b><small>${t.recibido === t.esperado ? '✅ completo' : t.recibido < t.esperado ? `⚠️ faltan ${t.esperado - t.recibido}` : `⚠️ sobran ${t.recibido - t.esperado}`}</small></div></div>
+    ${recActiva.items.length ? recActiva.items.map((it,k)=>{
+      const n = it.porCaja || 0;
+      const debeC = n ? Math.floor(it.esperado / n) : 0, debeS = n ? it.esperado % n : it.esperado;
+      const rec = (it.cajas||0) * n + (it.sueltas||0), d = rec - it.esperado;
+      const est = d === 0 ? '<span class="rec-ok">✅ Completo</span>' : d < 0 ? `<span class="rec-mal">⚠️ Faltan ${-d} pz${n && -d >= n ? ` (${Math.floor(-d/n)} caja${Math.floor(-d/n)>1?'s':''}${(-d)%n?` + ${(-d)%n}`:''})` : ''}</span>` : `<span class="rec-mal">⚠️ Sobran ${d} pz</span>`;
+      return `<div class="cerv-card">
+        <div class="cerv-top"><div><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div><div class="meta">${cvEsc(it.codigo)} · caja de ${n} · <a href="#" data-cambiacaja="${k}">cambiar</a></div></div>
+          <button class="del" data-cervdel="${k}">✕</button></div>
+        <div class="cerv-debe">Sistema: <b>${it.esperado} pz</b> = <b>${debeC} caja${debeC===1?'':'s'}${debeS ? ` + ${debeS} suelta${debeS===1?'':'s'}` : ''}</b> · <a href="#" data-cambiaesp="${k}">editar</a></div>
+        <div class="cerv-cont">
+          <div><span>Cajas</span><div class="stepper"><button type="button" data-paso="${k}:cajas:-1">−</button><b>${it.cajas||0}</b><button type="button" data-paso="${k}:cajas:1">+</button></div></div>
+          <div><span>Sueltas</span><div class="stepper"><button type="button" data-paso="${k}:sueltas:-1">−</button><b>${it.sueltas||0}</b><button type="button" data-paso="${k}:sueltas:1">+</button></div></div>
+        </div>
+        <div class="cerv-est">${est}</div>
+      </div>`;
+    }).join('') : '<div class="empty">Busca arriba la primera cerveza del pedido.</div>'}
+    <div class="rec-botones"><button type="button" class="btn btn-export blue" id="recTerminar" ${recActiva.items.length?'':'disabled'}>✅ Terminar y guardar</button></div>
+    <button type="button" id="recNotaBtn" style="display:none;"></button>`;
+  byId('recCancelar').onclick = ()=> openConfirm('¿Descartar esta recepción? Lo capturado aquí no se guarda.', ()=>{ recActiva = null; guardarRecLocal(); renderRecepcion(); }, {yesLabel:'Descartar'});
+  byId('recTerminar').onclick = terminarRecepcion;
+  byId('recProvCajas').onchange = ()=>{ recActiva.proveedor = byId('recProvCajas').value.trim(); guardarRecLocal(); };
+  const inp = byId('recCervBuscar');
+  let tt = null;
+  inp.addEventListener('input', ()=>{ clearTimeout(tt); tt = setTimeout(()=>{
+    const v = inp.value.trim();
+    if(v.length < 2){ recResultados = []; byId('recResultados').innerHTML = ''; return; }
+    const exacto = findProduct(v);
+    let res = exacto ? [exacto] : buscarPalabras(v, 40);
+    recResultados = res.slice(0,8);
+    byId('recResultados').innerHTML = recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}${piezasPorCaja(i.codigo)?' · caja de '+piezasPorCaja(i.codigo):''}</small></button>`).join('');
+    byId('recResultados').querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> agregarCerveza(recResultados[Number(b.dataset.rres)]));
+  }, 200); });
+  act.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> agregarCerveza(recResultados[Number(b.dataset.rres)]));
+  act.querySelectorAll('[data-paso]').forEach(b=> b.onclick = ()=>{
+    const [k, campo, d] = b.dataset.paso.split(':'); const it = recActiva.items[Number(k)];
+    it[campo] = Math.max(0, (it[campo]||0) + Number(d)); guardarRecLocal(); renderRecCerveza();
+  });
+  act.querySelectorAll('[data-cervdel]').forEach(b=> b.onclick = ()=>{ recActiva.items.splice(Number(b.dataset.cervdel),1); guardarRecLocal(); renderRecCerveza(); });
+  act.querySelectorAll('[data-cambiacaja]').forEach(a=> a.onclick = (e)=>{ e.preventDefault(); const it = recActiva.items[Number(a.dataset.cambiacaja)];
+    preguntarCartonaje(it, (n)=>{ it.porCaja = n; guardarRecLocal(); renderRecCerveza(); }); });
+  act.querySelectorAll('[data-cambiaesp]').forEach(a=> a.onclick = (e)=>{ e.preventDefault(); const it = recActiva.items[Number(a.dataset.cambiaesp)];
+    openKeypad('Piezas que dice el sistema', it.esperado, (v)=>{ it.esperado = Math.max(0, Number(v)||0); guardarRecLocal(); renderRecCerveza(); }); });
+}
+function agregarCerveza(item){
+  if(!item) return;
+  recResultados = [];
+  openKeypad(`Piezas que dice el sistema · ${item.descripcion || item.codigo}`, '', (v)=>{
+    const esperado = Math.max(0, Number(v)||0);
+    const agregar = (n)=>{
+      const prev = recActiva.items.find(x=> x.codigo === item.codigo);
+      if(prev){ prev.esperado += esperado; prev.porCaja = n; }
+      else recActiva.items.push({codigo:item.codigo, descripcion:item.descripcion, barcode:item.barcode||'', esperado, porCaja:n, cajas:0, sueltas:0});
+      guardarRecLocal(); renderRecCerveza();
+    };
+    const n = piezasPorCaja(item.codigo);
+    if(n) agregar(n); else preguntarCartonaje(item, agregar);
+  });
+}
+function terminarRecepcion(){
+  if(!recActiva || !recActiva.items.length) return;
+  const esCerv = recActiva.tipo === 'cerveza';
+  if(!esCerv && !String(recActiva.proveedor||'').trim()){ openConfirm('Escribe de qué proveedor es la recepción.', ()=>{ const i = byId('recProv'); if(i) i.focus(); }); return; }
+  const t = totalRec();
+  let cuadra = null, difTexto = '';
+  if(esCerv){ const d = t.recibido - t.esperado; cuadra = d === 0; difTexto = d < 0 ? `faltaron ${-d} pz` : d > 0 ? `sobraron ${d} pz` : ''; }
+  else if(recActiva.notaTotal !== null && recActiva.notaTotal !== undefined && recActiva.notaTotal !== ''){ const d = t.recibido - Number(recActiva.notaTotal); cuadra = d === 0; difTexto = d < 0 ? `faltaron ${-d} pz` : d > 0 ? `sobraron ${d} pz` : ''; }
+  const items = recActiva.items.map(it=> esCerv
+    ? Object.assign({}, it, {piezas: (it.cajas||0) * (it.porCaja||0) + (it.sueltas||0)})
+    : Object.assign({}, it));
+  const reg = {id: recActiva.id, tipo: recActiva.tipo, proveedor: recActiva.proveedor || 'Sin proveedor', fecha: new Date().toISOString(),
+    recibio: currentUser || '', items, totalPiezas: t.recibido, danadas: t.danadas, esperado: esCerv ? t.esperado : (recActiva.notaTotal ?? null), cuadra, difTexto};
+  if(esCerv && !String(recActiva.proveedor||'').trim()){ openConfirm('Escribe de qué proveedor es la recepción.', ()=>{ const i = byId('recProvCajas'); if(i) i.focus(); }); return; }
+  const msg = cuadra === false ? `⚠️ La recepción NO cuadra: ${difTexto}.\n\n¿Guardarla así? Avísale al repartidor antes de que se vaya.` : '¿Terminar y guardar esta recepción?';
+  openConfirm(msg, ()=>{
+    fsRecepcionesCol.doc(reg.id).set(reg).catch(err=> avisarErrorGuardado(err, {descripcion:'la recepción'}));
+    const hoy = hoyISO(), cambios = {};
+    items.forEach(it=>{ if(it.piezas > 0) cambios[it.codigo] = {ultimaRecepcion: hoy}; });
+    if(Object.keys(cambios).length) cobGuardar(cambios);
+    recepcionesHist.unshift(reg);
+    recActiva = null; guardarRecLocal(); renderRecepcion();
+    if(!esCerv) openConfirm('✅ Recepción guardada.\n\n¿La pasas a caja ahora? Te muestro cada código con sus piezas para escanearlos en el POS.', ()=> abrirCaja(itemsParaCaja(reg)), {yesLabel:'📲 Pasar a caja', noLabel:'Después'});
+    else openConfirm('✅ Recepción guardada.', ()=>{}, {yesLabel:'Listo'});
+  }, {yesLabel:'Guardar'});
+}
+byId('recNuevaEscaneo').onclick = ()=> nuevaRecepcion('escaneo');
+byId('recNuevaCerveza').onclick = ()=> nuevaRecepcion('cerveza');
+renderRecepcion();
+
+/* ---------- Arranque de los nuevos datos ---------- */
+function iniciarDatosNuevos(){
+  fsListenConfig();
+  fsListenPapelera();
+  fsListenCartonaje();
+  fsListenRecepciones();
+}
+
+</script>
+
 
 <script>
 (function(){
