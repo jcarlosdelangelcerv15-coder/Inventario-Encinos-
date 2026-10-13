@@ -461,7 +461,7 @@
   .lock-pad button.lock-empty{visibility:hidden;box-shadow:none;background:none;}
   /* ================= DISEÑO LIMPIO (oct 2026) ================= */
   body{padding-bottom:calc(86px + env(safe-area-inset-bottom));}
-  header{padding:14px 16px 12px;border-radius:0 0 18px 18px;}
+  header{padding:14px 16px 12px;border-radius:0 0 18px 18px;position:relative;top:auto;}
   .hd-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
   .hd-titles{min-width:0;}
   header h1{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -491,6 +491,7 @@
   .sheet-toggle .seg{display:flex;flex:0 0 auto;flex-direction:row;gap:4px;}
   .seg .mode-btn{padding:7px 14px;font-size:13px;}
   .sheet-close{width:100%;padding:13px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:700;color:var(--ink);cursor:pointer;}
+  .version-app{text-align:center;font-size:12px;color:#9a9484;margin-top:10px;}
   .elegir-titulo{font-weight:800;font-size:16px;margin:2px 4px 10px;}
 
   .nip-overlay{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#232a4d 0%,#0f1226 70%);display:none;align-items:center;justify-content:center;z-index:1150;padding:20px;}
@@ -630,7 +631,7 @@
   .kc-total{text-align:center;margin-top:6px;font-size:14px;}
   .kc-t{font-weight:800;text-align:center;margin-bottom:6px;}
   .kc-ops{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
-  .kc-cambiar{border:none;background:none;color:var(--blue);font:inherit;font-size:13px;font-weight:700;text-decoration:underline;padding:0 0 0 6px;cursor:pointer;}
+  .kc-cambiar{display:block;margin-top:4px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;border-radius:999px;padding:4px 10px;cursor:pointer;}
   .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
   .kc-s{font-size:12px;text-align:center;color:#7a7466;margin-top:6px;}
 
@@ -806,6 +807,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
+    <div class="version-app">Versión 13 oct 2026 · 00:20</div>
   </div>
 </div>
 
@@ -1762,7 +1764,7 @@ function avisarErrorGuardado(err, rec){
   }
 }
 const fsRegistrosCol = tCol('inventario_registros_items');
-let fsRegistrosMigrated = false;
+let fsRegistrosMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 function fsSaveRecord(rec){
   if(!fsReady || !rec || !rec.id) return;
   fsRegistrosCol.doc(rec.id).set(rec).then(()=> fsSyncBadge('ok')).catch((err)=>{ fsSyncBadge('error'); avisarErrorGuardado(err, rec); });
@@ -1799,16 +1801,11 @@ function fsSaveRecordsBatch(recs){
   }
 }
 async function fsMigrateOldRegistrosDoc(){
-  // Puente de un solo uso: si venías del esquema anterior (todo en un solo
-  // documento), sube esos escaneos a la colección nueva la primera vez.
-  try{
-    const oldDoc = await tCol(FS_COLLECTION).doc('registros').get();
-    if(oldDoc.exists){
-      const oldRecords = JSON.parse(oldDoc.data().value || '[]');
-      const check = await fsRegistrosCol.limit(1).get();
-      if(check.empty && oldRecords.length) fsSaveRecordsBatch(oldRecords);
-    }
-  }catch(e){}
+  // El esquema viejo (todo en un documento) ya se migró en septiembre. Ese
+  // documento viejo NO se vuelve a usar: si se quedaba, cada vez que la
+  // colección quedaba vacía (al terminar inventario o borrar conteos) "revivía"
+  // datos antiguos. Se elimina de la tienda (el respaldo original sigue fuera).
+  try{ const d = await tCol(FS_COLLECTION).doc('registros').get(); if(d.exists) await tCol(FS_COLLECTION).doc('registros').delete(); }catch(e){}
 }
 function fsListenRegistros(){
   fsRegistrosCol.onSnapshot((snap)=>{
@@ -1841,7 +1838,7 @@ function fsListenRegistros(){
    querer un producto que la otra persona acababa de borrar. Con un documento
    por código, borrar o editar uno no toca — ni pisa — los demás. */
 const fsExistenciasCol = tCol('inventario_existencias_items');
-let fsExistenciasMigrated = false;
+let fsExistenciasMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 let fsExistenciasKnownCodigos = new Set();
 function fsSaveExistencia(entry){
   if(!fsReady || !entry || !entry.codigo) return;
@@ -1873,16 +1870,11 @@ function fsDeleteExistenciasBatch(codigos){
   }
 }
 async function fsMigrateOldExistenciasDoc(){
-  // Puente de un solo uso: si venías del esquema anterior (todo en un solo
-  // documento), sube esas existencias a la colección nueva la primera vez.
-  try{
-    const oldDoc = await tCol(FS_COLLECTION).doc('existencias_sistema').get();
-    if(oldDoc.exists){
-      const oldMap = JSON.parse(oldDoc.data().value || '{}');
-      const check = await fsExistenciasCol.limit(1).get();
-      if(check.empty && fsHasData(oldMap)) fsSaveExistenciasBatch(Object.values(oldMap));
-    }
-  }catch(e){}
+  // El esquema viejo (todo en un documento) ya se migró en septiembre. Ese
+  // documento viejo NO se vuelve a usar: si se quedaba, cada vez que la
+  // colección quedaba vacía (al terminar inventario o borrar conteos) "revivía"
+  // datos antiguos. Se elimina de la tienda (el respaldo original sigue fuera).
+  try{ const d = await tCol(FS_COLLECTION).doc('existencias_sistema').get(); if(d.exists) await tCol(FS_COLLECTION).doc('existencias_sistema').delete(); }catch(e){}
 }
 function fsListenExistencias(){
   fsExistenciasCol.onSnapshot((snap)=>{
@@ -1928,20 +1920,11 @@ function fsDeleteCierre(id){
   fsCierresCol.doc(id).delete().then(()=> fsSyncBadge('ok')).catch(()=> fsSyncBadge('error'));
 }
 async function fsMigrateOldCierresDoc(){
-  try{
-    const check = await fsCierresCol.limit(1).get();
-    if(!check.empty) return;
-    const oldDoc = await tCol(FS_COLLECTION).doc('cierres_conteo').get();
-    let lista = [];
-    if(oldDoc.exists){ try{ lista = JSON.parse(oldDoc.data().value || '[]'); }catch(e){} }
-    const ids = new Set(lista.map(c=>c.id));
-    (cierresConteo||[]).forEach(c=>{ if(c && c.id && !ids.has(c.id)) lista.push(c); });
-    for(let i=0;i<lista.length;i+=400){
-      const batch = fsDb.batch();
-      lista.slice(i,i+400).forEach(c=>{ if(c && c.id) batch.set(fsCierresCol.doc(c.id), c); });
-      await batch.commit();
-    }
-  }catch(e){}
+  // El esquema viejo (todo en un documento) ya se migró en septiembre. Ese
+  // documento viejo NO se vuelve a usar: si se quedaba, cada vez que la
+  // colección quedaba vacía (al terminar inventario o borrar conteos) "revivía"
+  // datos antiguos. Se elimina de la tienda (el respaldo original sigue fuera).
+  try{ const d = await tCol(FS_COLLECTION).doc('cierres_conteo').get(); if(d.exists) await tCol(FS_COLLECTION).doc('cierres_conteo').delete(); }catch(e){}
 }
 function fsListenCierres(){
   fsCierresCol.onSnapshot((snap)=>{
@@ -1953,7 +1936,7 @@ function fsListenCierres(){
   }, ()=> fsSyncBadge('error'));
 }
 const fsHistorialCol = tCol('inventario_historial_items');
-let fsHistorialMigrated = false;
+let fsHistorialMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 let fsHistorialKnownIds = new Set();
 function fsSaveHistorialItem(item){
   if(!fsReady || !item || !item.id) return;
@@ -1982,16 +1965,11 @@ function fsDeleteHistorialBatch(ids){
   }
 }
 async function fsMigrateOldHistorialDoc(){
-  // Puente de un solo uso: si venías del esquema anterior (todo en un solo
-  // documento), sube ese historial a la colección nueva la primera vez.
-  try{
-    const oldDoc = await tCol(FS_COLLECTION).doc('historial_conteo').get();
-    if(oldDoc.exists){
-      const oldHist = JSON.parse(oldDoc.data().value || '[]');
-      const check = await fsHistorialCol.limit(1).get();
-      if(check.empty && oldHist.length) fsSaveHistorialBatch(oldHist);
-    }
-  }catch(e){}
+  // El esquema viejo (todo en un documento) ya se migró en septiembre. Ese
+  // documento viejo NO se vuelve a usar: si se quedaba, cada vez que la
+  // colección quedaba vacía (al terminar inventario o borrar conteos) "revivía"
+  // datos antiguos. Se elimina de la tienda (el respaldo original sigue fuera).
+  try{ const d = await tCol(FS_COLLECTION).doc('historial_conteo').get(); if(d.exists) await tCol(FS_COLLECTION).doc('historial_conteo').delete(); }catch(e){}
 }
 function fsListenHistorial(){
   fsHistorialCol.onSnapshot((snap)=>{
@@ -2021,7 +1999,7 @@ function fsListenHistorial(){
    "desaparecía" del catálogo aunque sí se había guardado un momento antes.
    Con un documento por código, agregar uno no pisa a los demás. */
 const fsCatalogoExtraCol = tCol('inventario_catalogo_extra_items');
-let fsCatalogoExtraMigrated = false;
+let fsCatalogoExtraMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 let fsCatalogoExtraKnownCodigos = new Set();
 function fsSaveCatalogoExtraItem(entry){
   if(!fsReady || !entry || !entry.codigo) return;
@@ -2050,16 +2028,11 @@ function fsDeleteCatalogoExtraBatch(codigos){
   }
 }
 async function fsMigrateOldCatalogoExtraDoc(){
-  // Puente de un solo uso: si venías del esquema anterior (todo en un solo
-  // documento), sube esos productos a la colección nueva la primera vez.
-  try{
-    const oldDoc = await tCol(FS_COLLECTION).doc('catalogo_extra').get();
-    if(oldDoc.exists){
-      const oldList = JSON.parse(oldDoc.data().value || '[]');
-      const check = await fsCatalogoExtraCol.limit(1).get();
-      if(check.empty && oldList.length) fsSaveCatalogoExtraBatch(oldList);
-    }
-  }catch(e){}
+  // El esquema viejo (todo en un documento) ya se migró en septiembre. Ese
+  // documento viejo NO se vuelve a usar: si se quedaba, cada vez que la
+  // colección quedaba vacía (al terminar inventario o borrar conteos) "revivía"
+  // datos antiguos. Se elimina de la tienda (el respaldo original sigue fuera).
+  try{ const d = await tCol(FS_COLLECTION).doc('catalogo_extra').get(); if(d.exists) await tCol(FS_COLLECTION).doc('catalogo_extra').delete(); }catch(e){}
 }
 function fsListenCatalogoExtra(){
   fsCatalogoExtraCol.onSnapshot((snap)=>{
@@ -2084,7 +2057,7 @@ function fsListenCatalogoExtra(){
    conteo" en paralelo al del equipo de auditoría externa. Separado por
    completo de "registros" para que nunca se mezcle con el inventario normal. */
 const fsAuditCol = tCol('inventario_auditoria_propio_items');
-let fsAuditMigrated = false;
+let fsAuditMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 function fsSaveAuditRecord(rec){
   if(!fsReady || !rec || !rec.id) return;
   fsAuditCol.doc(rec.id).set(rec).then(()=> fsSyncBadge('ok')).catch(()=> fsSyncBadge('error'));
@@ -2171,7 +2144,7 @@ function pintarKeypadCajas(){
     return;
   }
   const sueltas = Number(keypadOverlay.dataset.value || 0);
-  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n} <button type="button" class="kc-cambiar" id="kcCambiar">cambiar</button></span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
+  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n}<button type="button" class="kc-cambiar" id="kcCambiar">✏️ Cambiar tamaño de caja</button></span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
     <div class="kc-total">Total: <b>${k.cajas * k.n + sueltas}</b> piezas</div>`;
   box.querySelectorAll('[data-kc]').forEach(b=> b.onclick = ()=>{ k.cajas = Math.max(0, k.cajas + Number(b.dataset.kc)); pintarKeypadCajas(); });
   $('kcCambiar').onclick = ()=>{ k.n = 0; k.cajas = 0; pintarKeypadCajas(); };
@@ -3066,6 +3039,11 @@ barcodeInput.addEventListener('input', ()=>{
       barcodeInput.value = '';
       $('etiInput').value = val;
       submitEtiScan();
+    } else if(t && t.dataset.tab === 'recepcion'){
+      const val = barcodeInput.value.trim();
+      barcodeInput.value = '';
+      const ri = document.getElementById('recInput') || document.getElementById('recCervBuscar');
+      if(ri){ ri.value = val; ri.dispatchEvent(new Event('input')); setTimeout(()=> ri.focus(), 30); }
     }
     return;
   }
@@ -3816,6 +3794,7 @@ function registrarEtiqueta(item){
   }
   persistEtiquetas(); renderEtiList();
   etiLookupResult.innerHTML = `<div class="found"><div class="desc">✓ Agregado · ${item.descripcion || '(sin descripción)'}</div><div class="cod">${item.codigo}</div></div>`;
+  clearTimeout(window.__etiMsgT); window.__etiMsgT = setTimeout(()=>{ if(etiLookupResult.querySelector('.found')) etiLookupResult.innerHTML = ''; }, 4000);
 }
 function submitEtiScan(){
   const raw = etiInput.value.trim();
@@ -3919,7 +3898,7 @@ $('etiExportBtn').onclick = ()=>{
 };
 $('etiResetBtn').onclick = ()=>{
   openConfirm('¿Vaciar la lista de etiquetas? Hazlo solo después de haberlas impreso en el punto de venta.', ()=>{
-    etiquetas = []; persistEtiquetas(); renderEtiList(); resetEtiStage();
+    etiquetas = []; persistEtiquetas(); renderEtiList(); resetEtiStage(); etiLookupResult.innerHTML = '';
   });
 };
 
@@ -5983,7 +5962,11 @@ function buscarRec(raw){
   const item = findProduct(v);
   if(item){ elegirRecItem(item); return; }
   recResultados = buscarPalabras(v, 6);
-  if(!recResultados.length) openConfirm(`No encontré "${v}" en tu catálogo. Agrégalo en la pestaña Sistema y vuelve a escanear.`, ()=>{});
+  if(!recResultados.length){
+    renderRecEscaneo();
+    showQuickAdd(byId('recResultados'), v, (nuevo)=> elegirRecItem(nuevo), ()=>{ const i = byId('recInput'); if(i){ i.value = ''; i.focus(); } });
+    return;
+  }
   renderRecEscaneo();
 }
 function elegirRecItem(item){
