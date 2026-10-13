@@ -629,7 +629,8 @@
   .kc-row .stepper{width:150px;}
   .kc-total{text-align:center;margin-top:6px;font-size:14px;}
   .kc-t{font-weight:800;text-align:center;margin-bottom:6px;}
-  .kc-ops{display:flex;gap:6px;justify-content:center;}
+  .kc-ops{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
+  .kc-cambiar{border:none;background:none;color:var(--blue);font:inherit;font-size:13px;font-weight:700;text-decoration:underline;padding:0 0 0 6px;cursor:pointer;}
   .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
   .kc-s{font-size:12px;text-align:center;color:#7a7466;margin-top:6px;}
 
@@ -2164,15 +2165,16 @@ function pintarKeypadCajas(){
   box.style.display = 'block';
   const k = keypadCajas;
   if(!k.n){
-    box.innerHTML = `<div class="kc-t">📦 ¿De cuántas viene la caja?</div><div class="kc-ops">${[6,12,18,24,30].map(n=>`<button type="button" data-kcn="${n}">${n}</button>`).join('')}</div><div class="kc-s">O escribe abajo las piezas sueltas, como siempre.</div>`;
+    box.innerHTML = `<div class="kc-t">📦 ¿De cuántas piezas viene la caja?</div><div class="kc-ops">${[6,8,12,15,18,20,24,30].map(n=>`<button type="button" data-kcn="${n}">${n}</button>`).join('')}</div><div class="kc-s">Se guarda para este producto y la puedes cambiar cuando quieras. O cuenta por pieza abajo, como siempre.</div>`;
     box.querySelectorAll('[data-kcn]').forEach(b=> b.onclick = ()=>{ k.n = Number(b.dataset.kcn); if(typeof guardarCartonaje === 'function') guardarCartonaje(k.codigo, k.n); pintarKeypadCajas(); });
     keypadLabel.textContent = 'Piezas';
     return;
   }
   const sueltas = Number(keypadOverlay.dataset.value || 0);
-  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n}</span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
+  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n} <button type="button" class="kc-cambiar" id="kcCambiar">cambiar</button></span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
     <div class="kc-total">Total: <b>${k.cajas * k.n + sueltas}</b> piezas</div>`;
   box.querySelectorAll('[data-kc]').forEach(b=> b.onclick = ()=>{ k.cajas = Math.max(0, k.cajas + Number(b.dataset.kc)); pintarKeypadCajas(); });
+  $('kcCambiar').onclick = ()=>{ k.n = 0; k.cajas = 0; pintarKeypadCajas(); };
   keypadLabel.textContent = 'Sueltas (piezas fuera de caja)';
 }
 function closeKeypad(){
@@ -2910,6 +2912,7 @@ function showQuickAdd(container, rawCode, onSaved, onCancel){
     dictarTexto((texto)=>{ $('qaDesc').value = texto.toUpperCase(); });
   };
   $('qaCancel').onclick = ()=>{
+    container.innerHTML = '';
     if(onCancel) onCancel();
   };
   $('qaSave').onclick = ()=>{
@@ -3839,8 +3842,21 @@ etiInput.addEventListener('input', ()=>{
   if(!isEtiquetasActive()) return;
   clearTimeout(etiScanTimer);
   const val = etiInput.value.trim();
-  if(val.length < 6) return;
-  etiScanTimer = setTimeout(()=>{ if(etiInput.value.trim()===val) submitEtiScan(); }, 180);
+  if(val.length < 2){ etiLookupResult.innerHTML = ''; return; }
+  // Código exacto (escaneo o alfanumérico completo): se agrega solo.
+  if(findProduct(val)){ etiScanTimer = setTimeout(()=>{ if(etiInput.value.trim()===val) submitEtiScan(); }, 180); return; }
+  // Número de barras a medio escribir: espera.
+  if(/^\d+$/.test(val) && val.length < 8){ etiLookupResult.innerHTML = ''; return; }
+  // Texto o código incompleto: sugerencias para tocar (Enter = dar de alta si no existe).
+  const res = buscarPalabras(val, 6);
+  etiLookupResult.innerHTML = res.length
+    ? res.map((it,k)=>`<button type="button" class="rec-res" data-etisug="${k}"><b>${cvEsc(it.descripcion||it.codigo)}</b><small>${cvEsc(it.codigo)}${it.barcode?' · '+cvEsc(it.barcode):''}</small></button>`).join('')
+    : `<div class="empty" style="padding:8px 0;">Sin coincidencias. Termina de escribir y presiona Enter para darlo de alta.</div>`;
+  etiLookupResult.querySelectorAll('[data-etisug]').forEach(b=> b.onclick = ()=>{
+    const it = res[Number(b.dataset.etisug)];
+    registrarEtiqueta({barcode: it.barcode || '', codigo: it.codigo, descripcion: it.descripcion});
+    resetEtiStage();
+  });
 });
 
 function renderEtiSummary(){
@@ -5778,7 +5794,7 @@ function guardarCartonaje(codigo, piezas){
 }
 function preguntarCartonaje(item, cb){
   elegir(`¿De cuántas piezas viene la caja de ${item.descripcion || item.codigo}?`,
-    [6,12,18,24,30].map(n=>({icono:'📦', label:`Caja de ${n}`, fn:()=>{ guardarCartonaje(item.codigo, n); cb(n); }}))
+    [6,8,12,15,18,20,24,30].map(n=>({icono:'📦', label:`Caja de ${n}`, fn:()=>{ guardarCartonaje(item.codigo, n); cb(n); }}))
     .concat([{icono:'✏️', label:'Otra cantidad', fn:()=> openKeypad('Piezas por caja', '', (v)=>{ const n = Number(v); if(n > 0){ guardarCartonaje(item.codigo, n); cb(n); } })}]));
 }
 
@@ -5928,7 +5944,19 @@ function renderRecEscaneo(){
   byId('recProv').onchange = ()=>{ recActiva.proveedor = byId('recProv').value.trim(); guardarRecLocal(); };
   const inp = byId('recInput');
   inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); buscarRec(inp.value); } });
-  let t = null; inp.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(()=>{ const v = inp.value.trim(); if(/^\d{8,14}$/.test(v)) buscarRec(v); }, 250); });
+  let t = null; inp.addEventListener('input', ()=>{ clearTimeout(t); t = setTimeout(()=>{
+    const v = inp.value.trim();
+    const box = byId('recResultados');
+    if(v.length < 2){ recResultados = []; box.innerHTML = ''; return; }
+    const exacto = findProduct(v);
+    if(exacto){ elegirRecItem(exacto); return; }
+    if(/^\d+$/.test(v) && v.length < 8){ box.innerHTML = ''; return; }
+    recResultados = buscarPalabras(v, 6);
+    box.innerHTML = recResultados.length
+      ? recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}</small></button>`).join('')
+      : '<div class="empty" style="padding:8px 0;">Sin coincidencias. Revisa el código o búscalo por nombre.</div>';
+    box.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> elegirRecItem(recResultados[Number(b.dataset.rres)]));
+  }, 220); });
   if(!recPend) setTimeout(()=> inp.focus(), 60);
   act.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> elegirRecItem(recResultados[Number(b.dataset.rres)]));
   act.querySelectorAll('[data-q]').forEach(b=> b.onclick = ()=>{
@@ -5942,7 +5970,6 @@ function renderRecEscaneo(){
     let it = recActiva.items.find(x=> x.codigo === recPend.codigo);
     if(!it){ it = {codigo: recPend.codigo, descripcion: recPend.descripcion, barcode: recPend.barcode || '', piezas:0, danadas:0}; recActiva.items.push(it); }
     if(recDanado) it.danadas += recQty; else it.piezas += recQty;
-    if(!piezasPorCaja(recPend.codigo) && [6,12,24].includes(recQty)) guardarCartonaje(recPend.codigo, recQty);
     recPend = null; recQty = 0; recDanado = false;
     guardarRecLocal(); renderRecEscaneo();
   };
