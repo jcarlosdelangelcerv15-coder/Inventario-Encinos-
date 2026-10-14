@@ -1,0 +1,15 @@
+{
+  "name": "Tiquenda",
+  "short_name": "Tiquenda",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#151a2e",
+  "theme_color": "#151a2e",
+  "lang": "es-MX",
+  "icons": [
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+    {"src": "apple-touch-icon.png", "sizes": "180x180", "type": "image/png"}
+  ]
+}
