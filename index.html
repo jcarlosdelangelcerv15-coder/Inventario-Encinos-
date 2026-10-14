@@ -223,7 +223,7 @@
      que iOS oculta cuando hay un escáner conectado como teclado externo. */
   .keypad-overlay{
     display:none;position:fixed;inset:0;background:rgba(15,18,38,.6);
-    z-index:100;align-items:flex-end;justify-content:center;
+    z-index:1160;align-items:flex-end;justify-content:center;
   }
   .keypad-card{
     width:100%;max-width:420px;background:var(--card);border-radius:26px 26px 0 0;
@@ -637,6 +637,11 @@
   .kc-ops{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
   .kc-cambiar{display:block;margin-top:4px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;border-radius:999px;padding:4px 10px;cursor:pointer;}
   .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
+  .rec-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+  .rec-chip{text-align:left;padding:10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px;}
+  .rec-chip b{font-size:13.5px;line-height:1.2;}
+  .rec-chip small{font-size:11.5px;color:#7a7466;}
+  .rec-chip.on{border-color:#1e7d4f;background:#eef8f2;}
   .kc-tog{display:flex;gap:6px;margin-bottom:8px;}
   .kc-tog button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:15px;cursor:pointer;}
   .kc-tog button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
@@ -829,7 +834,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 14 oct 2026 · 10:00</div>
+    <div class="version-app">Tiquenda · Versión 14 oct 2026 · 11:15</div>
   </div>
 </div>
 
@@ -5308,6 +5313,14 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="notaOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">🧾 Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
+    <div class="cotejo-body" id="notaBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="notaSaltar">Sin nota</button><button class="confirm-yes" id="notaSeguir">Continuar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="noManejoOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">🚫 Productos que ya no manejo<small>No salen como faltantes. Si lo vuelves a vender, toca "Volver a manejar".</small></div>
@@ -5913,7 +5926,7 @@ function fsListenRecepciones(){
 }
 function nuevaRecepcion(tipo){
   recActiva = {id: uid(), tipo, proveedor: '', inicio: Date.now(), items: [], notaTotal: null};
-  recPend = null; recQty = 0; recDanado = false; recResultados = [];
+  recPend = null; recQty = 0; recDanado = false; recResultados = []; recChipsTodos = false;
   guardarRecLocal(); renderRecepcion();
 }
 function totalRec(){
@@ -6024,6 +6037,30 @@ function wireRecComun(){
   byId('recNotaBtn').onclick = ()=> openKeypad('Piezas que dice la nota del repartidor', recActiva.notaTotal || '', (v)=>{ recActiva.notaTotal = v === '' ? null : Number(v); guardarRecLocal(); renderRecepcion(); });
   byId('recTerminar').onclick = terminarRecepcion;
 }
+// Productos del proveedor para tocar sin escanear (cajas sin código, pilas revueltas).
+let recChipsTodos = false;
+const normProv = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').replace(/\b(sa|de|cv|rl|s|the)\b/g,' ').replace(/\s+/g,' ').trim();
+function productosDelProveedor(prov){
+  const np = normProv(prov); if(np.length < 3) return [];
+  const coincide = (x)=>{ const n = normProv(x); return n && (n === np || n.includes(np) || np.includes(n)); };
+  const {byCodigo} = buildIndexes();
+  const freq = {};
+  recepcionesHist.forEach(r=>{ if(coincide(r.proveedor)) (r.items||[]).forEach(it=>{ freq[it.codigo] = (freq[it.codigo]||0) + 1; }); });
+  Object.values(coberturaMap).forEach(c=>{ if(c.descatalogado) return; if(coincide(c.proveedor) || coincide(c.provLocal)) freq[c.codigo] = freq[c.codigo] || 0; });
+  if(recActiva && coincide(recActiva.proveedor)) recActiva.items.forEach(it=>{ freq[it.codigo] = freq[it.codigo] || 0; });
+  return Object.keys(freq).filter(c=> byCodigo[c] && !(coberturaMap[c]||{}).descatalogado)
+    .map(c=> ({item: byCodigo[c], f: freq[c]}))
+    .sort((a,b)=> (b.f - a.f) || String(a.item.descripcion).localeCompare(String(b.item.descripcion)));
+}
+function recChipsHTML(){
+  const lista = productosDelProveedor(recActiva.proveedor);
+  if(!lista.length) return '';
+  const vis = recChipsTodos ? lista : lista.slice(0, 12);
+  const got = {}; recActiva.items.forEach(it=> got[it.codigo] = it.piezas);
+  return `<div class="section-title" style="margin-top:12px;"><span>¿Sin código? Toca el producto</span><span>${lista.length}</span></div>
+    <div class="rec-chips">${vis.map(x=>`<button type="button" class="rec-chip ${got[x.item.codigo]?'on':''}" data-rchip="${cvEsc(x.item.codigo)}"><b>${cvEsc(x.item.descripcion||x.item.codigo)}</b><small>${cvEsc(x.item.codigo)}${got[x.item.codigo]?` · ${got[x.item.codigo]} pz`:''}</small></button>`).join('')}</div>
+    ${lista.length > vis.length ? `<button type="button" class="mini-btn" id="recChipsTodos" style="width:100%;margin-top:6px;">Ver todos (${lista.length})</button>` : ''}`;
+}
 function renderRecEscaneo(){
   const act = byId('recActiva');
   const provs = proveedoresDirectos().map(p=> p.nombre).concat(recepcionesHist.map(r=> r.proveedor).filter(Boolean)).filter((v,i,a)=> a.indexOf(v) === i);
@@ -6038,6 +6075,7 @@ function renderRecEscaneo(){
       <div id="recResultados"></div>
       <div class="hint">Escanea → cantidad → Registrar. Igual que en Contar.</div>
     </div>
+    ${recChipsHTML()}
     <div class="rec-resumen"><div><b>${t.recibido}</b><span>piezas</span></div><div><b>${recActiva.items.length}</b><span>productos</span></div></div>
     <div class="section-title"><span>Lo que va llegando</span><span>${recActiva.items.length ? 'toca la cantidad para corregir' : ''}</span></div>
     ${recActiva.items.length ? recActiva.items.slice().reverse().map(it=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div>
@@ -6049,10 +6087,12 @@ function renderRecEscaneo(){
     </div>`;
   byId('recCancelar').onclick = ()=> openConfirm('¿Descartar esta recepción? Lo capturado aquí no se guarda.', ()=>{ recActiva = null; guardarRecLocal(); renderRecepcion(); }, {yesLabel:'Descartar'});
   byId('recTerminar').onclick = terminarRecepcion;
-  byId('recProv').onchange = ()=>{ recActiva.proveedor = byId('recProv').value.trim(); guardarRecLocal(); };
+  byId('recProv').onchange = ()=>{ recActiva.proveedor = byId('recProv').value.trim(); guardarRecLocal(); renderRecEscaneo(); };
+  act.querySelectorAll('[data-rchip]').forEach(b=> b.onclick = ()=>{ const it = buildIndexes().byCodigo[b.dataset.rchip]; if(it) elegirRecItem(it); });
+  const vt = byId('recChipsTodos'); if(vt) vt.onclick = ()=>{ recChipsTodos = true; renderRecEscaneo(); };
   const inp = byId('recInput');
   inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); buscarRec(inp.value); } });
-  let tt = null; inp.addEventListener('input', ()=>{ clearTimeout(tt); tt = setTimeout(()=>{
+  inp.addEventListener('input', ()=>{ clearTimeout(recBuscarTT); recBuscarTT = setTimeout(()=>{
     const v = inp.value.trim();
     const box = byId('recResultados');
     if(v.length < 2){ recResultados = []; box.innerHTML = ''; return; }
@@ -6075,7 +6115,9 @@ function renderRecEscaneo(){
   });
   byId('recCaja').onclick = ()=> abrirCaja(itemsParaCaja(recActiva));
 }
+let recBuscarTT = null;
 function buscarRec(raw){
+  clearTimeout(recBuscarTT);
   const v = String(raw||'').trim(); if(!v) return;
   const item = findProduct(v);
   if(item){ elegirRecItem(item); return; }
@@ -6180,8 +6222,7 @@ function terminarRecepcion(){
   const pv = byId('recProv'); if(pv && pv.value.trim()) recActiva.proveedor = pv.value.trim();
   if(!String(recActiva.proveedor||'').trim()){ openConfirm('Escribe arriba el nombre del proveedor.', ()=>{ const i = byId('recProv'); if(i) i.focus(); }, {yesLabel:'Entendido'}); return; }
   if(recActiva.tipo !== 'cerveza' && !recActiva._notaPedida){
-    recActiva._notaPedida = true;
-    openKeypad('¿Cuántas piezas dice la nota del repartidor? (si no hay nota, toca Cancelar)', '', (v)=>{ recActiva.notaTotal = v === '' ? null : Number(v); terminarRecepcion(); }, {onCancel: ()=>{ recActiva.notaTotal = null; terminarRecepcion(); }});
+    abrirCompararNota();
     return;
   }
   recActiva._notaPedida = false;
@@ -6189,7 +6230,14 @@ function terminarRecepcion(){
   const t = totalRec();
   let cuadra = null, difTexto = '';
   if(esCerv){ const d = t.recibido - t.esperado; cuadra = d === 0; difTexto = d < 0 ? `faltaron ${-d} pz` : d > 0 ? `sobraron ${d} pz` : ''; }
-  else if(recActiva.notaTotal !== null && recActiva.notaTotal !== undefined && recActiva.notaTotal !== ''){ const d = t.recibido - Number(recActiva.notaTotal); cuadra = d === 0; difTexto = d < 0 ? `faltaron ${-d} pz` : d > 0 ? `sobraron ${d} pz` : ''; }
+  else {
+    const comp = recActiva.items.filter(it=> it.nota !== undefined && it.nota !== null);
+    if(comp.length){
+      const difs = comp.filter(it=> it.piezas !== it.nota).map(it=>{ const d = it.piezas - it.nota; return `${it.descripcion||it.codigo}: ${d<0?'faltaron '+(-d):'sobraron '+d} pz`; });
+      cuadra = !difs.length; difTexto = difs.join(' · ');
+      recActiva.notaTotal = comp.reduce((a,it)=> a + it.nota, 0);
+    } else recActiva.notaTotal = null;
+  }
   const items = recActiva.items.map(it=> esCerv
     ? Object.assign({}, it, {piezas: (it.cajas||0) * (it.porCaja||0) + (it.sueltas||0)})
     : Object.assign({}, it));
@@ -6208,6 +6256,39 @@ function terminarRecepcion(){
   }, {yesLabel:'Guardar', onNo: ()=>{ recActiva._notaPedida = false; }});
 }
 byId('recNuevaEscaneo').onclick = ()=> nuevaRecepcion('escaneo');
+
+// ---- Comparar con la nota / POS, producto por producto ----
+function abrirCompararNota(){ byId('notaOverlay').style.display = 'flex'; pintarNota(); }
+function cerrarNota(){ byId('notaOverlay').style.display = 'none'; }
+function pintarNota(){
+  const body = byId('notaBody');
+  const its = recActiva.items;
+  const pend = its.filter(it=> it.nota === undefined || it.nota === null).length;
+  body.innerHTML = `${pend ? `<button type="button" class="add-missing-btn" id="notaTodo" style="margin:0 0 12px;">✅ Todo coincide con la nota</button>` : ''}` +
+    its.map((it,i)=>{
+      const tiene = it.nota !== undefined && it.nota !== null;
+      const d = tiene ? it.piezas - it.nota : 0;
+      const est = !tiene ? '' : d === 0 ? `<div class="meta" style="color:#1e7d4f;font-weight:800;">✅ Nota ${it.nota} · coincide</div>`
+        : `<div class="meta" style="color:#c0392b;font-weight:800;">⚠️ Nota ${it.nota} · ${d<0?'faltan '+(-d):'sobran '+d} pz</div>`;
+      return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div>
+        <div class="meta">${cvEsc(it.codigo)} · recibiste <b>${it.piezas}</b> pz</div>${est}</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          ${tiene ? `<button type="button" class="mini-btn" data-notaedit="${i}">Cambiar</button>`
+          : `<button type="button" class="mini-btn" data-notaok="${i}">✓ Igual</button><button type="button" class="mini-btn off" data-notaedit="${i}">Otra cantidad</button>`}
+        </div></div>`;
+    }).join('');
+  const t = byId('notaTodo'); if(t) t.onclick = ()=>{ its.forEach(it=>{ if(it.nota === undefined || it.nota === null) it.nota = it.piezas; }); guardarRecLocal(); pintarNota(); };
+  body.querySelectorAll('[data-notaok]').forEach(b=> b.onclick = ()=>{ const it = its[+b.dataset.notaok]; it.nota = it.piezas; guardarRecLocal(); pintarNota(); });
+  body.querySelectorAll('[data-notaedit]').forEach(b=> b.onclick = ()=>{
+    const it = its[+b.dataset.notaedit];
+    openKeypad(`¿Cuántas piezas dice la nota? · ${it.descripcion||it.codigo}`, '', (v)=>{
+      if(v !== '') it.nota = Math.max(0, Number(v)||0);
+      guardarRecLocal(); pintarNota();
+    }, {cajas:{n: piezasPorCaja(it.codigo), codigo: it.codigo}});
+  });
+}
+byId('notaSaltar').onclick = ()=>{ recActiva.items.forEach(it=>{ delete it.nota; }); cerrarNota(); recActiva._notaPedida = true; terminarRecepcion(); };
+byId('notaSeguir').onclick = ()=>{ cerrarNota(); recActiva._notaPedida = true; terminarRecepcion(); };
 
 renderRecepcion();
 
