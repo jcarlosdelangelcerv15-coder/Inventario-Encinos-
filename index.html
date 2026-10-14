@@ -637,6 +637,9 @@
   .kc-ops{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
   .kc-cambiar{display:block;margin-top:4px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;border-radius:999px;padding:4px 10px;cursor:pointer;}
   .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
+  .kc-tog{display:flex;gap:6px;margin-bottom:8px;}
+  .kc-tog button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:15px;cursor:pointer;}
+  .kc-tog button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
   .kc-s{font-size:12px;text-align:center;color:#7a7466;margin-top:6px;}
 
   /* ---------- Impresión ---------- */
@@ -826,7 +829,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 13 oct 2026 · 21:30</div>
+    <div class="version-app">Tiquenda · Versión 14 oct 2026 · 10:00</div>
   </div>
 </div>
 
@@ -990,6 +993,7 @@
     <div class="filter-row" style="flex-wrap:wrap;">
       <div style="display:flex;gap:8px;flex:1 1 100%;"><select id="cobProveedor" class="cv-select" style="margin:0;flex:1;min-width:0;"></select>
       <button type="button" class="mini-btn" id="cobProvBtn" title="Proveedores directos">🏷️ Proveedores</button></div>
+      <button type="button" class="mini-btn" id="cobNoManejoBtn" style="flex:1 1 100%;">🚫 Ya no manejo (0) · ver y reactivar</button>
       <input type="text" id="cobBuscar" placeholder="Buscar producto o código…" autocomplete="off" style="flex:1 1 100%;font-family:inherit;font-size:15px;">
     </div>
     <div class="section-title"><span>Productos</span><span id="cobCount"></span></div>
@@ -2144,29 +2148,42 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
   keypadCallback = onConfirm;
   keypadCancelCallback = opts.onCancel || null;
   keypadAsString = !!opts.asString;
-  keypadCajas = opts.cajas ? {n: opts.cajas.n || 0, cajas: 0, codigo: opts.cajas.codigo, item: opts.cajas.item} : null;
+  keypadCajas = opts.cajas ? {n: opts.cajas.n || 0, modo: opts.cajas.n ? 'cajas' : 'piezas', sueltas: 0, codigo: opts.cajas.codigo, label} : null;
   pintarKeypadCajas();
   keypadOverlay.style.display = 'flex';
 }
-// Conteo de cerveza por cajas: "8 cajas + 5 sueltas" → 197 piezas.
+// Piezas | Cajas: en modo cajas el teclado captura CAJAS y se suman sueltas.
 let keypadCajas = null;
+function keypadTotal(){
+  const v = Number(keypadOverlay.dataset.value || 0);
+  const k = keypadCajas;
+  if(!k || k.modo !== 'cajas' || !k.n) return v;
+  return v * k.n + (k.sueltas || 0);
+}
 function pintarKeypadCajas(){
   const box = $('keypadCajasBox');
-  if(!keypadCajas){ box.style.display = 'none'; box.innerHTML = ''; return; }
+  if(!keypadCajas){ box.style.display = 'none'; box.innerHTML = ''; const pb = $('keypadPasteBtn'); if(pb) pb.style.display = ''; return; }
   box.style.display = 'block';
   const k = keypadCajas;
-  if(!k.n){
-    box.innerHTML = `<div class="kc-t">📦 ¿De cuántas piezas viene la caja?</div><div class="kc-ops">${[6,8,12,15,18,20,24,30].map(n=>`<button type="button" data-kcn="${n}">${n}</button>`).join('')}</div><div class="kc-s">Se guarda para este producto y la puedes cambiar cuando quieras. O cuenta por pieza abajo, como siempre.</div>`;
-    box.querySelectorAll('[data-kcn]').forEach(b=> b.onclick = ()=>{ k.n = Number(b.dataset.kcn); if(typeof guardarCartonaje === 'function') guardarCartonaje(k.codigo, k.n); pintarKeypadCajas(); });
-    keypadLabel.textContent = 'Piezas';
-    return;
+  const tog = `<div class="kc-tog"><button type="button" data-kmodo="piezas" class="${k.modo==='piezas'?'on':''}">Piezas</button><button type="button" data-kmodo="cajas" class="${k.modo==='cajas'?'on':''}">📦 Cajas</button></div>`;
+  let extra = '';
+  if(k.modo === 'piezas'){
+    keypadLabel.textContent = k.label;
+  } else if(!k.n){
+    extra = `<div class="kc-t">¿Cuántas piezas trae la caja?</div><div class="kc-ops">${[6,8,12,15,18,20,24,30].map(n=>`<button type="button" data-kcn="${n}">${n}</button>`).join('')}</div><div class="kc-s">Se guarda para este producto. La puedes cambiar cuando quieras.</div>`;
+    keypadLabel.textContent = 'Elige el tamaño de la caja';
+  } else {
+    extra = `<div class="kc-row"><span>Sueltas</span><div class="stepper"><button type="button" data-kcs="-1">−</button><b>${k.sueltas}</b><button type="button" data-kcs="1">+</button></div></div>
+      <div class="kc-total">${Number(keypadOverlay.dataset.value||0)} caja(s) × ${k.n}${k.sueltas?` + ${k.sueltas}`:''} = <b>${keypadTotal()}</b> piezas</div>
+      <button type="button" class="kc-cambiar" id="kcCambiar">✏️ La caja trae ${k.n} · cambiar</button>`;
+    keypadLabel.textContent = `¿Cuántas CAJAS? (de ${k.n} piezas)`;
   }
-  const sueltas = Number(keypadOverlay.dataset.value || 0);
-  box.innerHTML = `<div class="kc-row"><span>Cajas de ${k.n}<button type="button" class="kc-cambiar" id="kcCambiar">✏️ Cambiar tamaño de caja</button></span><div class="stepper"><button type="button" data-kc="-1">−</button><b>${k.cajas}</b><button type="button" data-kc="1">+</button></div></div>
-    <div class="kc-total">Total: <b>${k.cajas * k.n + sueltas}</b> piezas</div>`;
-  box.querySelectorAll('[data-kc]').forEach(b=> b.onclick = ()=>{ k.cajas = Math.max(0, k.cajas + Number(b.dataset.kc)); pintarKeypadCajas(); });
-  $('kcCambiar').onclick = ()=>{ k.n = 0; k.cajas = 0; pintarKeypadCajas(); };
-  keypadLabel.textContent = 'Sueltas (piezas fuera de caja)';
+  box.innerHTML = tog + extra;
+  const pb = $('keypadPasteBtn'); if(pb) pb.style.display = 'none';
+  box.querySelectorAll('[data-kmodo]').forEach(b=> b.onclick = ()=>{ k.modo = b.dataset.kmodo; pintarKeypadCajas(); });
+  box.querySelectorAll('[data-kcn]').forEach(b=> b.onclick = ()=>{ k.n = Number(b.dataset.kcn); if(typeof guardarCartonaje === 'function') guardarCartonaje(k.codigo, k.n); pintarKeypadCajas(); });
+  box.querySelectorAll('[data-kcs]').forEach(b=> b.onclick = ()=>{ k.sueltas = Math.max(0, k.sueltas + Number(b.dataset.kcs)); pintarKeypadCajas(); });
+  const cam = $('kcCambiar'); if(cam) cam.onclick = ()=>{ k.n = 0; pintarKeypadCajas(); };
 }
 function closeKeypad(){
   keypadOverlay.style.display = 'none';
@@ -2186,7 +2203,7 @@ document.querySelectorAll('.keypad-grid button').forEach(btn=>{
     else if(val.length < 20) val += k;
     keypadOverlay.dataset.value = val;
     keypadDisplay.textContent = val === '' ? '0' : val;
-    if(keypadCajas && keypadCajas.n) pintarKeypadCajas();
+    if(keypadCajas) pintarKeypadCajas();
   };
 });
 $('keypadCancel').onclick = ()=>{
@@ -2211,7 +2228,7 @@ $('keypadPasteBtn').onclick = async ()=>{
 };
 $('keypadConfirm').onclick = ()=>{
   let val = keypadOverlay.dataset.value || '';
-  if(keypadCajas && keypadCajas.n && keypadCajas.cajas) val = String(keypadCajas.cajas * keypadCajas.n + Number(val || 0));
+  if(keypadCajas && keypadCajas.modo === 'cajas'){ if(!keypadCajas.n) return; val = (val === '' && !keypadCajas.sueltas) ? '' : String(keypadTotal()); }
   const cb = keypadCallback;
   const asString = keypadAsString;
   closeKeypad();
@@ -3545,6 +3562,8 @@ const COB_ESTADOS = {
 
 function renderCobertura(){
   const lista = cobLista();
+  const nNo = Object.values(coberturaMap).filter(c=>c.descatalogado).length;
+  $('cobNoManejoBtn').textContent = `🚫 Ya no manejo (${nNo}) · ver y reactivar`;
   const cont = {desabasto:0, directo:0, riesgo:0, negativo:0, sinhist:0};
   lista.forEach(x=>{ if(cont[x.estado] !== undefined) cont[x.estado]++; if(x.negativo) cont.negativo++; });
   $('cobCards').innerHTML = Object.entries(COB_ESTADOS).map(([k,v])=>`
@@ -3594,8 +3613,8 @@ function renderCobertura(){
   }).join('') : `<div class="empty">Nada en esta lista${cobProveedor!=='todos'?' para este proveedor':''}. ✅</div>`;
   $('cobList').querySelectorAll('[data-cobdesc]').forEach(b=> b.onclick = ()=>{
     const cod = b.dataset.cobdesc;
-    openConfirm(`¿Marcar ${cod} como "ya no lo manejo"? Dejará de salir como faltante. (Se puede reactivar volviéndolo a cargar.)`, ()=>{
-      cobGuardar({[cod]:{descatalogado:true}}).then(renderCobertura); renderCobertura();
+    openConfirm(`¿Marcar ${cod} como "ya no lo manejo"?\n\nDejará de salir como faltante. Si lo vuelves a vender, lo reactivas en "🚫 Ya no manejo".`, ()=>{
+      cobGuardar({[cod]:{descatalogado:true, descatalogadoEn:hoyISO(), descatalogadoPor:(typeof currentUser!=='undefined'&&currentUser)||''}}).then(renderCobertura); renderCobertura();
     });
   });
 }
@@ -5289,6 +5308,14 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="noManejoOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">🚫 Productos que ya no manejo<small>No salen como faltantes. Si lo vuelves a vender, toca "Volver a manejar".</small></div>
+    <div class="cotejo-body" id="noManejoBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="noManejoCerrar">Listo</button></div></div>
+  </div>
+</div>
+
 <div class="caja-overlay" id="cajaOverlay">
   <div class="caja-top">
     <button type="button" class="cv-back" id="cajaCerrar">← Volver</button>
@@ -5749,6 +5776,29 @@ function proveedoresDirectos(){
   return Object.entries(cuenta).sort((a,b)=> a[0].localeCompare(b[0])).map(([nombre, n])=>({nombre, n}));
 }
 let provLocalesNuevos = [], provEditando = null, provBusqueda = '';
+// ---- Productos que ya no manejo (con reactivar) ----
+function abrirNoManejo(){ byId('noManejoOverlay').style.display = 'flex'; renderNoManejo(); }
+byId('noManejoCerrar').onclick = ()=>{ byId('noManejoOverlay').style.display = 'none'; renderCobertura(); };
+byId('cobNoManejoBtn').onclick = abrirNoManejo;
+function renderNoManejo(){
+  const {byCodigo} = buildIndexes();
+  const lista = Object.values(coberturaMap).filter(c=>c.descatalogado).map(c=>{
+    const it = byCodigo[c.codigo] || {};
+    return {codigo:c.codigo, desc: it.descripcion || c.descripcion || c.codigo, en:c.descatalogadoEn||'', por:c.descatalogadoPor||''};
+  }).sort((a,b)=> a.desc.localeCompare(b.desc));
+  const body = byId('noManejoBody');
+  body.innerHTML = lista.length ? lista.map(x=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(x.desc)}</div>
+      <div class="meta">${cvEsc(x.codigo)}${x.en?' · desde '+fechaCorta(x.en):''}${x.por?' · '+cvEsc(x.por):''}</div></div>
+      <button type="button" class="mini-btn" data-react="${cvEsc(x.codigo)}">Volver a manejar</button></div>`).join('')
+    : '<div class="empty">No tienes productos marcados como "ya no lo manejo".</div>';
+  body.querySelectorAll('[data-react]').forEach(b=> b.onclick = ()=>{
+    const cod = b.dataset.react;
+    openConfirm(`¿Volver a manejar ${cod}? Si está en 0 volverá a salir como faltante.`, ()=>{
+      cobGuardar({[cod]:{descatalogado:false}}).then(renderNoManejo); renderNoManejo(); renderCobertura();
+    });
+  });
+}
+
 function abrirProveedores(){ provEditando = null; provBusqueda = ''; byId('provOverlay').style.display = 'flex'; renderProveedores(); }
 byId('provCerrar').onclick = ()=>{ byId('provOverlay').style.display = 'none'; renderCobertura(); };
 function renderProveedores(){
@@ -6051,7 +6101,7 @@ function elegirRecItem(item){
       guardarRecLocal();
     }
     renderRecEscaneo();
-  }, {onCancel: ()=> renderRecEscaneo()});
+  }, {onCancel: ()=> renderRecEscaneo(), cajas:{n: piezasPorCaja(item.codigo), codigo:item.codigo}});
 }
 function renderRecCerveza(){
   const act = byId('recActiva');
