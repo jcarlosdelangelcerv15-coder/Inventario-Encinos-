@@ -307,11 +307,37 @@
   .cv-nota{background:#fdf3e7;border:1px solid #f0d9b5;border-radius:10px;padding:9px 11px;font-size:12.5px;color:#7a5520;margin:8px 0;}
   .cv-select{width:100%;margin-bottom:10px;padding:10px;border:1.5px solid var(--line);border-radius:10px;font-size:14px;font-family:inherit;background:#fff;}
   .cob-cards{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:10px;}
+  .cob-cards.cob-cards-v{grid-template-columns:repeat(4,1fr);margin-top:6px;}
+  .cob-ventas-tit span{white-space:nowrap;}
+  .cob-ventas-tit{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-top:12px;font-weight:800;font-size:13px;color:#57534a;}
+  .cob-ventas-tit small{font-weight:600;font-size:11.5px;color:#8a8475;text-align:right;}
+  .cob-sug{font-size:12.5px;font-weight:800;color:#1e7d4f;margin-top:2px;}
   .cob-card{background:var(--card,#fff);border:1.5px solid var(--line);border-radius:12px;padding:8px 2px;text-align:center;font-family:inherit;cursor:pointer;}
   .cob-card b{display:block;font-size:20px;color:var(--c);}
   .cob-card span{display:block;font-size:10.5px;color:#6b6659;line-height:1.15;margin-top:2px;}
   .cob-card.on{border-color:var(--c);box-shadow:0 0 0 2px var(--c) inset;}
   @media (max-width:380px){ .cob-cards{grid-template-columns:repeat(3,1fr);} }
+  .cob-seg{display:flex;background:#ebe7dc;border-radius:14px;padding:4px;gap:4px;margin-top:6px;}
+  .cob-seg button{flex:1;border:none;background:none;border-radius:11px;padding:10px 6px;font:inherit;font-weight:800;font-size:14.5px;color:#6b6659;cursor:pointer;}
+  .cob-seg button.on{background:#fff;color:var(--ink,#151a2e);box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  .cob-cards.v4{grid-template-columns:repeat(4,1fr);}
+  .cob-card:disabled{opacity:.45;}
+  .cob-vacio{background:#fff;border:1.5px dashed var(--line);border-radius:14px;padding:16px;text-align:center;margin-top:10px;}
+  .cob-vacio b{display:block;font-size:16px;margin-bottom:4px;}
+  .cob-vacio span{display:block;font-size:13.5px;color:#6b6659;}
+  .cob-ayuda{font-size:13px;color:#57534a;background:#fff;border-left:4px solid var(--c,#c0392b);border-radius:10px;padding:9px 12px;margin-top:10px;line-height:1.35;}
+  .cob-tools{display:flex;gap:8px;margin-top:10px;}
+  .cob-tools select{margin:0;flex:1;min-width:0;}
+  .cob-tools .mini-btn{flex:0 0 auto;}
+  .cob-buscar{width:100%;margin-top:8px;font-family:inherit;font-size:15px;padding:12px 14px;border-radius:12px;border:1.5px solid var(--line);background:#fff;box-sizing:border-box;}
+  #panel-cobertura #cobBuscar{font-family:inherit !important;font-size:15px !important;letter-spacing:0;}
+  .cob-item{cursor:pointer;}
+  .cob-item .qty{min-width:44px;text-align:right;}
+  .cob-acciones{display:flex;gap:8px;margin-top:12px;}
+  .cob-acciones .btn{flex:1;margin:0;}
+  .cob-acciones #cobSurtidoBtn{flex:1.6;}
+  .cob-pie{font-size:12px;color:#8a8475;text-align:center;margin-top:8px;}
+  .cob-sug{display:inline-block;font-size:12.5px;font-weight:800;color:#1e7d4f;background:#eef8f2;border-radius:8px;padding:2px 8px;margin-top:4px;}
   .cob-item .info{min-width:0;}
   .cob-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
   .cob-desc{background:none;border:1px solid var(--line);border-radius:999px;font-size:10.5px;color:#8a8577;padding:3px 8px;font-family:inherit;white-space:nowrap;}
@@ -637,11 +663,20 @@
   .kc-ops{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;}
   .kc-cambiar{display:block;margin-top:4px;border:1.5px solid var(--blue);background:#fff;color:var(--blue);font:inherit;font-size:12.5px;font-weight:800;border-radius:999px;padding:4px 10px;cursor:pointer;}
   .kc-ops button{padding:8px 12px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font-weight:800;font-family:inherit;cursor:pointer;}
+  .rec-prov-btn{text-align:left;font-weight:800;cursor:pointer;width:100%;}
+  .rec-prov-btn.vacio{color:#c0392b;}
   .rec-chips{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
   .rec-chip{text-align:left;padding:10px;border-radius:12px;border:1.5px solid var(--line);background:#fff;font:inherit;cursor:pointer;display:flex;flex-direction:column;gap:2px;}
   .rec-chip b{font-size:13.5px;line-height:1.2;}
   .rec-chip small{font-size:11.5px;color:#7a7466;}
   .rec-chip.on{border-color:#1e7d4f;background:#eef8f2;}
+  .caja-precio{margin-top:14px;text-align:center;}
+  .caja-precio .cp-t{font-size:14px;color:#57534a;margin-bottom:8px;}
+  .caja-precio .cp-ult{font-size:16px;margin-bottom:8px;}
+  .caja-precio .cp-ok{font-size:18px;color:#1e7d4f;margin-bottom:8px;}
+  .caja-precio .cp-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
+  .caja-precio .cp-btns button{padding:14px 18px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:17px;cursor:pointer;}
+  .caja-precio .cp-btns button.on{background:#1e7d4f;border-color:#1e7d4f;color:#fff;}
   .kc-tog{display:flex;gap:6px;margin-bottom:8px;}
   .kc-tog button{flex:1;padding:10px;border-radius:10px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:15px;cursor:pointer;}
   .kc-tog button.on{background:var(--blue);border-color:var(--blue);color:#fff;}
@@ -692,6 +727,15 @@
   .rec-resumen b{display:block;font-size:24px;}
   .rec-resumen span{font-size:12px;color:#7a7466;font-weight:700;}
   .rec-editar{border:none;font:inherit;cursor:pointer;}
+  /* iPhone/Android: nada debajo del reloj ni de la isla (zona segura de arriba) */
+  header{padding-top:calc(14px + env(safe-area-inset-top));}
+  .caja-top{padding-top:max(12px, calc(8px + env(safe-area-inset-top)));}
+  .caja-top .cv-back{padding:11px 18px;font-size:16px;}
+  .keypad-overlay,.cotejo-overlay,.sheet-overlay{padding-top:env(safe-area-inset-top);}
+  .confirm-overlay,.nip-overlay{padding-top:calc(20px + env(safe-area-inset-top));padding-bottom:calc(20px + env(safe-area-inset-bottom));}
+  .auth-screen,#lockScreen{padding-top:calc(24px + env(safe-area-inset-top));}
+  .cotejo-card,.sheet{max-height:calc(100dvh - env(safe-area-inset-top) - 10px);}
+  .keypad-card{max-height:calc(100dvh - env(safe-area-inset-top));overflow:auto;}
 </style>
 
 </head>
@@ -775,6 +819,15 @@
         <label class="td-check"><input id="tdBase" type="checkbox"> Empezar con el catálogo base (productos de Encinos)</label>
         <button type="submit" id="tdCrear" class="auth-btn" style="margin:0;">➕ Crear tienda</button>
       </form>
+      <form id="empresaForm" class="equipo-form">
+        <div class="section-title" style="margin-top:0;"><span>🏢 Empresas con varias unidades</span></div>
+        <input id="emNombre" type="text" placeholder="Nombre de la empresa (ej. Tico Plastic)" autocomplete="off">
+        <input id="emDuenoNombre" type="text" placeholder="Nombre del dueño" autocomplete="off">
+        <input id="emDuenoEmail" type="email" placeholder="Correo del dueño (ve todas las unidades)" autocomplete="off" inputmode="email">
+        <button type="submit" class="auth-btn" style="margin:0;">➕ Crear empresa</button>
+        <div class="td-label" style="margin-top:4px;">Después da de alta cada unidad (almacén y sucursales) como tienda y toca <b>🏢 Empresa</b> en cada una.</div>
+      </form>
+      <div id="empresasLista"></div>
       <div class="section-title"><span>Tiendas</span></div>
       <div id="tiendasLista"></div>
     </div>
@@ -819,13 +872,18 @@
     <div class="sheet-group">
       <button type="button" class="sheet-item" data-ir="recepcion"><span>📦</span><div><b>Recepción</b><small>Cuando llega mercancía de un proveedor</small></div></button>
       <button type="button" class="sheet-item" data-ir="etiquetas"><span>🏷️</span><div><b>Etiquetas</b><small>Códigos para escanear en caja</small></div></button>
+      <button type="button" class="sheet-item" id="masPreciosBtn"><span>💲</span><div><b>Precios del conteo</b><small>Precio de la etiqueta de lo que tiene diferencia</small></div></button>
       <button type="button" class="sheet-item" data-ir="caducidades"><span>📅</span><div><b>Caducidades</b><small>Lotes y semáforo</small></div></button>
       <button type="button" class="sheet-item" data-ir="dashboard"><span>📈</span><div><b>Dashboard</b><small>Cobertura de conteo</small></div></button>
     </div>
     <div class="sheet-group">
       <button type="button" class="sheet-item" id="equipoBtn" style="display:none;"><span>👥</span><div><b>Equipo</b><small>Quién entra a la tienda</small></div></button>
+      <button type="button" class="sheet-item" id="respaldoBtn" style="display:none;"><span>💾</span><div><b>Respaldo de la tienda</b><small id="respaldoSub">Descarga todo en un Excel</small></div></button>
       <button type="button" class="sheet-item" id="nipBtn" style="display:none;"><span>🔐</span><div><b>NIP de la tienda</b><small>Protege borrar conteos e historial</small></div></button>
       <button type="button" class="sheet-item" id="papeleraBtn"><span>🗑️</span><div><b>Papelera</b><small>Lo borrado se guarda 30 días</small></div></button>
+      <button type="button" class="sheet-item" id="unidadBtn" style="display:none;"><span>🏢</span><div><b>Cambiar de unidad</b><small id="unidadSub">Almacén y sucursales</small></div></button>
+      <button type="button" class="sheet-item" id="tableroBtn" style="display:none;"><span>📊</span><div><b>Mis unidades</b><small>Resumen de almacén y sucursales</small></div></button>
+      <button type="button" class="sheet-item" id="traspasosBtn" style="display:none;"><span>🚚</span><div><b>Traspasos</b><small id="traspasosSub">Envíos entre almacén y sucursales</small></div></button>
       <button type="button" class="sheet-item" id="tiendasBtn" style="display:none;"><span>🏪</span><div><b>Tiendas</b><small>Altas, pagos y suspensiones</small></div></button>
     </div>
     <div class="sheet-group">
@@ -834,7 +892,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 14 oct 2026 · 11:15</div>
+    <div class="version-app">Tiquenda · Versión 21 oct 2026 · 20:00</div>
   </div>
 </div>
 
@@ -930,6 +988,7 @@
 
   <div class="panel" id="panel-comparativo">
     <div class="summary" id="compSummary"></div>
+    <button class="sis-principal" id="compPreciosBtn" style="background:linear-gradient(135deg,#b8722a,#8f5418);">🏷️ Precios del conteo<small id="compPreciosSub">Captura el precio de los productos con diferencia</small></button>
     <button class="sis-principal" id="compPronBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);">💰 Pronóstico en pesos<small>Faltante y sobrante compensados por familia de código</small></button>
     <div class="section-title"><span id="compSectionTitle">Físico vs. sistema</span><span id="compCountLabel"></span></div>
     <div id="compLog"></div>
@@ -993,24 +1052,36 @@
   </div>
 
   <div class="panel" id="panel-cobertura">
+    <div class="cob-seg" id="cobSeg">
+      <button type="button" data-cobgrupo="faltantes">🚚 Faltantes</button>
+      <button type="button" data-cobgrupo="ventas">📈 Ventas y sugerido</button>
+    </div>
     <div class="cob-cards" id="cobCards"></div>
-    <div class="catalog-note" id="cobAyuda" style="margin-top:8px;"></div>
-    <div class="filter-row" style="flex-wrap:wrap;">
-      <div style="display:flex;gap:8px;flex:1 1 100%;"><select id="cobProveedor" class="cv-select" style="margin:0;flex:1;min-width:0;"></select>
-      <button type="button" class="mini-btn" id="cobProvBtn" title="Proveedores directos">🏷️ Proveedores</button></div>
-      <button type="button" class="mini-btn" id="cobNoManejoBtn" style="flex:1 1 100%;">🚫 Ya no manejo (0) · ver y reactivar</button>
-      <input type="text" id="cobBuscar" placeholder="Buscar producto o código…" autocomplete="off" style="flex:1 1 100%;font-family:inherit;font-size:15px;">
+    <div class="cob-vacio" id="cobVentasVacio" style="display:none;">
+      <b>Aún no hay ventas cargadas</b>
+      <span>Sube el archivo que trae las ventas (puede ser el mismo de proveedores y existencias) y aquí verás qué se está quebrando y cuánto pedir.</span>
+      <button type="button" class="btn btn-export blue" id="cobVentasBtn2" style="width:100%;margin-top:10px;">📥 Cargar archivo</button>
     </div>
-    <div class="section-title"><span>Productos</span><span id="cobCount"></span></div>
+    <div class="cob-ayuda" id="cobAyuda"></div>
+    <div class="cob-tools">
+      <select id="cobProveedor" class="cv-select"></select>
+      <button type="button" class="mini-btn" id="cobMasBtn">⚙️ Opciones</button>
+    </div>
+    <input type="text" id="cobBuscar" class="cob-buscar" placeholder="🔍 Buscar producto o código…" autocomplete="off">
+    <div class="section-title"><span id="cobListaTit">Productos</span><span id="cobCount"></span></div>
     <div id="cobList"></div>
-    <div class="actions" style="flex-wrap:wrap;">
-      <button class="btn btn-export blue" id="cobSurtidoBtn" style="flex:1 1 100%;">📊 Excel para quien surte</button>
-      <button class="btn btn-export" id="cobVendedorBtn">📤 Lista por WhatsApp</button>
-      <button class="btn btn-export" id="cobExportBtn">Exportar CSV</button>
+    <div class="cob-acciones">
+      <button class="btn btn-export blue" id="cobSurtidoBtn">📊 Excel para quien surte</button>
+      <button class="btn btn-export" id="cobVendedorBtn">📤 WhatsApp</button>
     </div>
-    <button class="add-missing-btn" id="cobImportBtn" style="margin-top:12px;background:#eaf1fb;border-color:#2a6fb8;color:#2a6fb8;">📥 Cargar datos de cobertura (Excel)</button>
+    <div class="cob-pie" id="cobVentasInfo"></div>
+    <div class="cob-pie" id="cobDatos"></div>
+    <div style="display:none;">
+      <button id="cobVentasBtn"></button><button id="cobDiasBtn"></button><button id="cobProvBtn"></button>
+      <button id="cobNoManejoBtn"></button><button id="cobImportBtn"></button><button id="cobExportBtn"></button>
+    </div>
+    <input type="file" id="cobVentasFile" accept=".xlsx,.xls,.csv" style="display:none;">
     <input type="file" id="cobImportFile" accept=".xlsx,.xls,.csv" style="display:none;">
-    <div class="catalog-note" id="cobDatos" style="margin-top:6px;"></div>
     <details class="ayuda"><summary>ℹ️ ¿Qué archivos acepta?</summary><div class="catalog-note" style="margin-top:6px;">
       Acepta: el Excel de cobertura (hojas "Catálogo maestro" e "Historial entregas"), tu <b>reporte de existencias del POS</b> (trae Proveedor y Distribución) o un Excel de entregas Cedis con <b>Fecha, Código y Unidades</b>. Cada carga suma; nunca borra.
     </div></details>
@@ -1312,6 +1383,17 @@ let datosIniciados = false;
 let sesionEmail = '';
 let miUsuario = null;   // ficha usuarios/{correo}
 let miTienda = null;    // ficha tiendas/{TIENDA_ID}
+let miEmpresa = null;   // ficha empresas/{id} si la tienda es unidad de una empresa ({id, nombre, unidades:[{id,nombre,tipo}]})
+const fsEmpresasCol = fsDb.collection('empresas');
+// Unidades a las que puede entrar esta persona (el dueño de una empresa entra a todas)
+function misUnidades(){
+  const ids = new Set([(miUsuario && miUsuario.tienda) || TIENDA_ID].concat((miUsuario && miUsuario.tiendas) || []));
+  if(esAdmin() && miEmpresa) (miEmpresa.unidades||[]).forEach(u=> ids.add(u.id));
+  return [...ids].filter(Boolean);
+}
+function nombreUnidad(id){ const u = miEmpresa && (miEmpresa.unidades||[]).find(x=> x.id === id); return u ? u.nombre : id; }
+function tipoUnidad(id){ const u = miEmpresa && (miEmpresa.unidades||[]).find(x=> x.id === id); return u ? (u.tipo||'sucursal') : ''; }
+const esDueno = ()=> !!(miEmpresa && (esAdmin() || (miUsuario && miUsuario.empresa === miEmpresa.id && (miUsuario.tiendas||[]).length > 1)));
 const esAdmin = ()=> sesionEmail === ADMIN_EMAIL;
 const esEncargado = ()=> esAdmin() || !!(miUsuario && miUsuario.rol === 'encargado' && miUsuario.tienda === TIENDA_ID);
 
@@ -1449,7 +1531,8 @@ function guardarCacheAcceso(){
   try{
     localStorage.setItem('acceso_cache', JSON.stringify({
       email: sesionEmail, usuario: miUsuario,
-      tienda: miTienda ? {id: TIENDA_ID, nombre: miTienda.nombre, estado: miTienda.estado, activaHasta: aMs(miTienda.activaHasta)} : null
+      tienda: miTienda ? {id: TIENDA_ID, nombre: miTienda.nombre, estado: miTienda.estado, activaHasta: aMs(miTienda.activaHasta), empresa: miTienda.empresa || '', tipo: miTienda.tipo || ''} : null,
+      empresa: miEmpresa
     }));
   }catch(e){}
 }
@@ -1491,7 +1574,9 @@ async function authRevisarAcceso(user, forzar){
       authMostrar('sinacceso', sesionEmail);
       return;
     }
-    tid = usuario.tienda;
+    const permitidas = [usuario.tienda].concat(usuario.tiendas || []);
+    const pedida = lsRaw('tienda_actual');
+    tid = (pedida && permitidas.includes(pedida)) ? pedida : usuario.tienda;
   }
   if(tid !== TIENDA_ID || !lsRaw('tienda_actual')){
     try{ localStorage.setItem('tienda_actual', tid); }catch(e){}
@@ -1506,6 +1591,11 @@ async function authRevisarAcceso(user, forzar){
   }catch(err){ tiendaSinRed = !(err && err.code === 'permission-denied'); }
   if(!tienda && tiendaSinRed && cache && cache.tienda && cache.tienda.id === TIENDA_ID) tienda = cache.tienda;
   miTienda = tienda;
+  miEmpresa = null;
+  if(tienda && tienda.empresa){
+    try{ const e = await fsEmpresasCol.doc(tienda.empresa).get(opt); if(e.exists) miEmpresa = Object.assign({id: e.id}, e.data()); }
+    catch(err){ if(cache && cache.empresa && cache.empresa.id === tienda.empresa) miEmpresa = cache.empresa; }
+  }
 
   if(!esAdmin()){
     if(!tienda){ authMostrar('sinacceso', sesionEmail); return; }
@@ -1541,6 +1631,11 @@ async function authRevisarAcceso(user, forzar){
   byId('equipoBtn').style.display = esEncargado() ? '' : 'none';
   byId('tiendasBtn').style.display = esAdmin() ? '' : 'none';
   byId('nipBtn').style.display = esEncargado() ? '' : 'none';
+  byId('respaldoBtn').style.display = esEncargado() ? '' : 'none';
+  byId('unidadBtn').style.display = misUnidades().length > 1 ? '' : 'none';
+  byId('tableroBtn').style.display = esDueno() ? '' : 'none';
+  byId('traspasosBtn').style.display = miEmpresa ? '' : 'none';
+  if(miEmpresa){ const tp = tipoUnidad(TIENDA_ID); byId('unidadSub').textContent = `Estás en: ${TIENDA_NOMBRE}${tp ? ' · ' + (tp === 'almacen' ? 'Almacén' : 'Sucursal') : ''}`; }
   authOcultar();
 
   // Primera vez con la versión multi-tienda: los datos de Encinos todavía
@@ -1620,6 +1715,7 @@ function abrirTiendas(){
   byId('tiendasOverlay').style.display = 'flex';
   const f = byId('tdHasta');
   if(f && !f.value){ const d = new Date(Date.now() + 30*DIA_MS); f.value = d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+  escucharEmpresas();
   if(tiendasUnsub) return;
   tiendasUnsub = fsTiendasCol.onSnapshot((snap)=>{
     tiendasLista = snap.docs.map(d=> Object.assign({id: d.id}, d.data()))
@@ -1645,15 +1741,17 @@ function renderTiendas(){
     const actual = t.id === TIENDA_ID;
     return `<div class="tienda-item${actual ? ' actual' : ''}">
       <div class="info"><div class="desc">${cvEsc(t.nombre || t.id)} ${estado}${actual ? ' <span class="eq-rol">Estás aquí</span>' : ''}</div>
-      <div class="meta">Aliado: ${cvEsc(t.encargadoNombre || '')} ${cvEsc(t.encargadoEmail || '—')}<br>Pagado hasta: ${hasta ? fechaLarga(hasta) : 'sin vencimiento'}${t.catalogoBase ? ' · con catálogo base' : ''}</div></div>
+      <div class="meta">Aliado: ${cvEsc(t.encargadoNombre || '')} ${cvEsc(t.encargadoEmail || '—')}<br>Pagado hasta: ${hasta ? fechaLarga(hasta) : 'sin vencimiento'}${t.catalogoBase ? ' · con catálogo base' : ''}${t.empresa ? `<br>🏢 ${cvEsc((empresasLista.find(x=> x.id === t.empresa)||{}).nombre || t.empresa)} · ${t.tipo === 'almacen' ? 'Almacén' : 'Sucursal'}` : ''}</div></div>
       <div class="tienda-acciones">
         ${actual ? '' : `<button type="button" data-entrar="${cvEsc(t.id)}">Entrar</button>`}
         <button type="button" data-mas30="${cvEsc(t.id)}">+30 días</button>
         <button type="button" data-susp="${cvEsc(t.id)}">${t.estado === 'suspendida' ? 'Reactivar' : 'Suspender'}</button>
+        <button type="button" data-empresa="${cvEsc(t.id)}">🏢 Empresa</button>
       </div></div>`;
   }).join('') : '<div class="empty">Todavía no hay tiendas.</div>';
   const L = byId('tiendasLista');
   L.querySelectorAll('[data-entrar]').forEach(b=> b.onclick = ()=> cambiarTienda(b.dataset.entrar));
+  L.querySelectorAll('[data-empresa]').forEach(b=> b.onclick = ()=>{ const t = tiendasLista.find(x=> x.id === b.dataset.empresa); if(t) asignarEmpresa(t); });
   L.querySelectorAll('[data-mas30]').forEach(b=> b.onclick = ()=>{
     const t = tiendasLista.find(x=> x.id === b.dataset.mas30); if(!t) return;
     const base = Math.max(Date.now(), aMs(t.activaHasta) || 0);
@@ -1673,6 +1771,67 @@ function renderTiendas(){
   });
 }
 byId('tiendasBtn').onclick = abrirTiendas;
+let empresasLista = [], empresasUnsub = null;
+function escucharEmpresas(){
+  if(empresasUnsub) return;
+  empresasUnsub = fsEmpresasCol.onSnapshot((snap)=>{
+    empresasLista = snap.docs.map(d=> Object.assign({id: d.id}, d.data())).sort((a,b)=> String(a.nombre).localeCompare(String(b.nombre)));
+    renderEmpresas(); renderTiendas();
+  }, ()=>{});
+}
+function renderEmpresas(){
+  const L = byId('empresasLista'); if(!L) return;
+  L.innerHTML = empresasLista.map(e=> `<div class="tienda-item"><div class="info"><div class="desc">🏢 ${cvEsc(e.nombre)}</div>
+    <div class="meta">Dueño: ${cvEsc(e.duenoNombre||'')} ${cvEsc(e.duenoEmail||'')}<br>Unidades: ${(e.unidades||[]).length ? (e.unidades||[]).map(u=> `${cvEsc(u.nombre)} (${u.tipo === 'almacen' ? 'almacén' : 'sucursal'})`).join(', ') : 'ninguna todavía'}</div></div></div>`).join('');
+}
+// Recalcula la lista de unidades de la empresa y el acceso del dueño a todas.
+async function sincronizarEmpresa(eid){
+  const e = empresasLista.find(x=> x.id === eid); if(!e) return;
+  const unidades = tiendasLista.filter(t=> t.empresa === eid).map(t=> ({id: t.id, nombre: t.nombre || t.id, tipo: t.tipo || 'sucursal'}))
+    .sort((a,b)=> (a.tipo === 'almacen' ? 0 : 1) - (b.tipo === 'almacen' ? 0 : 1) || a.nombre.localeCompare(b.nombre));
+  const batch = fsDb.batch();
+  batch.update(fsEmpresasCol.doc(eid), {unidades});
+  if(e.duenoEmail && unidades.length){
+    let previa = null;
+    try{ const u = await fsUsuariosCol.doc(e.duenoEmail).get(); if(u.exists) previa = u.data(); }catch(err){}
+    const casa = previa && previa.tienda && unidades.some(u=> u.id === previa.tienda) ? previa.tienda : unidades[0].id;
+    batch.set(fsUsuariosCol.doc(e.duenoEmail), {email: e.duenoEmail, nombre: (previa && previa.nombre) || e.duenoNombre || e.duenoEmail.split('@')[0],
+      tienda: casa, tiendas: unidades.map(u=> u.id), empresa: eid, rol:'encargado', activo:true,
+      agregado: (previa && previa.agregado) || new Date().toISOString(), agregadoPor: sesionEmail}, {merge:true});
+  }
+  await batch.commit();
+}
+function asignarEmpresa(t){
+  const poner = async (eid, tipo)=>{
+    const anterior = t.empresa || '';
+    try{
+      await fsTiendasCol.doc(t.id).update({empresa: eid || '', tipo: eid ? tipo : ''});
+      t.empresa = eid || ''; t.tipo = eid ? tipo : '';
+      if(anterior && anterior !== eid) await sincronizarEmpresa(anterior);
+      if(eid) await sincronizarEmpresa(eid);
+      openConfirm(eid ? `✅ ${t.nombre} ahora es ${tipo === 'almacen' ? 'el almacén' : 'una sucursal'} de ${empresasLista.find(x=> x.id === eid).nombre}.` : `${t.nombre} ya no pertenece a ninguna empresa.`, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){ avisarErrorGuardado(err, {descripcion:'la empresa de la tienda'}); }
+  };
+  const ops = empresasLista.map(e=> ({icono:'🏢', label: e.nombre, sub: `${(e.unidades||[]).length} unidad(es)`, fn: ()=> elegir(`¿Qué es ${t.nombre} en ${e.nombre}?`, [
+    {icono:'🏭', label:'Almacén', sub:'Surte a las sucursales', fn: ()=> poner(e.id, 'almacen')},
+    {icono:'🏪', label:'Sucursal', sub:'Recibe del almacén', fn: ()=> poner(e.id, 'sucursal')}
+  ])}));
+  if(t.empresa) ops.push({icono:'✖️', label:'Quitar de la empresa', sub:'Vuelve a ser tienda independiente', fn: ()=> poner('', '')});
+  if(!ops.length){ openConfirm('Primero crea una empresa arriba.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  elegir(`Empresa de ${t.nombre}`, ops);
+}
+byId('empresaForm').addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const nombre = byId('emNombre').value.trim(), dn = byId('emDuenoNombre').value.trim(), de = byId('emDuenoEmail').value.trim().toLowerCase();
+  if(!nombre || !dn || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(de)){ openConfirm('Escribe el nombre de la empresa, el nombre y el correo del dueño.', ()=>{}); return; }
+  const id = slugTienda(nombre);
+  if(empresasLista.some(x=> x.id === id)){ openConfirm(`Ya existe la empresa "${nombre}".`, ()=>{}); return; }
+  try{
+    await fsEmpresasCol.doc(id).set({nombre, duenoNombre: dn, duenoEmail: de, unidades: [], creada: new Date().toISOString(), creadaPor: sesionEmail});
+    ['emNombre','emDuenoNombre','emDuenoEmail'].forEach(k=> byId(k).value = '');
+    openConfirm(`✅ Empresa "${nombre}" creada.\n\nAhora da de alta su almacén y sus sucursales como tiendas y toca 🏢 Empresa en cada una. El dueño (${de}) verá todas.`, ()=>{}, {yesLabel:'Entendido'});
+  }catch(err){ avisarErrorGuardado(err, {descripcion:'la empresa'}); }
+});
 byId('tiendasCerrar').onclick = ()=>{ byId('tiendasOverlay').style.display = 'none'; };
 byId('tdNombre').addEventListener('input', ()=>{
   const c = byId('tdClave');
@@ -2153,6 +2312,8 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
   keypadCallback = onConfirm;
   keypadCancelCallback = opts.onCancel || null;
   keypadAsString = !!opts.asString;
+  const kc = document.querySelector('.keypad-grid .k-clear');
+  if(kc){ if(opts.decimal){ kc.dataset.k = '.'; kc.textContent = '.'; } else { kc.dataset.k = 'clear'; kc.textContent = 'C'; } }
   keypadCajas = opts.cajas ? {n: opts.cajas.n || 0, modo: opts.cajas.n ? 'cajas' : 'piezas', sueltas: 0, codigo: opts.cajas.codigo, label} : null;
   pintarKeypadCajas();
   keypadOverlay.style.display = 'flex';
@@ -2205,6 +2366,7 @@ document.querySelectorAll('.keypad-grid button').forEach(btn=>{
     const k = btn.dataset.k;
     if(k === 'back') val = val.slice(0,-1);
     else if(k === 'clear') val = '';
+    else if(k === '.'){ if(!val.includes('.')) val = (val || '0') + '.'; }
     else if(val.length < 20) val += k;
     keypadOverlay.dataset.value = val;
     keypadDisplay.textContent = val === '' ? '0' : val;
@@ -2508,10 +2670,15 @@ function normBarcode(code){
   return stripped || c;
 }
 function findProduct(rawCode){
-  const code = rawCode.trim();
+  const code = String(rawCode||'').trim();
   if(!code) return null;
   const {byBarcode, byCodigo} = buildIndexes();
-  return byBarcode[normBarcode(code)] || byBarcode[code] || byCodigo[code.toUpperCase()] || null;
+  const hit = byBarcode[normBarcode(code)] || byBarcode[code] || byCodigo[code.toUpperCase()];
+  if(hit) return hit;
+  // Algunos lectores mandan caracteres invisibles o separadores junto con el código: se limpian y se reintenta.
+  const limpio = code.replace(/[^0-9A-Za-z]/g, '');
+  if(limpio && limpio !== code) return byBarcode[normBarcode(limpio)] || byBarcode[limpio] || byCodigo[limpio.toUpperCase()] || null;
+  return null;
 }
 
 // Caché local separado por tienda (t:<tienda>:<dato>). Lo que había antes
@@ -3460,6 +3627,17 @@ let coberturaMap = {};
 try{ const c = lsGet('cobertura'); if(c) coberturaMap = JSON.parse(c); }catch(e){}
 const persistCoberturaLocal = ()=> lsSet('cobertura', JSON.stringify(coberturaMap));
 let cobFiltro = 'desabasto', cobProveedor = 'todos', cobBusqueda = '';
+// Días de surtido y estado de las ventas cargadas (por tienda)
+let surtidoCfg = {cedis:7, directo:7, colchon:3, ventasCargadas:false, ventasFecha:'', ventasDias:30, ventasPeriodo:''};
+try{ const c = lsGet('surtido_cfg'); if(c) surtidoCfg = Object.assign(surtidoCfg, JSON.parse(c)); }catch(e){}
+function guardarSurtidoCfg(){
+  lsSet('surtido_cfg', JSON.stringify(surtidoCfg));
+  if(fsReady) tCol('inventario_ajustes_items').doc('surtido').set(surtidoCfg).catch(()=>{});
+}
+function cargarSurtidoCfg(){
+  if(!fsReady) return;
+  tCol('inventario_ajustes_items').doc('surtido').get().then(d=>{ if(d.exists){ surtidoCfg = Object.assign(surtidoCfg, d.data()); lsSet('surtido_cfg', JSON.stringify(surtidoCfg)); if(isCoberturaActive()) renderCobertura(); } }).catch(()=>{});
+}
 
 function fsListenCobertura(){
   fsCoberturaCol.onSnapshot((snap)=>{
@@ -3545,9 +3723,25 @@ function cobEstado(c){
     else if(dist === 'CEDIS') estado = (fechasEnt.length || cob.ultimaConExistencia) ? 'desabasto' : 'sinhist';
     else estado = 'sindist';
   } else if(dist === 'CEDIS' && ex <= 2 && ultimaEnt && dias >= 28) estado = 'riesgo';
+  // Ventas: venta por día, días que alcanza y sugerido (redondeado a cajas si se conoce la caja)
+  let vd = null;
+  if(cob.ventaMes && Number(cob.ventaMes.dias) > 0) vd = Number(cob.ventaMes.piezas||0) / Number(cob.ventaMes.dias);
+  else if(surtidoCfg.ventasCargadas) vd = 0;
+  const ciclo = dist === 'DIRECTO' ? Number(surtidoCfg.directo||7) : Number(surtidoCfg.cedis||7);
+  const colchon = Number(surtidoCfg.colchon||0);
+  const diasCob = (vd && ex !== null) ? Math.max(0, ex) / vd : null;
+  let sug = 0, cajas = 0, porCaja = (typeof piezasPorCaja === 'function') ? piezasPorCaja(c.codigo) : 0;
+  if(vd && ex !== null){
+    sug = Math.max(0, Math.ceil(vd * (ciclo + colchon) - Math.max(0, ex)));
+    if(sug && porCaja){ cajas = Math.ceil(sug / porCaja); sug = cajas * porCaja; }
+  }
   return {codigo:c.codigo, descripcion: c.descripcion || cob.descripcion || '', barcode: c.barcode || cob.upc || '',
     proveedor: cob.proveedor || '', prov: provEfectivo(cob), ultimaRec: cob.ultimaRecepcion || '', dist, ex, negativo: ex !== null && ex < 0,
-    entregas: fechasEnt.length, ultimaEnt, dias, ultimaConEx: cob.ultimaConExistencia || '', estado};
+    entregas: fechasEnt.length, ultimaEnt, dias, ultimaConEx: cob.ultimaConExistencia || '', estado,
+    vd, ventaMes: cob.ventaMes ? Number(cob.ventaMes.piezas||0) : (vd === 0 ? 0 : null), ciclo, diasCob, sug, cajas, porCaja,
+    quiebre: !!vd && ex !== null && ex <= 0,
+    riesgoq: !!vd && ex !== null && ex > 0 && diasCob < ciclo,
+    sinmov: vd === 0 && ex !== null && ex > 0};
 }
 function cobLista(){
   const {all} = buildIndexes();
@@ -3557,6 +3751,21 @@ function cobLista(){
   return base.map(cobEstado).filter(Boolean);
 }
 
+const COB_VENTAS = {
+  quiebre:  {label:'🔥 Quiebre', color:'#b0281a', ayuda:'Se vende y hoy está en 0: estás perdiendo venta. Ordenado por lo que más se vende.'},
+  riesgoq:  {label:'⏳ Por quebrar', color:'#c26a00', ayuda:'Lo que tienes no alcanza hasta la siguiente entrega. Ordenado por los días que le quedan.'},
+  sugerido: {label:'🛒 Sugerido', color:'#1e7d4f', ayuda:'Cuánto pedir: venta por día × (días hasta la entrega + colchón) − lo que tienes. Redondeado a cajas si sabe cuántas trae.'},
+  sinmov:   {label:'💤 Sin venta', color:'#6b6b6b', ayuda:'Tienes existencia y no se vendió en el periodo de ventas cargado. No lo vuelvas a pedir por ahora.'}
+};
+function cobInfoFiltro(){ return COB_ESTADOS[cobFiltro] || COB_VENTAS[cobFiltro] || COB_ESTADOS.desabasto; }
+function cobCoincide(x){
+  if(cobFiltro === 'negativo') return x.negativo;
+  if(cobFiltro === 'quiebre') return x.quiebre;
+  if(cobFiltro === 'riesgoq') return x.riesgoq;
+  if(cobFiltro === 'sugerido') return x.sug > 0;
+  if(cobFiltro === 'sinmov') return x.sinmov;
+  return x.estado === cobFiltro;
+}
 const COB_ESTADOS = {
   desabasto: {label:'🔴 Desabasto Cedis', color:'#c0392b', ayuda:'Lo surte Cedis, ya te había llegado y hoy está en 0. Reclámalo o pídelo en tu siguiente pedido.'},
   directo:   {label:'🔵 Directo en 0', color:'#2a6fb8', ayuda:'Proveedor directo: pídeselo al vendedor cuando pase. Elige el proveedor y usa "Lista para el vendedor".'},
@@ -3571,7 +3780,10 @@ function renderCobertura(){
   $('cobNoManejoBtn').textContent = `🚫 Ya no manejo (${nNo}) · ver y reactivar`;
   const cont = {desabasto:0, directo:0, riesgo:0, negativo:0, sinhist:0};
   lista.forEach(x=>{ if(cont[x.estado] !== undefined) cont[x.estado]++; if(x.negativo) cont.negativo++; });
-  $('cobCards').innerHTML = Object.entries(COB_ESTADOS).map(([k,v])=>`
+  const grupoVentas = !!COB_VENTAS[cobFiltro];
+  document.querySelectorAll('#cobSeg [data-cobgrupo]').forEach(b=> b.classList.toggle('on', (b.dataset.cobgrupo === 'ventas') === grupoVentas));
+  $('cobCards').classList.toggle('v4', grupoVentas);
+  $('cobCards').innerHTML = grupoVentas ? '' : Object.entries(COB_ESTADOS).map(([k,v])=>`
     <button type="button" class="cob-card ${cobFiltro===k?'on':''}" data-cobf="${k}" style="--c:${v.color}">
       <b>${cont[k]}</b><span>${v.label.replace(/^\S+\s/,'')}</span>
     </button>`).join('');
@@ -3588,13 +3800,37 @@ function renderCobertura(){
   sel.value = cobProveedor;
 
   const q = cobBusqueda.trim().toLowerCase();
-  let vis = lista.filter(x=> cobFiltro === 'negativo' ? x.negativo : x.estado === cobFiltro);
+  let vis = lista.filter(cobCoincide);
   if(cobProveedor !== 'todos') vis = vis.filter(x=> x.prov === cobProveedor);
   if(q) vis = vis.filter(x=> x.codigo.toLowerCase().includes(q) || x.descripcion.toLowerCase().includes(q) || String(x.barcode).includes(q));
-  vis.sort((a,b)=> cobFiltro==='negativo' ? a.ex-b.ex : cobFiltro==='directo' ? (a.prov.localeCompare(b.prov) || codigoCompare(a.codigo,b.codigo)) : (b.entregas-a.entregas) || codigoCompare(a.codigo,b.codigo));
+  vis.sort((a,b)=> cobFiltro==='negativo' ? a.ex-b.ex : cobFiltro==='directo' ? (a.prov.localeCompare(b.prov) || codigoCompare(a.codigo,b.codigo))
+    : cobFiltro==='quiebre' ? (b.vd-a.vd) : cobFiltro==='riesgoq' ? (a.diasCob-b.diasCob) || (b.vd-a.vd)
+    : cobFiltro==='sugerido' ? (String(a.prov).localeCompare(String(b.prov)) || (b.vd-a.vd)) : cobFiltro==='sinmov' ? (b.ex-a.ex)
+    : (b.entregas-a.entregas) || codigoCompare(a.codigo,b.codigo));
 
-  const est = COB_ESTADOS[cobFiltro];
-  $('cobAyuda').textContent = est.ayuda;
+  // Tarjetas de ventas
+  const contV = {quiebre:0, riesgoq:0, sugerido:0, sinmov:0};
+  lista.forEach(x=>{ if(x.quiebre) contV.quiebre++; if(x.riesgoq) contV.riesgoq++; if(x.sug > 0) contV.sugerido++; if(x.sinmov) contV.sinmov++; });
+  if(grupoVentas) $('cobCards').innerHTML = Object.entries(COB_VENTAS).map(([k,v])=>`
+    <button type="button" class="cob-card ${cobFiltro===k?'on':''}" data-cobf="${k}" style="--c:${v.color}" ${surtidoCfg.ventasCargadas?'':'disabled'}>
+      <b>${surtidoCfg.ventasCargadas ? contV[k] : '—'}</b><span>${v.label.replace(/^\S+\s/,'')}</span>
+    </button>`).join('');
+  $('cobCards').querySelectorAll('[data-cobf]').forEach(b=> b.onclick = ()=>{ cobFiltro = b.dataset.cobf; renderCobertura(); });
+  const sinVentas = grupoVentas && !surtidoCfg.ventasCargadas;
+  $('cobCards').style.display = sinVentas ? 'none' : '';
+  $('cobVentasVacio').style.display = sinVentas ? '' : 'none';
+  $('cobAyuda').style.display = sinVentas ? 'none' : ''; $('cobListaTit').parentElement.style.display = sinVentas ? 'none' : '';
+  $('cobList').style.display = sinVentas ? 'none' : '';
+  $('cobBuscar').style.display = sinVentas ? 'none' : ''; $('cobProveedor').style.visibility = sinVentas ? 'hidden' : '';
+  document.querySelector('#panel-cobertura .cob-acciones').style.display = sinVentas ? 'none' : '';
+  $('cobVentasInfo').textContent = surtidoCfg.ventasCargadas
+    ? `${surtidoCfg.ventasDias} días de venta · Cedis ${surtidoCfg.cedis}d · directos ${surtidoCfg.directo}d · colchón ${surtidoCfg.colchon}d`
+    : '';
+
+  const est = cobInfoFiltro();
+  const modoVentas = !!COB_VENTAS[cobFiltro];
+  $('cobAyuda').textContent = est.ayuda; $('cobAyuda').style.setProperty('--c', est.color);
+  $('cobListaTit').textContent = est.label;
   $('cobCount').textContent = `${vis.length} producto(s)`;
   const conDist = Object.values(coberturaMap).filter(c=>c.distribucion).length;
   const conEnt = Object.values(coberturaMap).filter(c=>c.entregas && Object.keys(c.entregas).length).length;
@@ -3606,22 +3842,33 @@ function renderCobertura(){
     const meta = [x.codigo, x.prov ? cvEsc(x.prov) : ''].filter(Boolean).join(' · ');
     const ent = x.entregas ? `Última entrega Cedis: ${fechaCorta(x.ultimaEnt)} (${x.dias} días) · llegó ${x.entregas} vez/veces` : (x.dist==='CEDIS' ? 'Sin entregas registradas' : '');
     const conEx = (x.ultimaConEx ? ` · tuvo existencia: ${fechaCorta(x.ultimaConEx)}` : '') + (x.ultimaRec ? ` · recibido: ${fechaCorta(x.ultimaRec)}` : '');
-    return `<div class="log-item cob-item">
+    const vtxt = x.vd !== null ? `Vende ${x.vd >= 10 ? Math.round(x.vd) : (Math.round(x.vd*10)/10)}/día (${x.ventaMes} en el periodo) · tienes ${x.ex===null?'—':x.ex}${x.diasCob!==null ? ` · alcanza ${x.diasCob < 1 ? 'menos de 1 día' : Math.floor(x.diasCob) + ' día(s)'}` : ''}` : '';
+    const stxt = x.sug > 0 ? `🛒 Pedir ${x.sug} pz${x.cajas ? ` (${x.cajas} caja${x.cajas>1?'s':''} de ${x.porCaja})` : ''}` : '';
+    return `<div class="log-item cob-item" data-cobitem="${cvEsc(x.codigo)}">
       <div class="info"><div class="desc">${cvEsc(x.descripcion||'—')}</div>
         <div class="meta">${meta}</div>
-        <div class="meta">${ent}${conEx}</div></div>
+        <div class="meta">${modoVentas ? vtxt : ent + conEx}</div>
+        ${stxt && (modoVentas || x.quiebre) ? `<div class="cob-sug">${stxt}</div>` : ''}</div>
       <div class="cob-right">
-        <div class="qty" style="color:${x.ex<0?'#8b3fa6':est.color}">${x.ex===null?'—':x.ex}</div>
-        <button type="button" class="cob-desc" data-cobdesc="${cvEsc(x.codigo)}" title="Ya no lo manejo">Ya no lo manejo</button>
+        <div class="qty" style="color:${x.ex<0?'#8b3fa6':est.color}">${cobFiltro==='sugerido' ? x.sug : (x.ex===null?'—':x.ex)}</div>
+        <small style="font-size:10.5px;color:#8a8577;">${cobFiltro==='sugerido' ? 'pedir' : 'tienes'}</small>
       </div>
     </div>`;
   }).join('') : `<div class="empty">Nada en esta lista${cobProveedor!=='todos'?' para este proveedor':''}. ✅</div>`;
-  $('cobList').querySelectorAll('[data-cobdesc]').forEach(b=> b.onclick = ()=>{
-    const cod = b.dataset.cobdesc;
-    openConfirm(`¿Marcar ${cod} como "ya no lo manejo"?\n\nDejará de salir como faltante. Si lo vuelves a vender, lo reactivas en "🚫 Ya no manejo".`, ()=>{
+  $('cobList').querySelectorAll('[data-cobitem]').forEach(b=> b.onclick = ()=>{
+    const cod = b.dataset.cobitem; const x = vis.find(v=> v.codigo === cod) || {};
+    elegir(x.descripcion || cod, [
+      {icono:'📲', label:'Ver código de barras', sub:'Para escanearlo en el POS', fn: ()=> abrirCaja([{descripcion:x.descripcion, codigo:cod, barcode:x.barcode, cantidadTxt: x.sug ? `Sugerido: ${x.sug} pz` : ''}])},
+      {icono:'🚫', label:'Ya no lo manejo', sub:'Deja de salir como faltante', fn: ()=> cobMarcarNoManejo(cod)}
+    ]);
+  });
+}
+function cobMarcarNoManejo(cod){
+  {
+    openConfirm(`¿Marcar ${cod} como "ya no lo manejo"?\n\nDejará de salir como faltante. Si lo vuelves a vender, lo reactivas en ⚙️ Opciones → Ya no manejo.`, ()=>{
       cobGuardar({[cod]:{descatalogado:true, descatalogadoEn:hoyISO(), descatalogadoPor:(typeof currentUser!=='undefined'&&currentUser)||''}}).then(renderCobertura); renderCobertura();
     });
-  });
+  }
 }
 
 // ---- Carga de datos (Excel): detecta solo cada hoja ----
@@ -3689,43 +3936,124 @@ function cobLeerHojas(wb){
 }
 
 $('cobImportBtn').onclick = ()=> $('cobImportFile').click();
-$('cobImportFile').addEventListener('change', (e)=>{
+// Un solo archivo puede traer todo: proveedor, distribución, existencia, entregas y ventas.
+function procesarArchivoCobertura(e){
   const file = e.target.files[0];
   if(!file) return;
   if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu conexión.', ()=>{}); e.target.value=''; return; }
   const reader = new FileReader();
   reader.onload = (ev)=>{
-    try{
-      const wb = XLSX.read(ev.target.result, {type:'array'});
-      const {res, cambios} = cobLeerHojas(wb);
-      const total = Object.keys(cambios).length;
-      if(!total){
-        openConfirm('No encontré datos de cobertura en el archivo. Necesito una columna "Código" (o Alfanumérico) y además "Proveedor"/"Distribución", o bien "Fecha" + "Unidades" para entregas.', ()=>{});
-      } else {
-        cobGuardar(cambios).then(()=>{ if(isCoberturaActive()) renderCobertura(); });
-        renderCobertura();
-        let msg = `Cobertura actualizada: ${total} producto(s).`;
-        if(res.catalogo) msg += `\n• ${res.catalogo} con proveedor / distribución`;
-        if(res.entregas) msg += `\n• ${res.entregas} renglón(es) de entregas Cedis`;
-        if(res.existencias) msg += `\n• ${res.existencias} existencia(s) del POS`;
-        msg += `\n\nHojas leídas: ${res.hojas.join(', ')}.\nNada se borró: todo se suma a lo que ya tenías.`;
-        openConfirm(msg, ()=>{}, {yesLabel:'Entendido'});
-      }
-    }catch(err){
-      openConfirm('No se pudo leer el archivo. Revisa que sea un Excel (.xlsx) o CSV válido.', ()=>{});
-    }
+    let wb;
+    try{ wb = XLSX.read(ev.target.result, {type:'array'}); }catch(err){ openConfirm('No se pudo leer el archivo. Revisa que sea un Excel (.xlsx) o CSV válido.', ()=>{}); e.target.value=''; return; }
     e.target.value = '';
+    let res = {catalogo:0, entregas:0, existencias:0, hojas:[]}, cambios = {}, ventas = {ventas:{}, noEncontrados:[]};
+    try{ ({res, cambios} = cobLeerHojas(wb)); }catch(err){}
+    try{ ventas = leerVentas(wb); }catch(err){}
+    const total = Object.keys(cambios).length, nV = Object.keys(ventas.ventas).length;
+    if(!total && !nV){
+      openConfirm('No encontré datos en el archivo. Necesito una columna de código y además alguna de: Proveedor/Distribución, Existencia, Fecha + Unidades (entregas) o Venta (piezas vendidas).', ()=>{}, {yesLabel:'Entendido'});
+      return;
+    }
+    if(total){ cobGuardar(cambios).then(()=>{ if(isCoberturaActive()) renderCobertura(); }); renderCobertura(); }
+    let msg = total ? `Cobertura actualizada: ${total} producto(s).` : '';
+    if(res.catalogo) msg += `\n• ${res.catalogo} con proveedor / distribución`;
+    if(res.entregas) msg += `\n• ${res.entregas} renglón(es) de entregas Cedis`;
+    if(res.existencias) msg += `\n• ${res.existencias} existencia(s) del POS`;
+    if(nV) aplicarVentas(ventas, msg);
+    else openConfirm(msg + `\n\nHojas leídas: ${res.hojas.join(', ')}.\nNada se borró: todo se suma a lo que ya tenías.`, ()=>{}, {yesLabel:'Entendido'});
   };
   reader.readAsArrayBuffer(file);
-});
+}
+$('cobImportFile').addEventListener('change', procesarArchivoCobertura);
 
 $('cobProvBtn').onclick = ()=> abrirProveedores();
+document.querySelectorAll('#cobSeg [data-cobgrupo]').forEach(b=> b.onclick = ()=>{
+  cobFiltro = b.dataset.cobgrupo === 'ventas' ? (COB_VENTAS[cobFiltro] ? cobFiltro : 'quiebre') : (COB_VENTAS[cobFiltro] ? 'desabasto' : cobFiltro);
+  renderCobertura();
+});
+$('cobVentasBtn2').onclick = ()=> $('cobVentasFile').click();
+$('cobMasBtn').onclick = ()=>{
+  const nNo = Object.values(coberturaMap).filter(c=>c.descatalogado).length;
+  elegir('⚙️ Opciones de cobertura', [
+    {icono:'📥', label:'Cargar archivo', sub:'Uno solo: proveedores, existencias, entregas Cedis y/o ventas. La app detecta qué trae.', fn: ()=> $('cobImportFile').click()},
+    {icono:'⏱️', label:'Días de surtido', sub:`Cedis ${surtidoCfg.cedis} d · directos ${surtidoCfg.directo} d · colchón ${surtidoCfg.colchon} d`, fn: ()=> $('cobDiasBtn').click()},
+    {icono:'🏷️', label:'Proveedores directos', sub:'Asignar productos a tus proveedores locales', fn: ()=> abrirProveedores()},
+    {icono:'🚫', label:`Ya no manejo (${nNo})`, sub:'Ver y reactivar productos', fn: ()=> abrirNoManejo()},
+    {icono:'📄', label:'Exportar CSV', sub:'La lista que estás viendo', fn: ()=> $('cobExportBtn').click()}
+  ]);
+};
+$('cobVentasBtn').onclick = ()=> $('cobVentasFile').click();
+$('cobDiasBtn').onclick = ()=>{
+  elegir('⚙️ Días de surtido', [
+    {icono:'🚚', label:`Cedis surte cada ${surtidoCfg.cedis} día(s)`, sub:'Toca para cambiar', fn: ()=> openKeypad('¿Cada cuántos días surte Cedis?', surtidoCfg.cedis, (v)=>{ if(Number(v)>0){ surtidoCfg.cedis = Number(v); guardarSurtidoCfg(); renderCobertura(); } })},
+    {icono:'🏷️', label:`Proveedores directos cada ${surtidoCfg.directo} día(s)`, sub:'Toca para cambiar', fn: ()=> openKeypad('¿Cada cuántos días pasan los proveedores directos?', surtidoCfg.directo, (v)=>{ if(Number(v)>0){ surtidoCfg.directo = Number(v); guardarSurtidoCfg(); renderCobertura(); } })},
+    {icono:'🛟', label:`Colchón de ${surtidoCfg.colchon} día(s)`, sub:'Días extra por si la entrega se retrasa', fn: ()=> openKeypad('¿Cuántos días de colchón?', surtidoCfg.colchon, (v)=>{ if(v !== ''){ surtidoCfg.colchon = Math.max(0, Number(v)||0); guardarSurtidoCfg(); renderCobertura(); } })}
+  ]);
+};
+// Ventas del periodo: Excel con código (o código de barras) y piezas vendidas. Suma renglones repetidos.
+function leerVentas(wb){
+  const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[_\.]+/g,' ').replace(/\s+/g,' ').trim();
+  const {byCodigo, byBarcode} = buildIndexes();
+  const ventas = {}, noEncontrados = new Set(); let filasLeidas = 0;
+  wb.SheetNames.forEach(nombre=>{
+    const filas = XLSX.utils.sheet_to_json(wb.Sheets[nombre], {header:1, defval:''});
+    let hi = -1, cols = null;
+    for(let i=0;i<Math.min(15, filas.length);i++){
+      const h = filas[i].map(norm);
+      const tieneCod = h.some(x=> /^(codigo|codigo pos|codigo interno|alfanumerico|articulo|sku|codigo de barras|upc|ean|equivalente)$/.test(x));
+      // Si la hoja trae existencia o fecha, solo cuenta una columna que diga "venta"/"vendido"
+      // (para no confundir existencias o entregas con ventas).
+      const mixta = h.some(x=> /(existencia|disponible|inventario|^fecha)/.test(x));
+      const tieneVta = h.some(x=> /(venta|vendid)/.test(x) && !/precio|importe|\$|monto|valor/.test(x)) || (!mixta && h.some(x=> /^(unidades|piezas|cantidad|uds)$/.test(x)));
+      if(tieneCod && tieneVta){ hi = i; cols = h; break; }
+    }
+    if(hi < 0) return;
+    const idx = (re)=> cols.findIndex(x=> re.test(x));
+    const cCod = idx(/^(codigo|codigo pos|codigo interno|alfanumerico|articulo|sku)$/);
+    const cBar = idx(/^(codigo de barras|upc|ean|equivalente)$/);
+    const mixta = cols.some(x=> /(existencia|disponible|inventario|^fecha)/.test(x));
+    const esPz = (x)=> !/precio|importe|\$|monto|valor|pesos/.test(x);
+    let cVta = cols.findIndex(x=> /(piezas vendidas|unidades vendidas|venta piezas|venta unidades|venta pzas|venta en piezas|vendidas|vendido)/.test(x) && esPz(x));
+    if(cVta < 0) cVta = cols.findIndex(x=> /^(venta|ventas|venta mes|venta mensual|ventas mes)$/.test(x));
+    if(cVta < 0) cVta = cols.findIndex(x=> /venta/.test(x) && esPz(x));
+    if(cVta < 0 && !mixta) cVta = idx(/^(unidades|piezas|cantidad|uds)$/);
+    if(cVta < 0) return;
+    filas.slice(hi+1).forEach(f=>{
+      const n = Number(String(f[cVta]).replace(/,/g,''));
+      if(!isFinite(n)) return;
+      let item = null;
+      const cod = cCod >= 0 ? String(f[cCod]||'').trim().toUpperCase() : '';
+      if(cod) item = byCodigo[cod] || byBarcode[normBarcode(cod.replace(/\D/g,''))] || null;
+      if(!item && cBar >= 0){ const b = String(f[cBar]||'').replace(/\D/g,''); if(b) item = byBarcode[normBarcode(b)] || byBarcode[b] || null; }
+      if(!item && cod && /^[A-Z]{2}\d{5,}$/.test(cod)) item = {codigo: cod};
+      if(!item){ const ref = cod || (cBar>=0 ? String(f[cBar]) : ''); if(ref) noEncontrados.add(ref); return; }
+      ventas[item.codigo] = (ventas[item.codigo] || 0) + n; filasLeidas++;
+    });
+  });
+  return {ventas, noEncontrados:[...noEncontrados], filasLeidas};
+}
+$('cobVentasFile').addEventListener('change', procesarArchivoCobertura);
+function aplicarVentas(r, msgPrevio){
+  const n = Object.keys(r.ventas).length;
+  openKeypad(`Este archivo trae ventas de ${n} producto(s). ¿De cuántos días son? (un mes = 30)`, surtidoCfg.ventasDias || 30, (v)=>{
+    const dias = Math.max(1, Number(v)||30);
+    const cambios = {};
+    Object.values(coberturaMap).forEach(c=>{ if(c.ventaMes && !(c.codigo in r.ventas)) cambios[c.codigo] = {ventaMes:{piezas:0, dias, cargado:hoyISO()}}; });
+    Object.entries(r.ventas).forEach(([cod, pz])=>{ cambios[cod] = {ventaMes:{piezas:pz, dias, cargado:hoyISO()}}; });
+    Object.assign(surtidoCfg, {ventasCargadas:true, ventasFecha:hoyISO(), ventasDias:dias, ventasPeriodo:`${dias} días, cargadas ${fechaCorta(hoyISO())}`});
+    guardarSurtidoCfg();
+    cobGuardar(cambios).then(()=>{ if(isCoberturaActive()) renderCobertura(); });
+    cobFiltro = 'quiebre'; if(isCoberturaActive()) renderCobertura();
+    openConfirm((msgPrevio ? msgPrevio.trim() + '\n\n' : '') + `✅ Ventas cargadas: ${n} producto(s) de ${dias} días.` + (r.noEncontrados.length ? `\n\n⚠️ ${r.noEncontrados.length} código(s) no están en tu catálogo y no se usaron (ej. ${r.noEncontrados.slice(0,3).join(', ')}).` : '') + `\n\nRevisa en Cobertura → 📈 Ventas y sugerido.`, ()=>{}, {yesLabel:'Entendido'});
+  }, {onCancel: ()=>{ if(msgPrevio) openConfirm(msgPrevio.trim() + '\n\n(Las ventas no se cargaron.)', ()=>{}, {yesLabel:'Entendido'}); }});
+}
+
 $('cobProveedor').onchange = ()=>{ cobProveedor = $('cobProveedor').value; renderCobertura(); };
 $('cobBuscar').addEventListener('input', ()=>{ cobBusqueda = $('cobBuscar').value; renderCobertura(); });
 
 function cobVisibles(){
   const q = cobBusqueda.trim().toLowerCase();
-  let vis = cobLista().filter(x=> cobFiltro === 'negativo' ? x.negativo : x.estado === cobFiltro);
+  let vis = cobLista().filter(cobCoincide);
   if(cobProveedor !== 'todos') vis = vis.filter(x=> x.prov === cobProveedor);
   if(q) vis = vis.filter(x=> x.codigo.toLowerCase().includes(q) || x.descripcion.toLowerCase().includes(q));
   return vis;
@@ -3733,9 +4061,10 @@ function cobVisibles(){
 $('cobVendedorBtn').onclick = async ()=>{
   const vis = cobVisibles();
   if(!vis.length){ openConfirm('No hay productos en la lista actual.', ()=>{}); return; }
-  const titulo = cobProveedor !== 'todos' ? cobProveedor : COB_ESTADOS[cobFiltro].label.replace(/^\S+\s/,'');
-  const texto = `Tienda ${TIENDA_NOMBRE} — ${titulo}\nProductos en 0 (${fechaCorta(hoyISO())}):\n` +
-    vis.map(x=> `• ${x.descripcion}${x.barcode ? ' ('+x.barcode+')' : ''}`).join('\n');
+  const titulo = cobProveedor !== 'todos' ? cobProveedor : cobInfoFiltro().label.replace(/^\S+\s/,'');
+  const texto = cobFiltro === 'sugerido'
+    ? `Tienda ${TIENDA_NOMBRE} — Pedido sugerido ${titulo} (${fechaCorta(hoyISO())}):\n` + vis.map(x=> `• ${x.descripcion}: ${x.sug} pz${x.cajas ? ` (${x.cajas} caja${x.cajas>1?'s':''})` : ''}`).join('\n')
+    : `Tienda ${TIENDA_NOMBRE} — ${titulo}\nProductos en 0 (${fechaCorta(hoyISO())}):\n` + vis.map(x=> `• ${x.descripcion}${x.barcode ? ' ('+x.barcode+')' : ''}`).join('\n');
   try{
     if(navigator.share){ await navigator.share({text: texto}); return; }
   }catch(e){ return; }
@@ -3745,7 +4074,7 @@ $('cobVendedorBtn').onclick = async ()=>{
 $('cobExportBtn').onclick = ()=>{
   const vis = cobVisibles();
   const lineas = [['Estatus','Codigo','Descripcion','Codigo de Barras','Proveedor','Distribucion','Existencia','Ultima entrega Cedis','Dias sin llegar','Veces que llego','Ultima con existencia'].join(',')];
-  vis.forEach(x=> lineas.push([COB_ESTADOS[cobFiltro].label.replace(/^\S+\s/,''), x.codigo, csvSafe(x.descripcion), x.barcode, csvSafe(x.proveedor), x.dist, x.ex===null?'':x.ex, x.ultimaEnt, x.dias===null?'':x.dias, x.entregas, x.ultimaConEx].join(',')));
+  vis.forEach(x=> lineas.push([cobInfoFiltro().label.replace(/^\S+\s/,''), x.codigo, csvSafe(x.descripcion), x.barcode, csvSafe(x.proveedor), x.dist, x.ex===null?'':x.ex, x.ultimaEnt, x.dias===null?'':x.dias, x.entregas, x.ultimaConEx].join(',')));
   downloadCsv(lineas.join('\n'), 'cobertura_'+cobFiltro);
 };
 
@@ -3777,6 +4106,13 @@ $('cobSurtidoBtn').onclick = async ()=>{
     ['Cedis sin historial', lista.filter(x=>x.estado==='sinhist'), (a,b)=> codigoCompare(a.codigo,b.codigo)],
     ['Negativos', lista.filter(x=>x.negativo), (a,b)=> a.ex-b.ex]
   ];
+  if(surtidoCfg.ventasCargadas){
+    const filaV = x => ({'Código': x.codigo, 'Código de barras': x.barcode || '', 'Descripción': x.descripcion, 'Proveedor': x.prov || x.proveedor,
+      'Existencia': x.ex, 'Venta por día': x.vd === null ? '' : Math.round(x.vd*10)/10, 'Días que alcanza': x.diasCob === null ? '' : Math.floor(x.diasCob),
+      'Sugerido (pz)': x.sug, 'Cajas': x.cajas || '', 'Pedido real': '', 'Comentario': ''});
+    grupos.unshift(['Sugerido', lista.filter(x=> x.sug > 0), (a,b)=> String(a.prov).localeCompare(String(b.prov)) || (b.vd-a.vd), filaV]);
+    grupos.unshift(['Quiebre', lista.filter(x=> x.quiebre), (a,b)=> b.vd-a.vd, filaV]);
+  }
   const total = grupos.reduce((s,g)=> s + g[1].length, 0);
   if(!total){ openConfirm('No hay faltantes que exportar' + (cobProveedor!=='todos' ? ' para este proveedor.' : '.'), ()=>{}); return; }
   const wb = XLSX.utils.book_new();
@@ -3788,9 +4124,9 @@ $('cobSurtidoBtn').onclick = async ()=>{
   ];
   const wsR = XLSX.utils.json_to_sheet(resumen); wsR['!cols'] = [{wch:24},{wch:40}];
   XLSX.utils.book_append_sheet(wb, wsR, 'Resumen');
-  grupos.forEach(([nombre, items, orden])=>{
+  grupos.forEach(([nombre, items, orden, filaFn])=>{
     if(!items.length) return;
-    const ws = XLSX.utils.json_to_sheet(items.slice().sort(orden).map(fila));
+    const ws = XLSX.utils.json_to_sheet(items.slice().sort(orden).map(filaFn || fila));
     ws['!cols'] = [{wch:11},{wch:15},{wch:38},{wch:30},{wch:9},{wch:12},{wch:9},{wch:9},{wch:10},{wch:26}];
     XLSX.utils.book_append_sheet(wb, ws, nombre);
   });
@@ -3841,7 +4177,8 @@ function registrarEtiqueta(item){
 function submitEtiScan(){
   const raw = etiInput.value.trim();
   if(!raw) return;
-  const item = findProduct(raw);
+  let item = findProduct(raw);
+  if(!item){ const res = buscarPalabras(raw, 2); if(res.length === 1) item = res[0]; }
   if(item){
     registrarEtiqueta({barcode: item.barcode || raw, codigo: item.codigo, descripcion: item.descripcion});
     resetEtiStage();
@@ -3870,6 +4207,9 @@ etiInput.addEventListener('input', ()=>{
   if(/^\d+$/.test(val) && val.length < 8){ etiLookupResult.innerHTML = ''; return; }
   // Texto o código incompleto: sugerencias para tocar (Enter = dar de alta si no existe).
   const res = buscarPalabras(val, 6);
+  const dig = val.replace(/\D/g,'');
+  const exacto = res.find(it=> (dig.length >= 8 && normBarcode(String(it.barcode||'').replace(/\D/g,'')) === normBarcode(dig)) || String(it.codigo).toUpperCase() === val.toUpperCase());
+  if(exacto){ etiScanTimer = setTimeout(()=>{ if(etiInput.value.trim()===val){ registrarEtiqueta({barcode: exacto.barcode || val, codigo: exacto.codigo, descripcion: exacto.descripcion}); resetEtiStage(); } }, 180); return; }
   etiLookupResult.innerHTML = res.length
     ? res.map((it,k)=>`<button type="button" class="rec-res" data-etisug="${k}"><b>${cvEsc(it.descripcion||it.codigo)}</b><small>${cvEsc(it.codigo)}${it.barcode?' · '+cvEsc(it.barcode):''}</small></button>`).join('')
     : `<div class="empty" style="padding:8px 0;">Sin coincidencias. Termina de escribir y presiona Enter para darlo de alta.</div>`;
@@ -4287,6 +4627,7 @@ $('sisImportFile').addEventListener('change', (e)=>{
   reader.readAsArrayBuffer(file);
 });
 
+let ventasPendientesSistema = null;
 $('sisImportCantBtn').onclick = ()=> $('sisImportCantFile').click();
 $('sisImportCantFile').addEventListener('change', (e)=>{
   const file = e.target.files[0];
@@ -4303,6 +4644,7 @@ $('sisImportCantFile').addEventListener('change', (e)=>{
       const sheet = wb.Sheets[wb.SheetNames[0]];
       const rows = XLSX.utils.sheet_to_json(sheet, {defval:''});
       const cotejo = construirCotejoExistencias(rows);
+      try{ const v = leerVentas(wb); ventasPendientesSistema = Object.keys(v.ventas).length ? v : null; }catch(err){ ventasPendientesSistema = null; }
       if(!cotejo.filas.length && !cotejo.invalidos){
         openConfirm('El archivo no trae renglones. Revisa que tenga columnas Codigo y Existencia.', ()=>{});
       } else {
@@ -4488,7 +4830,9 @@ function aplicarCotejo(){
   if(noAgregados.length) msg += `\n⛔ No se pudieron agregar: ${noAgregados.join(', ')}.`;
   if(c.faltantes.length) msg += `\n🔍 ${c.faltantes.length} producto(s) de tu app no vinieron en el ticket (no se tocaron).`;
   if(c.negativos.length) msg += `\n⚠️ ${c.negativos.length} con existencia negativa.`;
-  openConfirm(msg, ()=>{}, {yesLabel:'Entendido'});
+  const vp = ventasPendientesSistema; ventasPendientesSistema = null;
+  if(vp) openConfirm(msg + `\n\n📈 El archivo también trae ventas de ${Object.keys(vp.ventas).length} producto(s).`, ()=> aplicarVentas(vp, ''), {yesLabel:'Cargar ventas', noLabel:'Ahora no'});
+  else openConfirm(msg, ()=>{}, {yesLabel:'Entendido'});
 }
 
 function descargarCotejo(){
@@ -5313,6 +5657,30 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="trasOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head" id="trasHead">🚚 Traspasos<small id="trasSub"></small></div>
+    <div class="cotejo-body" id="trasBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions" id="trasFoot"></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="tableroOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">📊 Mis unidades<small id="tableroSub"></small></div>
+    <div class="cotejo-body" id="tableroBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="tableroCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="preciosOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">🏷️ Precios del conteo<small id="preciosSub">Precio de venta de la etiqueta del anaquel. Se toma en cada conteo.</small></div>
+    <div class="cotejo-body" id="preciosBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="preciosCerrar">Listo</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">🧾 Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
@@ -5380,9 +5748,18 @@ function rolTexto(u){
 function dibujarBarcode(svg, code, opts={}){
   if(!svg || !code || typeof JsBarcode === 'undefined') return false;
   const digits = String(code).replace(/\D/g,'');
-  const intentos = digits.length===13 ? ['EAN13','CODE128'] : digits.length===12 ? ['UPC','CODE128'] : digits.length===8 ? ['EAN8','CODE128'] : ['CODE128'];
-  for(const formato of intentos){
-    try{ JsBarcode(svg, code, Object.assign({format:formato, displayValue:true, height:44, fontSize:13, margin:10}, opts)); return true; }catch(e){}
+  // Excel se come el 0 inicial (021136010480 → 21136010480): se lo regresamos para que el POS lo lea.
+  const intentos = digits.length===13 ? [['EAN13',digits]] : digits.length===12 ? [['UPC',digits],['EAN13','0'+digits]]
+    : digits.length===11 ? [['UPC','0'+digits]] : digits.length===8 ? [['EAN8',digits]] : digits.length===7 ? [['EAN8','0'+digits]] : [];
+  intentos.push(['CODE128', String(code)]);
+  const digVerif = (d)=>{ const n = d.slice(0,-1).split('').reverse().map(Number); const sum = n.reduce((a,x,i)=> a + x*(i%2===0?3:1), 0); return (10 - sum%10)%10 === Number(d.slice(-1)); };
+  for(const [formato, valor] of intentos){
+    if(formato !== 'CODE128' && !digVerif(valor)) continue;
+    try{
+      let valido = true;
+      JsBarcode(svg, valor, Object.assign({format:formato, displayValue:true, height:44, fontSize:13, margin:10, valid:(v)=>{ valido = v; }}, opts));
+      if(valido) return true;
+    }catch(e){}
   }
   return false;
 }
@@ -5646,13 +6023,9 @@ async function pintarPreciosPron(){
     const p = {}, cambios = [];
     byId('pronBody').querySelectorAll('[data-precio]').forEach(inp=>{
       const cod = inp.dataset.precio, v = Number(String(inp.value).replace(',', '.'));
-      if(v > 0){ p[cod] = v; if(!preciosMap[cod] || Number(preciosMap[cod].precio) !== v) cambios.push({codigo:cod, precio:v}); }
+      if(v > 0){ p[cod] = v; if(!preciosMap[cod] || Number(preciosMap[cod].precio) !== v || !precioVigente(preciosMap[cod], inicioConteoActual())) cambios.push({codigo:cod, precio:v}); }
     });
-    if(cambios.length && fsReady){
-      const batch = fsDb.batch();
-      cambios.forEach(c=>{ const doc = {codigo:c.codigo, precio:c.precio, actualizado:new Date().toISOString(), por: currentUser || ''}; preciosMap[c.codigo] = doc; batch.set(fsPreciosCol.doc(c.codigo), doc); });
-      batch.commit().catch(()=>{});
-    }
+    cambios.forEach(c=> guardarPrecioConteo(c.codigo, c.precio));
     pron.precios = p;
     pron.res = calcPronostico(pron.difs, p);
     pintarResultadoPron();
@@ -5666,7 +6039,10 @@ function pintarResultadoPron(){
       <div class="pron-card verde"><span>Compensado en la misma familia</span><b>${fmt(t.comp)}</b></div>
     </div>
     <div class="pron-linea">Faltante bruto ${fmt(t.faltBruto)} · Sobrante bruto ${fmt(t.sobrBruto)}${r.enPesos ? '' : ' · <b>sin precios: cuenta en piezas</b>'}</div>
-    ${r.sinPrecio.length ? `<div class="catalog-note" style="margin-top:8px;">⚠️ ${r.sinPrecio.length} producto(s) sin precio no entraron al cálculo.</div>` : ''}`;
+    ${r.sinPrecio.length ? `<div class="catalog-note" style="margin-top:8px;">⚠️ ${r.sinPrecio.length} producto(s) sin precio no entraron al cálculo.</div>` : ''}
+    ${r.enPesos ? (()=>{ const desde = inicioConteoActual(); const items = r.items.map(i=> preciosMap && preciosMap[i.codigo]);
+      const viejos = items.filter(d=> !precioVigente(d, desde)).length, sinVer = items.filter(d=> precioVigente(d, desde) && !d.verificado).length;
+      return (viejos || sinVer) ? `<div class="catalog-note" style="margin-top:8px;">⚠️ Total no definitivo: ${viejos ? `${viejos} precio(s) son de un conteo anterior` : ''}${viejos && sinVer ? ' y ' : ''}${sinVer ? `${sinVer} sin verificar por el aliado` : ''}. Revísalos en 🏷️ Precios del conteo.</div>` : ''; })() : ''}`;
   const fams = `<div class="section-title"><span>Por familia</span><span>${r.familias.length}</span></div>
     <table class="pron-tabla"><thead><tr><th>Familia</th><th>Faltante</th><th>Sobrante</th><th>Neto</th></tr></thead><tbody>
     ${r.familias.map(F=>`<tr><td>${cvEsc(F.familia)}</td><td class="t-red">${fmt(F.falt)}</td><td class="t-blue">${fmt(F.sobr)}</td><td class="${F.neto<0?'t-red':F.neto>0?'t-blue':''}"><b>${fmt(F.neto)}</b></td></tr>`).join('')}
@@ -5812,6 +6188,430 @@ function renderNoManejo(){
   });
 }
 
+
+// ================= Precios del conteo =================
+// El precio cambia seguido: se captura en cada conteo (con el anterior como referencia)
+// y el aliado lo verifica. Doc: {codigo, precio, fecha, por, verificado, verificadoPor, anterior:{precio,fecha,por}}
+function inicioConteoActual(){
+  const ts = records.map(r=> Number(r.ts)||0).filter(Boolean);
+  const d = ts.length ? new Date(Math.min(...ts)) : new Date();
+  d.setHours(0,0,0,0); return d.getTime();
+}
+function precioVigente(doc, desde){ return !!(doc && doc.fecha && new Date(doc.fecha).getTime() >= desde); }
+async function datosPrecios(){
+  const precios = await cargarPrecios();
+  const desde = inicioConteoActual();
+  const difs = comparativoActual().filter(f=> f.sistema !== null && f.sistema !== undefined && f.diferencia);
+  const porCapturar = [], capturados = [];
+  difs.forEach(f=>{ const d = precios[f.codigo]; (precioVigente(d, desde) ? capturados : porCapturar).push({f, d}); });
+  const porVerificar = capturados.filter(x=> !x.d.verificado);
+  return {difs, porCapturar, capturados, porVerificar, desde};
+}
+async function actualizarBotonPrecios(){
+  try{
+    const sub = byId('compPreciosSub'); if(!sub) return;
+    const x = await datosPrecios();
+    if(!x.difs.length){ sub.textContent = 'Sin diferencias contra sistema todavía'; return; }
+    sub.textContent = x.porCapturar.length ? `Faltan ${x.porCapturar.length} de ${x.difs.length} productos con diferencia`
+      : (x.porVerificar.length && esEncargado() ? `✅ Todos capturados · ${x.porVerificar.length} por verificar` : `✅ Los ${x.difs.length} productos tienen precio de este conteo`);
+  }catch(e){}
+}
+function guardarPrecioConteo(codigo, precio){
+  const prev = preciosMap[codigo];
+  const desde = inicioConteoActual();
+  const doc = {codigo, precio:Number(precio), fecha:new Date().toISOString(), por: currentUser || '',
+    verificado: esEncargado(), verificadoPor: esEncargado() ? (currentUser||'') : ''};
+  if(prev){
+    if(precioVigente(prev, desde) && prev.anterior) doc.anterior = prev.anterior;      // corrección en el mismo conteo
+    else if(prev.precio) doc.anterior = {precio:Number(prev.precio), fecha: prev.fecha || prev.actualizado || '', por: prev.por || ''};
+  }
+  preciosMap[codigo] = doc;
+  if(fsReady) fsPreciosCol.doc(codigo).set(doc).catch(err=> avisarErrorGuardado(err, {descripcion:'el precio'}));
+}
+function verificarPrecio(codigo){
+  const d = preciosMap[codigo]; if(!d) return;
+  d.verificado = true; d.verificadoPor = currentUser || '';
+  if(fsReady) fsPreciosCol.doc(codigo).set({verificado:true, verificadoPor:d.verificadoPor}, {merge:true}).catch(()=>{});
+}
+function fechaDeISO(iso){ return iso ? fechaCorta(String(iso).slice(0,10)) : ''; }
+async function abrirPreciosConteo(){
+  if(auditModeActive){ openConfirm('Los precios se toman con tu inventario normal. Apaga el Modo auditoría en ☰ Más.', ()=>{}); return; }
+  byId('preciosOverlay').style.display = 'flex';
+  byId('preciosBody').innerHTML = '<div class="empty">Cargando…</div>';
+  await pintarPreciosConteo();
+}
+async function pintarPreciosConteo(){
+  const x = await datosPrecios();
+  const body = byId('preciosBody');
+  if(!x.difs.length){
+    body.innerHTML = '<div class="empty">No hay productos con diferencia contra sistema. Primero cuenta y carga las existencias en Sistema.</div>';
+    return;
+  }
+  const difTxt = (f)=> `<span class="${f.diferencia<0?'t-red':'t-blue'}">${f.diferencia>0?'+':''}${f.diferencia}</span>`;
+  const capt = x.porCapturar.sort((a,b)=> codigoCompare(a.f.codigo, b.f.codigo)).map(({f,d})=>`
+    <div class="log-item"><div class="info"><div class="desc">${cvEsc(f.descripcion||f.codigo)}</div>
+      <div class="meta">${cvEsc(f.codigo)} · ${difTxt(f)}${d && d.precio ? ` · último <b>${dinero(d.precio)}</b> (${fechaDeISO(d.fecha||d.actualizado)})` : ' · sin precio anterior'}</div></div>
+      <div style="display:flex;flex-direction:column;gap:6px;">
+        ${d && d.precio ? `<button type="button" class="mini-btn" data-pigual="${cvEsc(f.codigo)}">✓ Sigue igual</button>` : ''}
+        <button type="button" class="mini-btn ${d && d.precio ? 'off' : ''}" data-pnuevo="${cvEsc(f.codigo)}">✏️ Precio</button>
+      </div></div>`).join('');
+  let verif = '';
+  if(esEncargado() && x.porVerificar.length){
+    const cambio = (d)=> d.anterior && Number(d.anterior.precio) !== Number(d.precio);
+    const lista = x.porVerificar.slice().sort((a,b)=> (cambio(b.d)?1:0) - (cambio(a.d)?1:0));
+    const iguales = lista.filter(v=> v.d.anterior && !cambio(v.d));
+    verif = `<div class="section-title" style="margin-top:14px;"><span>✅ Por verificar (aliado)</span><span>${lista.length}</span></div>
+      ${iguales.length ? `<button type="button" class="add-missing-btn" id="pAprobarIguales" style="margin:0 0 10px;">✓ Aprobar los ${iguales.length} que no cambiaron</button>` : ''}
+      ${lista.map(({f,d})=>`<div class="log-item"><div class="info"><div class="desc">${cvEsc(f.descripcion||f.codigo)}</div>
+        <div class="meta">${cvEsc(f.codigo)} · ${cambio(d) ? `<b class="t-red">${dinero(d.anterior.precio)} → ${dinero(d.precio)}</b>` : `<b>${dinero(d.precio)}</b>${d.anterior?' · sin cambio':' · nuevo'}`} · ${cvEsc(d.por||'')}</div></div>
+        <div style="display:flex;flex-direction:column;gap:6px;"><button type="button" class="mini-btn" data-pok="${cvEsc(f.codigo)}">✓ Correcto</button>
+        <button type="button" class="mini-btn off" data-pnuevo="${cvEsc(f.codigo)}">✏️ Corregir</button></div></div>`).join('')}`;
+  }
+  const listos = x.capturados.length - (esEncargado() ? x.porVerificar.length : 0);
+  body.innerHTML = `<div class="rec-resumen" style="margin-top:0;"><div><b>${x.porCapturar.length}</b><span>por capturar</span></div><div><b>${x.capturados.length}</b><span>con precio de hoy</span></div></div>
+    ${x.porCapturar.length ? `<button type="button" class="add-missing-btn" id="pConsultarPOS" style="margin:10px 0 4px;">📲 Consultar en el POS (${x.porCapturar.length}) · escanea el código desde el celular</button>
+      <div class="section-title"><span>🏷️ Por capturar</span><span>${x.porCapturar.length}</span></div>${capt}` : '<div class="empty">✅ Ya están todos los precios de este conteo.</div>'}
+    ${verif}
+    ${!esEncargado() && x.porVerificar.length ? `<div class="catalog-note" style="margin-top:10px;">${x.porVerificar.length} precio(s) esperan que el aliado los revise.</div>` : ''}`;
+  const refrescar = ()=>{ pintarPreciosConteo(); actualizarBotonPrecios(); };
+  body.querySelectorAll('[data-pigual]').forEach(b=> b.onclick = ()=>{ const c = b.dataset.pigual; guardarPrecioConteo(c, preciosMap[c].precio); refrescar(); });
+  body.querySelectorAll('[data-pok]').forEach(b=> b.onclick = ()=>{ verificarPrecio(b.dataset.pok); refrescar(); });
+  body.querySelectorAll('[data-pnuevo]').forEach(b=> b.onclick = ()=>{
+    const c = b.dataset.pnuevo; const it = x.difs.find(f=> f.codigo === c) || {};
+    openKeypad(`Precio de venta (etiqueta) · ${it.descripcion || c}`, '', (v)=>{
+      const n = Number(String(v).replace(',', '.'));
+      if(n > 0){ guardarPrecioConteo(c, Math.round(n*100)/100); refrescar(); }
+    }, {asString:true, decimal:true});
+  });
+  const cp = byId('pConsultarPOS'); if(cp) cp.onclick = ()=> abrirCaja(x.porCapturar.slice().sort((a,b)=> codigoCompare(a.f.codigo, b.f.codigo))
+    .map(({f})=> ({descripcion:f.descripcion, codigo:f.codigo, barcode:f.barcode, cantidadTxt:'', pedirPrecio:true})));
+  const ap = byId('pAprobarIguales'); if(ap) ap.onclick = ()=>{
+    x.porVerificar.filter(v=> v.d.anterior && Number(v.d.anterior.precio) === Number(v.d.precio)).forEach(v=> verificarPrecio(v.f.codigo));
+    refrescar();
+  };
+}
+byId('preciosCerrar').onclick = ()=>{ byId('preciosOverlay').style.display = 'none'; actualizarBotonPrecios(); };
+byId('compPreciosBtn').onclick = abrirPreciosConteo;
+byId('masPreciosBtn').onclick = ()=>{ cerrarMas(); abrirPreciosConteo(); };
+document.querySelectorAll('.tab[data-tab="comparativo"]').forEach(t=> t.addEventListener('click', actualizarBotonPrecios));
+
+
+// ================= Respaldo completo de la tienda (Excel) =================
+const RESPALDO_COLS = [
+  ['inventario_registros_items','Conteo en curso'], ['inventario_existencias_items','Existencias sistema'],
+  ['inventario_cierres_items','Conteos guardados'], ['inventario_historial_items','Historial'],
+  ['inventario_recepciones_items','Recepciones'], ['inventario_cobertura_items','Cobertura y ventas'],
+  ['inventario_precios_items','Precios'], ['inventario_catalogo_extra_items','Catalogo agregado'],
+  ['inventario_cartonaje_items','Piezas por caja'], ['inventario_auditoria_propio_items','Auditoria'],
+  ['inventario_papelera_items','Papelera'], ['inventario_ajustes_items','Ajustes']
+];
+function respaldoPlano(o){
+  const r = {};
+  Object.entries(o || {}).forEach(([k,v])=>{
+    if(v && typeof v === 'object' && typeof v.toDate === 'function') v = v.toDate().toISOString();
+    if(v && typeof v === 'object') v = JSON.stringify(v);
+    if(typeof v === 'string' && v.length > 32000) v = v.slice(0, 32000) + '…(recortado)';
+    r[k] = v;
+  });
+  return r;
+}
+async function hacerRespaldo(){
+  if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu conexión.', ()=>{}); return; }
+  if(!fsReady || !navigator.onLine){ openConfirm('Para el respaldo necesitas internet, así salen los datos de todo el equipo y no solo de este celular.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  openConfirm('⏳ Preparando el respaldo…', ()=>{}, {yesLabel:'Espera'});
+  const wb = XLSX.utils.book_new();
+  const resumen = [{'Dato':'Tienda','Valor':TIENDA_NOMBRE}, {'Dato':'Clave de tienda','Valor':TIENDA_ID}, {'Dato':'Fecha del respaldo','Valor':new Date().toLocaleString('es-MX')}, {'Dato':'Hecho por','Valor':currentUser||''}];
+  let total = 0;
+  for(const [col, nombre] of RESPALDO_COLS){
+    try{
+      const snap = await tCol(col).get();
+      const filas = snap.docs.map(d=> Object.assign({_id: d.id}, respaldoPlano(d.data())));
+      resumen.push({'Dato': nombre, 'Valor': filas.length}); total += filas.length;
+      if(filas.length) XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(filas), nombre.slice(0,31));
+    }catch(e){ resumen.push({'Dato': nombre, 'Valor':'no se pudo leer'}); }
+  }
+  // Datos que viven en documentos (etiquetas, caducidades, etc.)
+  try{
+    const snap = await tCol(FS_COLLECTION).get();
+    snap.docs.forEach(d=>{
+      let v = d.data() && d.data().value; try{ v = JSON.parse(v); }catch(e){}
+      if(Array.isArray(v) && v.length){
+        const nombre = ({etiquetas_pendientes:'Etiquetas', caducidades_lotes:'Caducidades'})[d.id] || d.id;
+        if(wb.SheetNames.includes(nombre.slice(0,31))) return;
+        XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(v.map(respaldoPlano)), nombre.slice(0,31));
+        resumen.push({'Dato': nombre, 'Valor': v.length}); total += v.length;
+      }
+    });
+  }catch(e){}
+  const wsR = XLSX.utils.json_to_sheet(resumen); wsR['!cols'] = [{wch:24},{wch:40}];
+  XLSX.utils.book_append_sheet(wb, wsR, 'Resumen');
+  wb.SheetNames.unshift(wb.SheetNames.pop());
+  const hoy = hoyISO();
+  const nombreArchivo = `Respaldo_${nombreArchivoTienda()}_${hoy}.xlsx`;
+  lsSet('ultimo_respaldo', hoy); pintarRespaldoSub();
+  byId('confirmOverlay').style.display = 'none';
+  try{
+    const data = XLSX.write(wb, {bookType:'xlsx', type:'array'});
+    const file = new File([data], nombreArchivo, {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    if(navigator.canShare && navigator.canShare({files:[file]})){
+      await navigator.share({files:[file], title:nombreArchivo, text:`Respaldo ${TIENDA_NOMBRE} — ${hoy}`});
+      return;
+    }
+  }catch(e){ if(e && e.name === 'AbortError') return; }
+  XLSX.writeFile(wb, nombreArchivo);
+  openConfirm(`✅ Respaldo listo: ${total} registro(s).\n\nGuárdalo en tu Drive, iCloud o correo. Te recomiendo hacer uno cada semana.`, ()=>{}, {yesLabel:'Entendido'});
+}
+function pintarRespaldoSub(){
+  const u = lsGet('ultimo_respaldo'); const el = byId('respaldoSub'); if(!el) return;
+  if(!u){ el.textContent = 'Aún no has hecho ninguno · descarga todo en un Excel'; return; }
+  const d = diasDesde(u);
+  el.textContent = `Último: ${fechaCorta(u)}${d >= 7 ? ' · ⚠️ hace ' + d + ' días, haz uno nuevo' : ''}`;
+}
+byId('respaldoBtn').onclick = ()=>{ cerrarMas(); hacerRespaldo(); };
+byId('masBtn').addEventListener('click', pintarRespaldoSub);
+
+
+// ================= Empresas: cambiar de unidad, traspasos y tablero del dueño =================
+byId('unidadBtn').onclick = ()=>{
+  cerrarMas();
+  const ops = misUnidades().map(id=> ({icono: tipoUnidad(id) === 'almacen' ? '🏭' : '🏪', label: nombreUnidad(id),
+    sub: id === TIENDA_ID ? 'Estás aquí' : (tipoUnidad(id) === 'almacen' ? 'Almacén' : 'Sucursal'), fn: ()=>{ if(id !== TIENDA_ID) cambiarTienda(id); }}));
+  elegir('¿A qué unidad quieres entrar?', ops);
+};
+const trasCol = ()=> fsEmpresasCol.doc(miEmpresa.id).collection('traspasos');
+let traspasos = [], trasUnsub = null, trasVista = 'recibir', trasNuevo = null, trasAbierto = null;
+function escucharTraspasos(){
+  if(trasUnsub || !miEmpresa || !fsReady) return;
+  trasUnsub = trasCol().onSnapshot((snap)=>{
+    traspasos = snap.docs.map(d=> d.data()).sort((a,b)=> String(b.enviadoEn||'').localeCompare(String(a.enviadoEn||'')));
+    const n = traspasos.filter(t=> t.destino === TIENDA_ID && t.estado === 'transito').length;
+    const sub = byId('traspasosSub'); if(sub) sub.textContent = n ? `📥 ${n} por recibir` : 'Envíos entre almacén y sucursales';
+    if(byId('trasOverlay').style.display === 'flex' && !trasNuevo && !trasAbierto) pintarTraspasos();
+  }, ()=>{});
+}
+function trasEstado(t){
+  return t.estado === 'transito' ? '<span class="chip status-pendiente">🚚 En camino</span>'
+    : t.estado === 'diferencia' ? '<span class="chip status-faltante">⚠️ Llegó con diferencia</span>'
+    : '<span class="chip status-ok">✅ Recibido completo</span>';
+}
+function trasPiezas(t, campo){ return (t.items||[]).reduce((a,i)=> a + (Number(i[campo])||0), 0); }
+function abrirTraspasos(){
+  escucharTraspasos();
+  trasNuevo = null; trasAbierto = null;
+  if(!['recibir','enviados','recibidos'].includes(trasVista)) trasVista = 'recibir';
+  byId('trasOverlay').style.display = 'flex';
+  pintarTraspasos();
+}
+function cerrarTraspasos(){ byId('trasOverlay').style.display = 'none'; trasNuevo = null; trasAbierto = null; }
+function pintarTraspasos(){
+  byId('trasHead').firstChild.textContent = '🚚 Traspasos ';
+  byId('trasSub').textContent = `${TIENDA_NOMBRE} · ${tipoUnidad(TIENDA_ID) === 'almacen' ? 'Almacén' : 'Sucursal'}`;
+  const porRecibir = traspasos.filter(t=> t.destino === TIENDA_ID && t.estado === 'transito');
+  const enviados = traspasos.filter(t=> t.origen === TIENDA_ID);
+  const recibidos = traspasos.filter(t=> t.destino === TIENDA_ID && t.estado !== 'transito');
+  const lista = trasVista === 'recibir' ? porRecibir : trasVista === 'enviados' ? enviados : recibidos;
+  const tab = (k, t, n)=> `<button type="button" data-tvista="${k}" class="${trasVista===k?'on':''}">${t}${n ? ` (${n})` : ''}</button>`;
+  byId('trasBody').innerHTML = `<button type="button" class="btn btn-export blue" id="trasNuevoBtn" style="width:100%;margin:0 0 10px;">📤 Nuevo envío a otra unidad</button>
+    <div class="cob-seg" style="margin-bottom:10px;">${tab('recibir','📥 Por recibir', porRecibir.length)}${tab('enviados','📤 Enviados')}${tab('recibidos','✅ Recibidos')}</div>
+    ${lista.length ? lista.map(t=> `<div class="log-item cob-item" data-tver="${cvEsc(t.id)}"><div class="info">
+        <div class="desc">${t.origen === TIENDA_ID ? '→ ' + cvEsc(t.destinoNombre) : '← ' + cvEsc(t.origenNombre)} · #${cvEsc(t.folio||'')}</div>
+        <div class="meta">${new Date(t.enviadoEn).toLocaleString('es-MX',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})} · ${(t.items||[]).length} producto(s) · ${trasPiezas(t,'enviado')} pz · envió ${cvEsc(t.enviadoPor||'')}</div>
+        <div style="margin-top:4px;">${trasEstado(t)}${t.difTexto ? ` <span class="meta">${cvEsc(t.difTexto)}</span>` : ''}</div></div></div>`).join('')
+      : `<div class="empty">${trasVista === 'recibir' ? 'No hay mercancía en camino hacia esta unidad.' : 'Todavía no hay traspasos aquí.'}</div>`}`;
+  byId('trasFoot').innerHTML = `<button class="confirm-no" id="trasCerrar">Cerrar</button>`;
+  byId('trasCerrar').onclick = cerrarTraspasos;
+  byId('trasNuevoBtn').onclick = iniciarEnvio;
+  byId('trasBody').querySelectorAll('[data-tvista]').forEach(b=> b.onclick = ()=>{ trasVista = b.dataset.tvista; pintarTraspasos(); });
+  byId('trasBody').querySelectorAll('[data-tver]').forEach(b=> b.onclick = ()=>{ const t = traspasos.find(x=> x.id === b.dataset.tver); if(t) abrirTraspaso(t); });
+}
+// ---- Nuevo envío
+function iniciarEnvio(){
+  const destinos = (miEmpresa.unidades||[]).filter(u=> u.id !== TIENDA_ID);
+  if(!destinos.length){ openConfirm('La empresa no tiene otras unidades todavía.', ()=>{}); return; }
+  elegir('¿A qué unidad envías?', destinos.map(u=> ({icono: u.tipo === 'almacen' ? '🏭' : '🏪', label: u.nombre, sub: u.tipo === 'almacen' ? 'Almacén' : 'Sucursal',
+    fn: ()=>{ trasNuevo = {destino: u.id, destinoNombre: u.nombre, items: []}; pintarEnvio(); }})));
+}
+function agregarAlEnvio(item){
+  openKeypad(`¿Cuántas piezas envías? · ${item.descripcion || item.codigo}`, '', (v)=>{
+    const n = Math.max(0, Number(v)||0);
+    if(n){
+      let it = trasNuevo.items.find(x=> x.codigo === item.codigo);
+      if(!it){ it = {codigo:item.codigo, descripcion:item.descripcion||'', barcode:item.barcode||'', enviado:0}; trasNuevo.items.push(it); }
+      it.enviado += n;
+    }
+    pintarEnvio();
+  }, {onCancel: ()=> pintarEnvio(), cajas:{n: piezasPorCaja(item.codigo), codigo:item.codigo}});
+}
+function buscarEnvio(raw){
+  const v = String(raw||'').trim(); if(!v) return;
+  const it = findProduct(v);
+  if(it){ agregarAlEnvio(it); return; }
+  const res = buscarPalabras(v, 8);
+  const box = byId('envRes');
+  box.innerHTML = res.length ? res.map((i,k)=> `<button type="button" class="rec-res" data-eres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}</small></button>`).join('')
+    : '<div class="empty" style="padding:8px 0;">No está en el catálogo de esta unidad.</div>';
+  box.querySelectorAll('[data-eres]').forEach(b=> b.onclick = ()=> agregarAlEnvio(res[+b.dataset.eres]));
+}
+function pintarEnvio(){
+  const t = trasNuevo; if(!t) return;
+  byId('trasHead').firstChild.textContent = '📤 Envío ';
+  byId('trasSub').textContent = `${TIENDA_NOMBRE} → ${t.destinoNombre}`;
+  const total = t.items.reduce((a,i)=> a + i.enviado, 0);
+  byId('trasBody').innerHTML = `<div style="display:flex;gap:8px;"><input type="text" id="envInput" class="rec-input" inputmode="none" autocomplete="off" placeholder="Escanea aquí…" style="flex:1;min-width:0;">
+      <button type="button" class="mini-btn" id="envTeclado" style="flex:0 0 auto;">⌨️ Escribir</button></div>
+    <div id="envRes"></div>
+    <div class="rec-resumen"><div><b>${total}</b><span>piezas</span></div><div><b>${t.items.length}</b><span>productos</span></div></div>
+    <div class="section-title"><span>Lo que va en el envío</span><span>${t.items.length ? 'toca la cantidad para corregir' : ''}</span></div>
+    ${t.items.length ? t.items.slice().reverse().map(it=> `<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div><div class="meta">${cvEsc(it.codigo)}</div></div>
+      <button type="button" class="qty rec-editar" data-eedit="${cvEsc(it.codigo)}">${it.enviado}</button><button class="del" data-edel="${cvEsc(it.codigo)}">✕</button></div>`).join('')
+      : '<div class="empty">Escanea o escribe el primer producto que vas a enviar.</div>'}`;
+  byId('trasFoot').innerHTML = `<button class="confirm-no" id="envCancelar">Cancelar</button><button class="confirm-yes" id="envEnviar" ${t.items.length?'':'disabled'}>📤 Enviar</button>`;
+  const inp = byId('envInput');
+  inp.addEventListener('keydown', (e)=>{ if(e.key === 'Enter'){ e.preventDefault(); const v = inp.value; inp.value = ''; buscarEnvio(v); } });
+  setTimeout(()=> inp.focus(), 60);
+  byId('envTeclado').onclick = ()=> openTextKeypad('Producto: nombre, código o código de barras', '', (val)=> buscarEnvio(val));
+  byId('trasBody').querySelectorAll('[data-edel]').forEach(b=> b.onclick = ()=>{ t.items = t.items.filter(x=> x.codigo !== b.dataset.edel); pintarEnvio(); });
+  byId('trasBody').querySelectorAll('[data-eedit]').forEach(b=> b.onclick = ()=>{
+    const it = t.items.find(x=> x.codigo === b.dataset.eedit);
+    openKeypad(`Corregir piezas · ${it.descripcion || it.codigo}`, it.enviado, (v)=>{ const n = Math.max(0, Number(v)||0); if(n) it.enviado = n; else t.items = t.items.filter(x=> x !== it); pintarEnvio(); });
+  });
+  byId('envCancelar').onclick = ()=> openConfirm('¿Cancelar este envío? No se guarda nada.', ()=>{ trasNuevo = null; pintarTraspasos(); }, {yesLabel:'Sí, cancelar'});
+  byId('envEnviar').onclick = ()=>{
+    const total = t.items.reduce((a,i)=> a + i.enviado, 0);
+    openConfirm(`¿Enviar ${total} pieza(s) de ${t.items.length} producto(s) a ${t.destinoNombre}?\n\nQuedará "en camino" hasta que ${t.destinoNombre} lo reciba.`, ()=>{
+      const id = uid(), ahora = new Date();
+      const folio = `${ahora.getFullYear()%100}${String(ahora.getMonth()+1).padStart(2,'0')}${String(ahora.getDate()).padStart(2,'0')}-${id.slice(-4).toUpperCase()}`;
+      const doc = {id, folio, origen: TIENDA_ID, origenNombre: TIENDA_NOMBRE, destino: t.destino, destinoNombre: t.destinoNombre,
+        items: t.items, estado:'transito', enviadoPor: currentUser || '', enviadoEn: ahora.toISOString()};
+      trasCol().doc(id).set(doc).catch(err=> avisarErrorGuardado(err, {descripcion:'el traspaso'}));
+      // Existencias de esta unidad: baja lo que salió (solo productos que ya tienen existencia de sistema)
+      t.items.forEach(it=>{ const e = existenciasMap[it.codigo]; if(e){ e.cantidad = Number(e.cantidad||0) - it.enviado; e.ts = ahora.toISOString(); persistExistenciaCodigo(it.codigo); } });
+      traspasos.unshift(doc); trasNuevo = null; trasVista = 'enviados'; pintarTraspasos();
+      openConfirm(`✅ Envío #${folio} registrado: va en camino a ${t.destinoNombre}.`, ()=>{}, {yesLabel:'Entendido'});
+    }, {yesLabel:'Enviar'});
+  };
+}
+// ---- Ver / recibir un traspaso
+function abrirTraspaso(t){
+  trasAbierto = JSON.parse(JSON.stringify(t));
+  pintarTraspaso();
+}
+function pintarTraspaso(){
+  const t = trasAbierto; if(!t) return;
+  const recibiendo = t.destino === TIENDA_ID && t.estado === 'transito';
+  byId('trasHead').firstChild.textContent = recibiendo ? '📥 Recibir ' : '🚚 Traspaso ';
+  byId('trasSub').textContent = `#${t.folio} · ${t.origenNombre} → ${t.destinoNombre}`;
+  const pend = t.items.filter(i=> i.recibido === undefined || i.recibido === null).length;
+  byId('trasBody').innerHTML = `<div class="meta" style="margin-bottom:8px;">Envió ${cvEsc(t.enviadoPor||'')} · ${new Date(t.enviadoEn).toLocaleString('es-MX')}${t.recibidoEn ? `<br>Recibió ${cvEsc(t.recibidoPor||'')} · ${new Date(t.recibidoEn).toLocaleString('es-MX')}` : ''}</div>
+    ${recibiendo && pend ? `<button type="button" class="add-missing-btn" id="trasTodo" style="margin:0 0 10px;">✅ Llegó todo completo</button>` : ''}
+    ${t.items.map((it,i)=>{
+      const tiene = it.recibido !== undefined && it.recibido !== null;
+      const d = tiene ? it.recibido - it.enviado : 0;
+      const est = !tiene ? '' : d === 0 ? `<div class="meta" style="color:#1e7d4f;font-weight:800;">✅ Llegaron ${it.recibido} · completo</div>`
+        : `<div class="meta" style="color:#c0392b;font-weight:800;">⚠️ Llegaron ${it.recibido} · ${d<0 ? 'faltan ' + (-d) : 'sobran ' + d} pz</div>`;
+      return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div>
+        <div class="meta">${cvEsc(it.codigo)} · salieron <b>${it.enviado}</b> pz</div>${est}</div>
+        ${recibiendo ? `<div style="display:flex;flex-direction:column;gap:6px;">${tiene ? `<button type="button" class="mini-btn" data-trcam="${i}">Cambiar</button>`
+          : `<button type="button" class="mini-btn" data-trok="${i}">✓ Completo</button><button type="button" class="mini-btn off" data-trcam="${i}">Otra cantidad</button>`}</div>` : ''}</div>`;
+    }).join('')}`;
+  const volver = `<button class="confirm-no" id="trasVolver">← Volver</button>`;
+  byId('trasFoot').innerHTML = recibiendo ? volver + `<button class="confirm-yes" id="trasConfirmar" ${pend ? 'disabled' : ''}>Confirmar recepción</button>` : volver;
+  byId('trasVolver').onclick = ()=>{ trasAbierto = null; pintarTraspasos(); };
+  if(!recibiendo) return;
+  const todo = byId('trasTodo'); if(todo) todo.onclick = ()=>{ t.items.forEach(it=>{ if(it.recibido === undefined || it.recibido === null) it.recibido = it.enviado; }); pintarTraspaso(); };
+  byId('trasBody').querySelectorAll('[data-trok]').forEach(b=> b.onclick = ()=>{ const it = t.items[+b.dataset.trok]; it.recibido = it.enviado; pintarTraspaso(); });
+  byId('trasBody').querySelectorAll('[data-trcam]').forEach(b=> b.onclick = ()=>{
+    const it = t.items[+b.dataset.trcam];
+    openKeypad(`¿Cuántas piezas llegaron? · ${it.descripcion || it.codigo}`, '', (v)=>{ if(v !== ''){ it.recibido = Math.max(0, Number(v)||0); } pintarTraspaso(); },
+      {onCancel: ()=> pintarTraspaso(), cajas:{n: piezasPorCaja(it.codigo), codigo: it.codigo}});
+  });
+  byId('trasConfirmar').onclick = ()=>{
+    const difs = t.items.filter(it=> it.recibido !== it.enviado).map(it=>{ const d = it.recibido - it.enviado; return `${it.descripcion||it.codigo}: ${d<0 ? 'faltaron ' + (-d) : 'sobraron ' + d} pz`; });
+    const msg = difs.length ? `⚠️ El envío llegó con diferencia:\n${difs.join('\n')}\n\n¿Confirmar así? Queda registrado quién envió y quién recibió.` : '✅ Llegó completo. ¿Confirmar la recepción?';
+    openConfirm(msg, ()=>{
+      const ahora = new Date().toISOString();
+      const cambios = {items: t.items, estado: difs.length ? 'diferencia' : 'recibido', difTexto: difs.join(' · '), recibidoPor: currentUser || '', recibidoEn: ahora};
+      trasCol().doc(t.id).update(cambios).catch(err=> avisarErrorGuardado(err, {descripcion:'la recepción del traspaso'}));
+      // Existencias de esta unidad: sube lo que llegó (solo productos que ya tienen existencia de sistema)
+      t.items.forEach(it=>{ const e = existenciasMap[it.codigo]; if(e){ e.cantidad = Number(e.cantidad||0) + Number(it.recibido||0); e.ts = ahora; persistExistenciaCodigo(it.codigo); } });
+      const local = traspasos.find(x=> x.id === t.id); if(local) Object.assign(local, cambios);
+      trasAbierto = null; trasVista = 'recibidos'; pintarTraspasos();
+    }, {yesLabel:'Confirmar'});
+  };
+}
+byId('traspasosBtn').onclick = ()=>{ cerrarMas(); abrirTraspasos(); };
+// ---- Tablero del dueño: todas las unidades de la empresa
+async function abrirTablero(){
+  cerrarMas();
+  if(!miEmpresa) return;
+  escucharTraspasos();
+  byId('tableroOverlay').style.display = 'flex';
+  byId('tableroSub').textContent = miEmpresa.nombre;
+  byId('tableroBody').innerHTML = '<div class="empty">Leyendo las unidades…</div>';
+  const filas = [];
+  for(const u of (miEmpresa.unidades||[])){
+    const T = fsTiendasCol.doc(u.id);
+    const r = {u, contadas:0, piezas:0, difs:0, faltPz:0, faltPesos:0, sinPrecio:0, ultimoConteo:'', ok:true};
+    try{
+      const [reg, exi, pre, cie] = await Promise.all([T.collection('inventario_registros_items').get(), T.collection('inventario_existencias_items').get(),
+        T.collection('inventario_precios_items').get(), T.collection('inventario_cierres_items').get()]);
+      const fis = {}; reg.docs.forEach(d=>{ const x = d.data(); const k = x.codigo || x.barcode; if(k){ fis[k] = (fis[k]||0) + Number(x.cantidad||0); r.piezas += Number(x.cantidad||0); } });
+      r.contadas = Object.keys(fis).length;
+      const precios = {}; pre.docs.forEach(d=>{ const x = d.data(); if(x && x.codigo) precios[x.codigo] = Number(x.precio)||0; });
+      exi.docs.forEach(d=>{ const x = d.data(); if(!x || !(x.codigo in fis)) return; const dif = fis[x.codigo] - Number(x.cantidad||0);
+        if(dif){ r.difs++; if(dif < 0){ r.faltPz += -dif; if(precios[x.codigo]) r.faltPesos += -dif * precios[x.codigo]; else r.sinPrecio++; } } });
+      const fechas = cie.docs.map(d=> d.data().fecha).filter(Boolean).sort(); r.ultimoConteo = fechas[fechas.length-1] || '';
+    }catch(e){ r.ok = false; }
+    const tr = traspasos.filter(t=> t.origen === u.id || t.destino === u.id);
+    r.entrando = tr.filter(t=> t.destino === u.id && t.estado === 'transito').length;
+    r.saliendo = tr.filter(t=> t.origen === u.id && t.estado === 'transito').length;
+    r.conDif = tr.filter(t=> t.estado === 'diferencia').length;
+    filas.push(r);
+  }
+  const tot = {faltPesos: filas.reduce((a,r)=> a + r.faltPesos, 0), transito: traspasos.filter(t=> t.estado === 'transito').length, conDif: traspasos.filter(t=> t.estado === 'diferencia').length};
+  byId('tableroBody').innerHTML = `<div class="pron-cards">
+      <div class="pron-card rojo"><span>Faltante en el conteo actual</span><b>${dinero(tot.faltPesos)}</b></div>
+      <div class="pron-card azul"><span>Traspasos en camino</span><b>${tot.transito}</b></div>
+      <div class="pron-card ${tot.conDif ? 'rojo' : 'verde'}"><span>Traspasos con diferencia</span><b>${tot.conDif}</b></div>
+    </div>
+    ${filas.map(r=> `<div class="log-item"><div class="info">
+      <div class="desc">${r.u.tipo === 'almacen' ? '🏭' : '🏪'} ${cvEsc(r.u.nombre)}${r.u.id === TIENDA_ID ? ' <span class="eq-rol">Estás aquí</span>' : ''}</div>
+      ${r.ok ? `<div class="meta">Conteo en curso: ${r.contadas} producto(s), ${r.piezas} pz · ${r.difs} con diferencia${r.faltPz ? ` · faltan ${r.faltPz} pz` : ''}${r.faltPesos ? ` (<b class="t-red">${dinero(r.faltPesos)}</b>${r.sinPrecio ? `, ${r.sinPrecio} sin precio` : ''})` : ''}</div>
+      <div class="meta">Último conteo guardado: ${r.ultimoConteo ? new Date(r.ultimoConteo).toLocaleDateString('es-MX',{day:'numeric',month:'short'}) : '—'} · 📥 ${r.entrando} por recibir · 📤 ${r.saliendo} en camino${r.conDif ? ` · ⚠️ ${r.conDif} con diferencia` : ''}</div>`
+      : '<div class="meta">No se pudo leer esta unidad (revisa que esté activa).</div>'}</div>
+      ${r.u.id !== TIENDA_ID ? `<button type="button" class="mini-btn" data-tbentrar="${cvEsc(r.u.id)}">Entrar</button>` : ''}</div>`).join('')}
+    <button type="button" class="btn btn-export" id="tbCopiarCat" style="width:100%;margin-top:12px;">📋 Copiar el catálogo de ${cvEsc(TIENDA_NOMBRE)} a las demás unidades</button>
+    <div class="catalog-note" style="margin-top:10px;">El faltante en pesos usa los precios capturados en cada unidad. Los traspasos con diferencia se revisan en 🚚 Traspasos. El catálogo se carga una vez (en Sistema) y se copia a todas con el botón de arriba.</div>`;
+  byId('tbCopiarCat').onclick = copiarCatalogoAUnidades;
+  byId('tableroBody').querySelectorAll('[data-tbentrar]').forEach(b=> b.onclick = ()=> cambiarTienda(b.dataset.tbentrar));
+}
+byId('tableroBtn').onclick = abrirTablero;
+// Catálogo compartido: copia los productos y piezas por caja de esta unidad a las demás de la empresa.
+function copiarCatalogoAUnidades(){
+  const otras = (miEmpresa.unidades||[]).filter(u=> u.id !== TIENDA_ID);
+  const prods = (extraCatalog||[]).filter(it=> it && it.codigo);
+  if(!otras.length || !prods.length){ openConfirm(!prods.length ? 'Esta unidad no tiene catálogo cargado todavía. Cárgalo primero en Sistema.' : 'No hay otras unidades.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  openConfirm(`¿Copiar ${prods.length} producto(s) del catálogo de ${TIENDA_NOMBRE} a ${otras.map(u=> u.nombre).join(', ')}?\n\nSe agregan o actualizan; no se borra nada de las otras unidades.`, async ()=>{
+    openConfirm('⏳ Copiando catálogo…', ()=>{}, {yesLabel:'Espera'});
+    try{
+      for(const u of otras){
+        const C = fsTiendasCol.doc(u.id).collection('inventario_catalogo_extra_items');
+        const K = fsTiendasCol.doc(u.id).collection('inventario_cartonaje_items');
+        for(let i=0;i<prods.length;i+=400){
+          const batch = fsDb.batch();
+          prods.slice(i,i+400).forEach(it=>{
+            batch.set(C.doc(it.codigo), JSON.parse(JSON.stringify(it)));
+            const pc = piezasPorCaja(it.codigo); if(pc) batch.set(K.doc(it.codigo), {codigo: it.codigo, piezas: pc, actualizado: new Date().toISOString()});
+          });
+          await batch.commit();
+        }
+      }
+      openConfirm(`✅ Catálogo copiado a ${otras.length} unidad(es).`, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){ avisarErrorGuardado(err, {descripcion:'la copia del catálogo'}); }
+  }, {yesLabel:'Copiar'});
+}
+byId('tableroCerrar').onclick = ()=>{ byId('tableroOverlay').style.display = 'none'; };
+
 function abrirProveedores(){ provEditando = null; provBusqueda = ''; byId('provOverlay').style.display = 'flex'; renderProveedores(); }
 byId('provCerrar').onclick = ()=>{ byId('provOverlay').style.display = 'none'; renderCobertura(); };
 function renderProveedores(){
@@ -5884,7 +6684,8 @@ function abrirCaja(items){
   byId('cajaOverlay').style.display = 'flex'; document.body.style.overflow = 'hidden';
   pintarCaja();
 }
-function cerrarCaja(){ byId('cajaOverlay').style.display = 'none'; document.body.style.overflow = ''; }
+function cerrarCaja(){ byId('cajaOverlay').style.display = 'none'; document.body.style.overflow = '';
+  if(byId('preciosOverlay').style.display === 'flex'){ pintarPreciosConteo(); actualizarBotonPrecios(); } }
 function pintarCaja(){
   const it = cajaItems[cajaIdx];
   byId('cajaPos').textContent = `${cajaIdx+1} de ${cajaItems.length}`;
@@ -5895,6 +6696,20 @@ function pintarCaja(){
   const ok = it.barcode ? dibujarBarcode(svg, it.barcode, {height:120, fontSize:18, margin:24, width:2.4}) : false;
   svg.style.display = ok ? '' : 'none';
   byId('cajaCant').innerHTML = (ok ? '' : `<div class="caja-sinbc">Sin código de barras · teclea <b>${cvEsc(it.codigo||'')}</b></div>`) + (it.cantidadTxt ? `<b>${cvEsc(it.cantidadTxt)}</b>` : '');
+  if(it.pedirPrecio){
+    const d = preciosMap && preciosMap[it.codigo];
+    const hoy = d && precioVigente(d, inicioConteoActual());
+    byId('cajaCant').innerHTML += `<div class="caja-precio">
+      <div class="cp-t">Escanéalo en el POS (consulta de precio) y escribe el precio que marca</div>
+      ${hoy ? `<div class="cp-ok">✅ Precio de hoy: <b>${dinero(d.precio)}</b></div>` : (d && d.precio ? `<div class="cp-ult">Último: ${dinero(d.precio)} (${fechaDeISO(d.fecha||d.actualizado)})</div>` : '')}
+      <div class="cp-btns">${!hoy && d && d.precio ? `<button type="button" id="cpIgual">✓ Sigue igual</button>` : ''}<button type="button" id="cpEscribir" class="on">💲 ${hoy ? 'Cambiar precio' : 'Escribir precio'}</button></div>
+    </div>`;
+    const avanzar = ()=>{ if(cajaIdx < cajaItems.length - 1){ cajaIdx++; } pintarCaja(); };
+    const ig = byId('cpIgual'); if(ig) ig.onclick = ()=>{ guardarPrecioConteo(it.codigo, d.precio); avanzar(); };
+    byId('cpEscribir').onclick = ()=> openKeypad(`Precio que marca el POS · ${it.descripcion || it.codigo}`, '', (v)=>{
+      const n = Number(String(v).replace(',', '.')); if(n > 0){ guardarPrecioConteo(it.codigo, Math.round(n*100)/100); avanzar(); }
+    }, {asString:true, decimal:true});
+  }
   byId('cajaAnt').disabled = cajaIdx === 0;
   byId('cajaSig').textContent = cajaIdx === cajaItems.length - 1 ? 'Terminar ✓' : 'Siguiente ›';
 }
@@ -6061,19 +6876,32 @@ function recChipsHTML(){
     <div class="rec-chips">${vis.map(x=>`<button type="button" class="rec-chip ${got[x.item.codigo]?'on':''}" data-rchip="${cvEsc(x.item.codigo)}"><b>${cvEsc(x.item.descripcion||x.item.codigo)}</b><small>${cvEsc(x.item.codigo)}${got[x.item.codigo]?` · ${got[x.item.codigo]} pz`:''}</small></button>`).join('')}</div>
     ${lista.length > vis.length ? `<button type="button" class="mini-btn" id="recChipsTodos" style="width:100%;margin-top:6px;">Ver todos (${lista.length})</button>` : ''}`;
 }
+// Proveedor sin teclado del celular (el escáner lo esconde): lista + teclado propio.
+function elegirProveedorRec(){
+  const poner = (nombre)=>{ nombre = String(nombre||'').trim(); if(!nombre) return; recActiva.proveedor = nombre; recChipsTodos = false; guardarRecLocal(); renderRecEscaneo(); };
+  const recientes = recepcionesHist.map(r=> r.proveedor).filter(p=> p && p !== 'Sin proveedor').filter((v,i,a)=> a.indexOf(v) === i).slice(0, 8);
+  const directos = proveedoresDirectos().map(p=> p.nombre).filter(p=> !recientes.includes(p));
+  const cuenta = {}; Object.values(coberturaMap).forEach(c=>{ if(c.proveedor && !c.descatalogado) cuenta[c.proveedor] = (cuenta[c.proveedor]||0) + 1; });
+  const catalogo = Object.keys(cuenta).filter(p=> !recientes.includes(p) && !directos.includes(p)).sort((a,b)=> a.localeCompare(b));
+  const ops = [{icono:'⌨️', label:'Escribir el nombre', sub:'Si no está en la lista', fn: ()=> openTextKeypad('Nombre del proveedor', '', poner)}];
+  recientes.forEach(p=> ops.push({icono:'🕘', label:p, sub:'Te surtió hace poco', fn: ()=> poner(p)}));
+  directos.forEach(p=> ops.push({icono:'🏷️', label:p, sub:'Proveedor directo', fn: ()=> poner(p)}));
+  catalogo.forEach(p=> ops.push({icono:'📦', label:p, sub:`${cuenta[p]} producto(s) en tu catálogo`, fn: ()=> poner(p)}));
+  elegir('¿Quién te surte?', ops);
+}
 function renderRecEscaneo(){
   const act = byId('recActiva');
   const provs = proveedoresDirectos().map(p=> p.nombre).concat(recepcionesHist.map(r=> r.proveedor).filter(Boolean)).filter((v,i,a)=> a.indexOf(v) === i);
   const t = totalRec();
   act.innerHTML = recCabecera('📦 Recepción') + `
     <div class="field-label">Proveedor</div>
-    <input type="text" id="recProv" class="rec-input" list="recProvList" placeholder="¿Quién te surte?" value="${cvEsc(recActiva.proveedor||'')}" autocomplete="off">
-    <datalist id="recProvList">${provs.map(p=>`<option value="${cvEsc(p)}">`).join('')}</datalist>
+    <button type="button" id="recProv" class="rec-input rec-prov-btn ${recActiva.proveedor?'':'vacio'}">${recActiva.proveedor ? cvEsc(recActiva.proveedor) : 'Toca para elegir proveedor'}</button>
     <div class="capture" style="margin-top:12px;">
       <div class="field-label">Escanea o escribe el producto</div>
-      <input type="text" id="recInput" class="rec-input" inputmode="text" autocomplete="off" placeholder="Escanea o escribe…">
+      <div style="display:flex;gap:8px;"><input type="text" id="recInput" class="rec-input" inputmode="none" autocomplete="off" placeholder="Escanea aquí…" style="flex:1;min-width:0;">
+      <button type="button" class="mini-btn" id="recTeclado" style="flex:0 0 auto;font-size:15px;">⌨️ Escribir</button></div>
       <div id="recResultados"></div>
-      <div class="hint">Escanea → cantidad → Registrar. Igual que en Contar.</div>
+      <div class="hint">Escanea → cantidad → Registrar. Para buscar por nombre o alfanumérico toca ⌨️ Escribir.</div>
     </div>
     ${recChipsHTML()}
     <div class="rec-resumen"><div><b>${t.recibido}</b><span>piezas</span></div><div><b>${recActiva.items.length}</b><span>productos</span></div></div>
@@ -6087,7 +6915,8 @@ function renderRecEscaneo(){
     </div>`;
   byId('recCancelar').onclick = ()=> openConfirm('¿Descartar esta recepción? Lo capturado aquí no se guarda.', ()=>{ recActiva = null; guardarRecLocal(); renderRecepcion(); }, {yesLabel:'Descartar'});
   byId('recTerminar').onclick = terminarRecepcion;
-  byId('recProv').onchange = ()=>{ recActiva.proveedor = byId('recProv').value.trim(); guardarRecLocal(); renderRecEscaneo(); };
+  byId('recProv').onclick = elegirProveedorRec;
+  byId('recTeclado').onclick = ()=> openTextKeypad('Producto: nombre, alfanumérico o código', '', (val)=>{ const v = String(val||'').trim(); if(v) buscarRec(v); });
   act.querySelectorAll('[data-rchip]').forEach(b=> b.onclick = ()=>{ const it = buildIndexes().byCodigo[b.dataset.rchip]; if(it) elegirRecItem(it); });
   const vt = byId('recChipsTodos'); if(vt) vt.onclick = ()=>{ recChipsTodos = true; renderRecEscaneo(); };
   const inp = byId('recInput');
@@ -6100,10 +6929,7 @@ function renderRecEscaneo(){
     if(exacto){ elegirRecItem(exacto); return; }
     if(/^\d+$/.test(v) && v.length < 8){ box.innerHTML = ''; return; }
     recResultados = buscarPalabras(v, 6);
-    box.innerHTML = recResultados.length
-      ? recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}</small></button>`).join('')
-      : '<div class="empty" style="padding:8px 0;">Sin coincidencias. Si es nuevo, termina el código y presiona Enter.</div>';
-    box.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> elegirRecItem(recResultados[Number(b.dataset.rres)]));
+    pintarRecResultados();
   }, 220); });
   setTimeout(()=> inp.focus(), 60);
   act.querySelectorAll('[data-recdel]').forEach(b=> b.onclick = ()=>{
@@ -6116,6 +6942,13 @@ function renderRecEscaneo(){
   byId('recCaja').onclick = ()=> abrirCaja(itemsParaCaja(recActiva));
 }
 let recBuscarTT = null;
+function pintarRecResultados(){
+  const box = byId('recResultados'); if(!box) return;
+  box.innerHTML = recResultados.length
+    ? recResultados.map((i,k)=>`<button type="button" class="rec-res" data-rres="${k}"><b>${cvEsc(i.descripcion||i.codigo)}</b><small>${cvEsc(i.codigo)}</small></button>`).join('')
+    : '<div class="empty" style="padding:8px 0;">Sin coincidencias. Si es nuevo, termina el código y presiona Enter.</div>';
+  box.querySelectorAll('[data-rres]').forEach(b=> b.onclick = ()=> elegirRecItem(recResultados[Number(b.dataset.rres)]));
+}
 function buscarRec(raw){
   clearTimeout(recBuscarTT);
   const v = String(raw||'').trim(); if(!v) return;
@@ -6127,7 +6960,7 @@ function buscarRec(raw){
     showQuickAdd(byId('recResultados'), v, (nuevo)=> elegirRecItem(nuevo), ()=>{ const i = byId('recInput'); if(i){ i.value = ''; i.focus(); } });
     return;
   }
-  renderRecEscaneo();
+  renderRecEscaneo(); pintarRecResultados();
 }
 function elegirRecItem(item){
   if(!item) return;
@@ -6219,8 +7052,7 @@ function agregarCerveza(item){
 }
 function terminarRecepcion(){
   if(!recActiva || !recActiva.items.length) return;
-  const pv = byId('recProv'); if(pv && pv.value.trim()) recActiva.proveedor = pv.value.trim();
-  if(!String(recActiva.proveedor||'').trim()){ openConfirm('Escribe arriba el nombre del proveedor.', ()=>{ const i = byId('recProv'); if(i) i.focus(); }, {yesLabel:'Entendido'}); return; }
+  if(!String(recActiva.proveedor||'').trim()){ openConfirm('Primero elige el proveedor.', ()=> elegirProveedorRec(), {yesLabel:'Elegir proveedor'}); return; }
   if(recActiva.tipo !== 'cerveza' && !recActiva._notaPedida){
     abrirCompararNota();
     return;
@@ -6323,6 +7155,8 @@ function iniciarDatosNuevos(){
   fsListenPapelera();
   fsListenCartonaje();
   fsListenRecepciones();
+  try{ cargarSurtidoCfg(); }catch(e){}
+  try{ escucharTraspasos(); }catch(e){}
 }
 
 </script>
