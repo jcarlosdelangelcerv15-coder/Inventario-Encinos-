@@ -505,6 +505,7 @@
   .bottom-nav .tab .ti,.nav-mas .ti{font-size:20px;line-height:1;}
   .bottom-nav .tab.active,.nav-mas.on{color:var(--brand-dark);background:#fbeee8;box-shadow:none;}
   .bottom-nav .tab.tab-sec{display:none;}
+  .bottom-nav .tab.tab-oculta{display:none;}
   .wrap{padding:14px 16px;}
 
   .sheet-overlay{position:fixed;inset:0;background:rgba(15,18,38,.45);display:none;align-items:flex-end;justify-content:center;z-index:1000;}
@@ -887,12 +888,12 @@
       <button type="button" class="sheet-item" id="tiendasBtn" style="display:none;"><span>🏪</span><div><b>Tiendas</b><small>Altas, pagos y suspensiones</small></div></button>
     </div>
     <div class="sheet-group">
-      <div class="sheet-item sheet-toggle"><span>🕵️</span><div><b>Modo auditoría</b><small>Conteo paralelo con el auditor</small></div>
+      <div class="sheet-item sheet-toggle" id="auditModeRow"><span>🕵️</span><div><b>Modo auditoría</b><small>Conteo paralelo con el auditor</small></div>
         <div class="seg"><button type="button" id="auditModeOffBtn" class="mode-btn">No</button><button type="button" id="auditModeOnBtn" class="mode-btn">Sí</button></div></div>
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 21 oct 2026 · 20:00</div>
+    <div class="version-app">Tiquenda · Versión 23 oct 2026 · 22:50</div>
   </div>
 </div>
 
@@ -1635,6 +1636,7 @@ async function authRevisarAcceso(user, forzar){
   byId('unidadBtn').style.display = misUnidades().length > 1 ? '' : 'none';
   byId('tableroBtn').style.display = esDueno() ? '' : 'none';
   byId('traspasosBtn').style.display = miEmpresa ? '' : 'none';
+  aplicarVistaRol();
   if(miEmpresa){ const tp = tipoUnidad(TIENDA_ID); byId('unidadSub').textContent = `Estás en: ${TIENDA_NOMBRE}${tp ? ' · ' + (tp === 'almacen' ? 'Almacén' : 'Sucursal') : ''}`; }
   authOcultar();
 
@@ -5740,6 +5742,31 @@ loadState();
 const dinero = (n)=> (Number(n) < 0 ? '-$' : '$') + Math.abs(Number(n||0)).toLocaleString('es-MX', {minimumFractionDigits:2, maximumFractionDigits:2});
 const piezasTxt = (n)=> Number(n||0).toLocaleString('es-MX') + ' pz';
 function horaCorta(ms){ const d = new Date(ms); return d.toLocaleDateString('es-MX',{day:'numeric',month:'short'}) + ' ' + d.toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'}); }
+// Vista por rol: el auxiliar/encargado de turno (capturista) entra a una vista
+// de OPERACIÓN con solo lo que usa; el aliado y el administrador ven todo.
+function aplicarVistaRol(){
+  const soloOp = !esAdmin() && !(miUsuario && miUsuario.rol === 'encargado');
+  const setTab = (tab, modo)=>{ const el = document.querySelector('.tab[data-tab="'+tab+'"]'); if(!el) return;
+    el.classList.remove('tab-sec','tab-oculta'); if(modo==='sec') el.classList.add('tab-sec'); else if(modo==='off') el.classList.add('tab-oculta'); };
+  if(soloOp){
+    // Abajo: Contar · Recibir · Etiquetas · Caducidades
+    setTab('conteo','primary'); setTab('recepcion','primary'); setTab('etiquetas','primary'); setTab('caducidades','primary');
+    setTab('sistema','off'); setTab('comparativo','off'); setTab('cobertura','off'); setTab('dashboard','off');
+  } else {
+    setTab('conteo','primary'); setTab('sistema','primary'); setTab('comparativo','primary'); setTab('cobertura','primary');
+    setTab('recepcion','sec'); setTab('etiquetas','sec'); setTab('caducidades','sec'); setTab('dashboard','sec');
+  }
+  // Menú ☰ Más: en operación se ocultan los que ya están abajo y el análisis
+  document.querySelectorAll('#masSheet [data-ir]').forEach(btn=>{
+    const t = btn.dataset.ir;
+    btn.style.display = soloOp && ['recepcion','etiquetas','caducidades','dashboard'].includes(t) ? 'none' : '';
+  });
+  byId('papeleraBtn').style.display = soloOp ? 'none' : '';
+  const ar = byId('auditModeRow'); if(ar) ar.style.display = '';
+  // Si quedó abierta una pestaña que ahora está oculta, regresa a Contar
+  const act = document.querySelector('.tab.active');
+  if(!act || act.classList.contains('tab-oculta')){ const c = document.querySelector('.tab[data-tab="conteo"]'); if(c) c.click(); }
+}
 function rolTexto(u){
   if(!u) return '';
   if(u.rol === 'encargado') return 'Aliado';
@@ -6501,14 +6528,18 @@ function pintarTraspaso(){
   const recibiendo = t.destino === TIENDA_ID && t.estado === 'transito';
   byId('trasHead').firstChild.textContent = recibiendo ? '📥 Recibir ' : '🚚 Traspaso ';
   byId('trasSub').textContent = `#${t.folio} · ${t.origenNombre} → ${t.destinoNombre}`;
-  const pend = t.items.filter(i=> i.recibido === undefined || i.recibido === null).length;
+  // Lo que llegó vive aparte (t.recibidos = {codigo: cantidad}); lo que el almacén
+  // envió (t.items) ya no se toca al recibir, para que nadie altere el "enviado".
+  const rec = t.recibidos || (t.recibidos = {});
+  const pend = t.items.filter(it=> rec[it.codigo] === undefined || rec[it.codigo] === null).length;
   byId('trasBody').innerHTML = `<div class="meta" style="margin-bottom:8px;">Envió ${cvEsc(t.enviadoPor||'')} · ${new Date(t.enviadoEn).toLocaleString('es-MX')}${t.recibidoEn ? `<br>Recibió ${cvEsc(t.recibidoPor||'')} · ${new Date(t.recibidoEn).toLocaleString('es-MX')}` : ''}</div>
     ${recibiendo && pend ? `<button type="button" class="add-missing-btn" id="trasTodo" style="margin:0 0 10px;">✅ Llegó todo completo</button>` : ''}
     ${t.items.map((it,i)=>{
-      const tiene = it.recibido !== undefined && it.recibido !== null;
-      const d = tiene ? it.recibido - it.enviado : 0;
-      const est = !tiene ? '' : d === 0 ? `<div class="meta" style="color:#1e7d4f;font-weight:800;">✅ Llegaron ${it.recibido} · completo</div>`
-        : `<div class="meta" style="color:#c0392b;font-weight:800;">⚠️ Llegaron ${it.recibido} · ${d<0 ? 'faltan ' + (-d) : 'sobran ' + d} pz</div>`;
+      const r = rec[it.codigo];
+      const tiene = r !== undefined && r !== null;
+      const d = tiene ? r - it.enviado : 0;
+      const est = !tiene ? '' : d === 0 ? `<div class="meta" style="color:#1e7d4f;font-weight:800;">✅ Llegaron ${r} · completo</div>`
+        : `<div class="meta" style="color:#c0392b;font-weight:800;">⚠️ Llegaron ${r} · ${d<0 ? 'faltan ' + (-d) : 'sobran ' + d} pz</div>`;
       return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(it.descripcion||it.codigo)}</div>
         <div class="meta">${cvEsc(it.codigo)} · salieron <b>${it.enviado}</b> pz</div>${est}</div>
         ${recibiendo ? `<div style="display:flex;flex-direction:column;gap:6px;">${tiene ? `<button type="button" class="mini-btn" data-trcam="${i}">Cambiar</button>`
@@ -6518,22 +6549,23 @@ function pintarTraspaso(){
   byId('trasFoot').innerHTML = recibiendo ? volver + `<button class="confirm-yes" id="trasConfirmar" ${pend ? 'disabled' : ''}>Confirmar recepción</button>` : volver;
   byId('trasVolver').onclick = ()=>{ trasAbierto = null; pintarTraspasos(); };
   if(!recibiendo) return;
-  const todo = byId('trasTodo'); if(todo) todo.onclick = ()=>{ t.items.forEach(it=>{ if(it.recibido === undefined || it.recibido === null) it.recibido = it.enviado; }); pintarTraspaso(); };
-  byId('trasBody').querySelectorAll('[data-trok]').forEach(b=> b.onclick = ()=>{ const it = t.items[+b.dataset.trok]; it.recibido = it.enviado; pintarTraspaso(); });
+  const todo = byId('trasTodo'); if(todo) todo.onclick = ()=>{ t.items.forEach(it=>{ if(rec[it.codigo] === undefined || rec[it.codigo] === null) rec[it.codigo] = it.enviado; }); pintarTraspaso(); };
+  byId('trasBody').querySelectorAll('[data-trok]').forEach(b=> b.onclick = ()=>{ const it = t.items[+b.dataset.trok]; rec[it.codigo] = it.enviado; pintarTraspaso(); });
   byId('trasBody').querySelectorAll('[data-trcam]').forEach(b=> b.onclick = ()=>{
     const it = t.items[+b.dataset.trcam];
-    openKeypad(`¿Cuántas piezas llegaron? · ${it.descripcion || it.codigo}`, '', (v)=>{ if(v !== ''){ it.recibido = Math.max(0, Number(v)||0); } pintarTraspaso(); },
+    openKeypad(`¿Cuántas piezas llegaron? · ${it.descripcion || it.codigo}`, '', (v)=>{ if(v !== ''){ rec[it.codigo] = Math.max(0, Number(v)||0); } pintarTraspaso(); },
       {onCancel: ()=> pintarTraspaso(), cajas:{n: piezasPorCaja(it.codigo), codigo: it.codigo}});
   });
   byId('trasConfirmar').onclick = ()=>{
-    const difs = t.items.filter(it=> it.recibido !== it.enviado).map(it=>{ const d = it.recibido - it.enviado; return `${it.descripcion||it.codigo}: ${d<0 ? 'faltaron ' + (-d) : 'sobraron ' + d} pz`; });
+    const difs = t.items.filter(it=> rec[it.codigo] !== it.enviado).map(it=>{ const d = rec[it.codigo] - it.enviado; return `${it.descripcion||it.codigo}: ${d<0 ? 'faltaron ' + (-d) : 'sobraron ' + d} pz`; });
     const msg = difs.length ? `⚠️ El envío llegó con diferencia:\n${difs.join('\n')}\n\n¿Confirmar así? Queda registrado quién envió y quién recibió.` : '✅ Llegó completo. ¿Confirmar la recepción?';
     openConfirm(msg, ()=>{
       const ahora = new Date().toISOString();
-      const cambios = {items: t.items, estado: difs.length ? 'diferencia' : 'recibido', difTexto: difs.join(' · '), recibidoPor: currentUser || '', recibidoEn: ahora};
+      // No se manda "items": las reglas lo tienen congelado. Solo lo recibido y el cierre.
+      const cambios = {recibidos: rec, estado: difs.length ? 'diferencia' : 'recibido', difTexto: difs.join(' · '), recibidoPor: currentUser || '', recibidoEn: ahora};
       trasCol().doc(t.id).update(cambios).catch(err=> avisarErrorGuardado(err, {descripcion:'la recepción del traspaso'}));
       // Existencias de esta unidad: sube lo que llegó (solo productos que ya tienen existencia de sistema)
-      t.items.forEach(it=>{ const e = existenciasMap[it.codigo]; if(e){ e.cantidad = Number(e.cantidad||0) + Number(it.recibido||0); e.ts = ahora; persistExistenciaCodigo(it.codigo); } });
+      t.items.forEach(it=>{ const e = existenciasMap[it.codigo]; if(e){ e.cantidad = Number(e.cantidad||0) + Number(rec[it.codigo]||0); e.ts = ahora; persistExistenciaCodigo(it.codigo); } });
       const local = traspasos.find(x=> x.id === t.id); if(local) Object.assign(local, cambios);
       trasAbierto = null; trasVista = 'recibidos'; pintarTraspasos();
     }, {yesLabel:'Confirmar'});
