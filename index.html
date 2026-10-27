@@ -893,7 +893,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 23 oct 2026 · 22:50</div>
+    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 17:05</div>
   </div>
 </div>
 
@@ -934,6 +934,7 @@
     <div class="summary" id="summaryMotivos" style="margin-top:8px;"></div>
 
     <div class="section-title"><span>Historial de conteo</span><span id="countLabel"></span></div>
+    <input type="text" id="logSearch" placeholder="🔍 Buscar producto ya contado (código o nombre)" autocomplete="off" autocorrect="off" autocapitalize="characters" style="width:100%;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;">
     <div id="log"></div>
 
     <div class="actions">
@@ -1278,6 +1279,7 @@ let capPendingFecha = '';
 let capPendingArea = '';
 let capPendingCritOverride = null; // null = automático; 'alta'|'media'|'baja' = elegido a mano para este lote
 let historialConteo = [];
+let logFiltro = ''; // texto del buscador del historial de conteo
 let cierresConteo = []; // conteos anteriores ya cerrados (al "Vaciar conteo"), con fecha
 let etiquetas = [];
 function uid(){ return Date.now()+'_'+Math.random().toString(36).slice(2,7); }
@@ -1295,7 +1297,12 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const fsDb = firebase.firestore();
-try{ fsDb.enablePersistence({synchronizeTabs:true}).catch(()=>{}); }catch(e){}
+// Persistencia local SIN "synchronizeTabs": ese modo (coordinar varias
+// pestañas vía IndexedDB) es justo el que más provoca que Safari en iPhone
+// "mate" el cliente ("The client has already been terminated"). Sin él, si
+// la app queda abierta en dos lados, la segunda simplemente trabaja en línea
+// y ninguna se cae. Seguimos teniendo guardado local para cortes de internet.
+try{ fsDb.enablePersistence().catch(()=>{}); }catch(e){}
 const FS_COLLECTION = 'inventario_actual';
 const fsTiendasCol = fsDb.collection('tiendas');
 const fsUsuariosCol = fsDb.collection('usuarios');
@@ -1310,6 +1317,30 @@ function fsSyncBadge(estado){
   else { el.textContent = '● Sin conexión · se guarda y sube al volver'; el.style.color = '#f0b45c'; }
 }
 fsSyncBadge('espera');
+
+// --- Recuperación si el navegador "mató" la conexión ---
+// Un iPhone con poca batería, señal débil o muchas horas con la app abierta
+// puede terminar por su cuenta el cliente interno de Firestore. A partir de
+// ese momento TODA escritura truena con "The client has already been
+// terminated". El conteo ya quedó guardado en el teléfono, así que esto
+// solo sirve para: (1) que ese corte NUNCA trabe el conteo, y (2) ofrecer
+// reconectar con un toque (recargar revive la conexión sin perder nada).
+let fsClienteMuerto = false;
+function fsEsClienteMuerto(err){
+  const m = ((err && (err.message||'')) + ' ' + (err && (err.code||''))).toLowerCase();
+  return m.indexOf('already been terminated') !== -1 || m.indexOf('client has already') !== -1;
+}
+function fsMarcarMuerto(){
+  if(fsClienteMuerto) return;
+  fsClienteMuerto = true;
+  const el = document.getElementById('fsSyncBadge');
+  if(!el) return;
+  el.textContent = '🔄 Se cortó con el equipo · TOCA para reconectar (tus conteos están guardados)';
+  el.style.color = '#f0b45c';
+  el.style.cursor = 'pointer';
+  el.style.textDecoration = 'underline';
+  el.onclick = ()=>{ try{ el.textContent = 'Reconectando…'; el.onclick = null; }catch(e){} setTimeout(()=>{ try{ location.reload(); }catch(e){} }, 150); };
+}
 
 let fsReady = false;
 const fsPendingWrites = {};
@@ -1955,7 +1986,16 @@ const fsRegistrosCol = tCol('inventario_registros_items');
 let fsRegistrosMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 function fsSaveRecord(rec){
   if(!fsReady || !rec || !rec.id) return;
-  fsRegistrosCol.doc(rec.id).set(rec).then(()=> fsSyncBadge('ok')).catch((err)=>{ fsSyncBadge('error'); avisarErrorGuardado(err, rec); });
+  // El try/catch atrapa el error síncrono de "cliente terminado" para que
+  // NUNCA se trabe el conteo: el escaneo ya se guardó local arriba.
+  try{
+    fsRegistrosCol.doc(rec.id).set(rec)
+      .then(()=> fsSyncBadge('ok'))
+      .catch((err)=>{ fsSyncBadge('error'); if(fsEsClienteMuerto(err)) fsMarcarMuerto(); else avisarErrorGuardado(err, rec); });
+  }catch(err){
+    fsSyncBadge('error');
+    if(fsEsClienteMuerto(err)) fsMarcarMuerto(); else avisarErrorGuardado(err, rec);
+  }
 }
 function fsDeleteRecord(id){
   if(!fsReady || !id) return;
@@ -2248,7 +2288,14 @@ const fsAuditCol = tCol('inventario_auditoria_propio_items');
 let fsAuditMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 function fsSaveAuditRecord(rec){
   if(!fsReady || !rec || !rec.id) return;
-  fsAuditCol.doc(rec.id).set(rec).then(()=> fsSyncBadge('ok')).catch(()=> fsSyncBadge('error'));
+  try{
+    fsAuditCol.doc(rec.id).set(rec)
+      .then(()=> fsSyncBadge('ok'))
+      .catch((err)=>{ fsSyncBadge('error'); if(fsEsClienteMuerto(err)) fsMarcarMuerto(); });
+  }catch(err){
+    fsSyncBadge('error');
+    if(fsEsClienteMuerto(err)) fsMarcarMuerto();
+  }
 }
 function fsDeleteAuditRecord(id){
   if(!fsReady || !id) return;
@@ -3010,6 +3057,8 @@ function renderSummary(){
 }
 
 function renderLog(){
+  const _ls = document.getElementById('logSearch');
+  if(_ls) _ls.style.display = auditModeActive ? 'none' : 'block';
   if(auditModeActive){
     countLabel.textContent = auditoriaPropio.length ? `${auditoriaPropio.length} escaneos` : '';
     if(!auditoriaPropio.length){ logEl.innerHTML = '<div class="empty">Aún no hay escaneos de tu conteo de auditoría.</div>'; return; }
@@ -3035,18 +3084,55 @@ function renderLog(){
   }
   countLabel.textContent = records.length ? `${records.length} escaneos` : '';
   if(!records.length){ logEl.innerHTML = '<div class="empty">Aún no hay escaneos en esta sesión.</div>'; return; }
-  logEl.innerHTML = records.slice().reverse().map((r, idxRev)=>{
-    const idx = records.length - 1 - idxRev;
+  // Buscador: filtra por código, código de barras o descripción.
+  const filtro = (logFiltro||'').toLowerCase().trim();
+  let lista = records.slice().reverse();
+  if(filtro){
+    lista = lista.filter(r=>
+      String(r.codigo||'').toLowerCase().includes(filtro) ||
+      String(r.barcode||'').toLowerCase().includes(filtro) ||
+      String(r.descripcion||'').toLowerCase().includes(filtro)
+    );
+  }
+  if(!lista.length){ logEl.innerHTML = `<div class="empty">Sin coincidencias para "${cvEsc(logFiltro)}".</div>`; return; }
+  // Referenciamos cada escaneo por su id (no por posición) para que editar o
+  // borrar funcione aun con el historial filtrado por el buscador.
+  logEl.innerHTML = lista.map(r=>{
+    const ref = r.id || '';
     return `<div class="log-item">
       <div class="info"><div class="desc">${r.descripcion || 'No encontrado'}</div><div class="meta">${r.codigo || r.barcode} · ${r.area}${r.motivo ? ' · '+r.motivo : ''}${r.capturista ? ' · '+r.capturista : ''}</div></div>
-      <div class="qty" style="color:${MODE_COLORS[r.area]}">${r.cantidad}</div>
-      <button class="del" data-idx="${idx}">✕</button>
+      <button class="qty log-edit" data-id="${ref}" title="Tocar para corregir la cantidad" style="color:${MODE_COLORS[r.area]};border:none;cursor:pointer;font-family:inherit;">${r.cantidad} ✎</button>
+      <button class="del" data-id="${ref}">✕</button>
     </div>`;
   }).join('');
+  const buscarRec = (id)=> records.find(r=> r.id && r.id === id);
+  // EDITAR cantidad (sin borrar ni re-escanear)
+  logEl.querySelectorAll('.log-edit').forEach(btn=>{
+    btn.onclick = ()=>{
+      const rec0 = buscarRec(btn.dataset.id);
+      if(!rec0) return;
+      const hacer = ()=>{
+        openKeypad('Corregir cantidad · ' + (rec0.descripcion || rec0.codigo || ''), rec0.cantidad, (val)=>{
+          const n = Number(val);
+          if(val === '' || val === null || isNaN(n)) return;
+          const rec = buscarRec(rec0.id); if(!rec) return;
+          rec.cantidad = n;
+          persistRecordsLocal();
+          fsSaveRecord(rec);
+          const h = historialConteo.find(h=> h.id === rec.id);
+          if(h){ h.cantidad = n; persistHistorialItemAdd(h); }
+          renderSummary(); renderLog(); renderDashboard();
+        });
+      };
+      if(rec0.capturista && rec0.capturista !== (currentUser || '')) pedirNip(`corregir un escaneo de ${rec0.capturista}`, hacer);
+      else hacer();
+    };
+  });
+  // BORRAR
   logEl.querySelectorAll('.del').forEach(btn=>{
     btn.onclick = ()=>{
-      const idx = Number(btn.dataset.idx);
-      const rec0 = records[idx];
+      const rec0 = buscarRec(btn.dataset.id);
+      if(!rec0) return;
       // Tu propio escaneo lo corriges libre; el de otra persona necesita NIP.
       const borrar = ()=>{
       const i2 = records.findIndex(r=> r === rec0 || (rec0 && rec0.id && r.id === rec0.id)); if(i2 < 0) return;
@@ -3126,7 +3212,14 @@ function confirmQtyEntry(qty){
     confirmQtyEntryInner(qty);
   }catch(err){
     console.error(err);
-    openConfirm('⚠️ No se registró el conteo por un error de la app.\n\nDetalle: ' + (err && err.message ? err.message : err) + '\n\nMándale una captura de este mensaje a quien te ayuda con la app.', ()=>{}, {yesLabel:'Entendido'});
+    if(fsEsClienteMuerto(err)){
+      // No es un error de datos: el navegador cortó la conexión. El conteo ya
+      // está guardado en el teléfono. Avisamos suave y ofrecemos reconectar.
+      fsMarcarMuerto();
+      openConfirm('🔄 Se cortó la conexión con el equipo (suele pasar con poca batería o señal débil).\n\nTranquilo: tus conteos están guardados en el teléfono. Toca "● Reconectar" arriba, o cierra y vuelve a abrir la app, para que se suban solos.', ()=>{}, {yesLabel:'Entendido'});
+    } else {
+      openConfirm('⚠️ No se registró el conteo por un error de la app.\n\nDetalle: ' + (err && err.message ? err.message : err) + '\n\nMándale una captura de este mensaje a quien te ayuda con la app.', ()=>{}, {yesLabel:'Entendido'});
+    }
   }
 }
 function confirmQtyEntryInner(qty){
@@ -3293,6 +3386,12 @@ function resetBarcodeStage(){
   barcodeInput.value=''; qtyInput.value=''; qtyBlock.style.display='none'; lookupResult.innerHTML='';
   barcodeInput.focus();
 }
+
+// Buscador del historial de conteo: filtra sin perder lo que escribe.
+(function(){
+  const inp = document.getElementById('logSearch');
+  if(inp) inp.addEventListener('input', ()=>{ logFiltro = inp.value; renderLog(); });
+})();
 
 $('exportBtn').onclick = ()=>{
   if(auditModeActive){
@@ -4587,7 +4686,7 @@ $('sisImportFile').addEventListener('change', (e)=>{
     try{
       const wb = XLSX.read(ev.target.result, {type:'array'});
       const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, {defval:''});
+      const rows = hojaARenglones(sheet);
       const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').trim();
       const findCol = (row, candidates) => {
         const keys = Object.keys(row);
@@ -4644,7 +4743,7 @@ $('sisImportCantFile').addEventListener('change', (e)=>{
     try{
       const wb = XLSX.read(ev.target.result, {type:'array'});
       const sheet = wb.Sheets[wb.SheetNames[0]];
-      const rows = XLSX.utils.sheet_to_json(sheet, {defval:''});
+      const rows = hojaARenglones(sheet);
       const cotejo = construirCotejoExistencias(rows);
       try{ const v = leerVentas(wb); ventasPendientesSistema = Object.keys(v.ventas).length ? v : null; }catch(err){ ventasPendientesSistema = null; }
       if(!cotejo.filas.length && !cotejo.invalidos){
@@ -4668,6 +4767,39 @@ $('sisImportCantFile').addEventListener('change', (e)=>{
    alta solo), qué está en la app y no vino en el ticket, negativos,
    repetidos y renglones inválidos. Nada se guarda hasta tocar "Aplicar". */
 let cotejoActual = null;
+
+// Convierte una hoja de Excel en renglones {columna: valor} DETECTANDO dónde
+// está la fila de encabezados. Muchos reportes —y los tickets cíclicos, que
+// arriba traen un título y notas antes de la tabla— no tienen el encabezado
+// en la primera fila. Buscamos la primera fila que tenga una columna de
+// "código" junto con alguna columna de datos (existencia, descripción,
+// código de barras, proveedor, venta…) y de ahí para abajo armamos la tabla.
+function hojaARenglones(sheet){
+  if(typeof XLSX === 'undefined' || !sheet) return [];
+  const aoa = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', blankrows:false});
+  const norm = s => String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[_\s]+/g,' ').trim();
+  const CODIGO = ['codigo','codigo interno','sku','alfanumerico','clave'];
+  const DATO = ['existencia','existencias','existencia sistema','exis','cantidad','stock','disponible',
+    'descripcion','producto','nombre','codigo de barras','barcode','barras','upc','ean',
+    'proveedor','distribucion','venta','ventas','vendidas','piezas','conteo fisico'];
+  let hdr = -1;
+  const lim = Math.min(aoa.length, 25);
+  for(let i=0;i<lim;i++){
+    const fila = aoa[i] || [];
+    if(fila.some(c=>CODIGO.includes(norm(c))) && fila.some(c=>DATO.includes(norm(c)))){ hdr = i; break; }
+  }
+  if(hdr < 0) return XLSX.utils.sheet_to_json(sheet, {defval:''}); // clásico: 1ª fila = encabezado
+  const encabezados = (aoa[hdr]||[]).map((c,idx)=>{ const t = String(c==null?'':c).trim(); return t || ('col'+idx); });
+  const renglones = [];
+  for(let r=hdr+1;r<aoa.length;r++){
+    const fila = aoa[r] || [];
+    if(!fila.some(c=> String(c==null?'':c).trim() !== '')) continue;
+    const obj = {};
+    encabezados.forEach((h,idx)=>{ obj[h] = fila[idx]==null ? '' : fila[idx]; });
+    renglones.push(obj);
+  }
+  return renglones;
+}
 
 function construirCotejoExistencias(rows){
   const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[_\s]+/g,' ').trim();
