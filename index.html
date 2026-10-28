@@ -899,7 +899,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 21:35</div>
+    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 21:55</div>
   </div>
 </div>
 
@@ -3452,19 +3452,19 @@ function nombreCategoriaActiva(){
   const c = CATEGORIAS.find(x=>x.prefix===categoriaActiva);
   return c ? c.label : categoriaActiva;
 }
-function finalizarConteo(estado){
-  const todosLosRecords = records;
-  records = recordsDeCategoriaActiva();
+async function finalizarConteo(estado){
+  const recsCierre = recordsDeCategoriaActiva();
+  if(!recsCierre.length) return;
   const totales = {};
   MODES.forEach(m=> totales[m] = 0);
-  records.forEach(r=>{ totales[r.area] = (totales[r.area]||0) + Number(r.cantidad); });
-  totales.total = records.reduce((s,r)=> s + Number(r.cantidad), 0);
+  recsCierre.forEach(r=>{ totales[r.area] = (totales[r.area]||0) + Number(r.cantidad); });
+  totales.total = recsCierre.reduce((s,r)=> s + Number(r.cantidad), 0);
 
   // Comparativa (Físico vs. Sistema) tal como estaba justo en el momento de
   // cerrar este conteo — así el historial no solo guarda lo escaneado, sino
   // también contra qué existencia de sistema se comparó y qué diferencia dio.
   const propioPorCodigoCierre = {};
-  records.forEach(r=>{
+  recsCierre.forEach(r=>{
     const key = r.codigo || r.barcode;
     propioPorCodigoCierre[key] = (propioPorCodigoCierre[key]||0) + Number(r.cantidad);
   });
@@ -3491,24 +3491,53 @@ function finalizarConteo(estado){
     estado, // 'completo' | 'incompleto'
     categoria: categoriaActiva,
     categoriaNombre: nombreCategoriaActiva(),
-    registros: records.map(r=> Object.assign({}, r)),
+    registros: recsCierre.map(r=> Object.assign({}, r)),
     totales,
     comparativo // snapshot Físico vs. Sistema al momento de cerrar este conteo
   };
-  cierresConteo.unshift(cierre);
-  persistCierreAdd(cierre);
+  // --- SEGURIDAD DE DATOS ---
+  // NO borramos los escaneos hasta CONFIRMAR que el cierre quedó guardado en la
+  // nube. Antes se borraban "a la buena de Dios" y, si el cierre no alcanzaba a
+  // subir (cliente cortado, etc. — no importa el motivo), se perdía el conteo.
+  if(!fsReady){
+    openConfirm('⚠️ Todavía no hay conexión con la nube, así que NO cerré el inventario — tus escaneos siguen completos.\n\nCuando arriba diga "● En línea con el equipo", vuelve a darle a "Terminar inventario".', ()=>{}, {yesLabel:'Entendido'});
+    return;
+  }
+  const btnReset = document.getElementById('resetBtn');
+  const txtPrev = btnReset ? btnReset.textContent : '';
+  if(btnReset){ btnReset.textContent = 'Guardando en la nube…'; btnReset.disabled = true; }
+  try{
+    const commit = fsCierresCol.doc(cierre.id).set(cierre);
+    // Espera a que el servidor confirme (con tope de 20s por si la red se cae).
+    await Promise.race([ commit, new Promise((_,rej)=> setTimeout(()=> rej(new Error('timeout')), 20000)) ]);
+    fsSyncBadge('ok');
+  }catch(err){
+    if(btnReset){ btnReset.textContent = txtPrev; btnReset.disabled = false; }
+    fsSyncBadge('error');
+    if(fsEsClienteMuerto(err)){
+      fsMarcarMuerto();
+      openConfirm('🔄 No se cerró el inventario: se cortó la conexión con el equipo.\n\nTranquilo: tus escaneos NO se borraron, están completos. Toca "Reconectar" arriba (o cierra y vuelve a abrir la app) y dale otra vez a "Terminar inventario".', ()=>{}, {yesLabel:'Entendido'});
+    } else {
+      openConfirm('⚠️ No pude confirmar que el cierre se guardó en la nube, así que NO borré tus escaneos — están completos y a salvo.\n\nRevisa el internet y en un momento vuelve a darle a "Terminar inventario".', ()=>{}, {yesLabel:'Entendido'});
+    }
+    return; // los escaneos quedan intactos
+  }
+  if(btnReset){ btnReset.textContent = txtPrev; btnReset.disabled = false; }
 
-  const idsToDelete = records.map(r=>r.id).filter(Boolean);
+  // Cierre CONFIRMADO en la nube → ahora sí lo guardamos local y borramos escaneos.
+  cierresConteo.unshift(cierre);
+  persistCierresLocal();
+  const idsToDelete = recsCierre.map(r=>r.id).filter(Boolean);
   const idsSet = new Set(idsToDelete);
   // Se quedan intactos los escaneos de las demás categorías (otras personas).
-  records = todosLosRecords.filter(r=> !idsSet.has(r.id));
+  records = records.filter(r=> !idsSet.has(r.id));
   persistRecordsLocal();
   fsDeleteRecordsBatch(idsToDelete);
   renderSummary(); renderLog(); resetBarcodeStage(); renderDashboard(); renderCierresList();
   const conDif = (cierre.comparativo || []).some(x=> x.sistema !== null && x.diferencia);
   setTimeout(()=>{
-    if(conDif) openConfirm('✅ Inventario guardado en Conteos anteriores.\n\n¿Quieres ver el pronóstico en pesos de este inventario?', ()=> abrirPronostico(cierre), {yesLabel:'💰 Ver pronóstico', noLabel:'Ahora no'});
-    else openConfirm('✅ Inventario guardado en Conteos anteriores. Desde ahí lo puedes imprimir para firmar y sellar.', ()=>{}, {yesLabel:'Entendido'});
+    if(conDif) openConfirm('✅ Inventario guardado en Conteos anteriores (confirmado en la nube).\n\n¿Quieres ver el pronóstico en pesos de este inventario?', ()=> abrirPronostico(cierre), {yesLabel:'💰 Ver pronóstico', noLabel:'Ahora no'});
+    else openConfirm('✅ Inventario guardado en Conteos anteriores (confirmado en la nube). Desde ahí lo puedes imprimir para firmar y sellar.', ()=>{}, {yesLabel:'Entendido'});
   }, 250);
 }
 
