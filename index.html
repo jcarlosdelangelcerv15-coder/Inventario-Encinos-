@@ -232,6 +232,10 @@
   .keypad-label{font-size:13px;font-weight:800;color:#6b6659;text-align:center;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
   .keypad-prod{font-size:17px;font-weight:800;color:var(--brand-dark);text-align:center;margin:-2px 0 8px;line-height:1.25;padding:8px 10px;background:#eef6f3;border-radius:10px;}
   .keypad-prod .kp-cod{display:block;font-size:12px;font-weight:700;color:#8a8473;font-family:var(--mono);margin-top:2px;}
+  #compFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
+  .comp-fchip{border:1.5px solid var(--line);background:#fff;color:#57706b;font-weight:700;font-size:13px;font-family:inherit;padding:8px 12px;border-radius:999px;cursor:pointer;}
+  .comp-fchip.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff;}
+  #compSearch{width:100%;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;}
   .keypad-display{
     font-family:var(--mono);font-size:34px;font-weight:800;text-align:center;
     padding:16px;background:var(--paper);border-radius:var(--radius-md);margin-bottom:14px;color:var(--ink);
@@ -895,7 +899,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 17:50</div>
+    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 18:50</div>
   </div>
 </div>
 
@@ -936,7 +940,7 @@
     <div class="summary" id="summaryMotivos" style="margin-top:8px;"></div>
 
     <div class="section-title"><span>Historial de conteo</span><span id="countLabel"></span></div>
-    <input type="text" id="logSearch" placeholder="🔍 Buscar producto ya contado (código o nombre)" autocomplete="off" autocorrect="off" autocapitalize="characters" style="width:100%;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;">
+    <input type="text" id="logSearch" readonly placeholder="🔍 Buscar producto ya contado (código o nombre)" autocomplete="off" style="width:100%;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;">
     <div id="log"></div>
 
     <div class="actions">
@@ -995,6 +999,13 @@
     <button class="sis-principal" id="compPreciosBtn" style="background:linear-gradient(135deg,#b8722a,#8f5418);">🏷️ Precios del conteo<small id="compPreciosSub">Captura el precio de los productos con diferencia</small></button>
     <button class="sis-principal" id="compPronBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);">💰 Pronóstico en pesos<small>Faltante y sobrante compensados por familia de código</small></button>
     <div class="section-title"><span id="compSectionTitle">Físico vs. sistema</span><span id="compCountLabel"></span></div>
+    <div id="compFiltros">
+      <button type="button" class="comp-fchip active" data-f="todos">Todos</button>
+      <button type="button" class="comp-fchip" data-f="OK">✅ OK</button>
+      <button type="button" class="comp-fchip" data-f="Faltante">🔴 Faltante</button>
+      <button type="button" class="comp-fchip" data-f="Sobrante">🔵 Sobrante</button>
+    </div>
+    <input type="text" id="compSearch" readonly placeholder="🔍 Buscar por código o nombre" autocomplete="off">
     <div id="compLog"></div>
     <div class="actions" style="flex-wrap:wrap;">
       <button class="btn btn-export" id="compPrintBtn">🖨️ Imprimir hoja</button>
@@ -1283,6 +1294,8 @@ let capPendingArea = '';
 let capPendingCritOverride = null; // null = automático; 'alta'|'media'|'baja' = elegido a mano para este lote
 let historialConteo = [];
 let logFiltro = ''; // texto del buscador del historial de conteo
+let compFiltroTexto = '';      // buscador de la comparativa (Físico vs. sistema)
+let compFiltroEstado = 'todos'; // 'todos' | 'OK' | 'Faltante' | 'Sobrante'
 let cierresConteo = []; // conteos anteriores ya cerrados (al "Vaciar conteo"), con fecha
 let etiquetas = [];
 function uid(){ return Date.now()+'_'+Math.random().toString(36).slice(2,7); }
@@ -3400,10 +3413,16 @@ function resetBarcodeStage(){
   barcodeInput.focus();
 }
 
-// Buscador del historial de conteo: filtra sin perder lo que escribe.
+// Buscador del historial de conteo: usa el teclado de la app (no el del
+// teléfono) y filtra en vivo mientras escribes.
 (function(){
   const inp = document.getElementById('logSearch');
-  if(inp) inp.addEventListener('input', ()=>{ logFiltro = inp.value; renderLog(); });
+  if(!inp) return;
+  inp.addEventListener('click', ()=>{
+    openTextKeypad('Buscar producto ya contado', logFiltro,
+      (val)=>{ logFiltro = val; inp.value = val; renderLog(); },
+      (live)=>{ logFiltro = live; inp.value = live; renderLog(); });
+  });
 })();
 
 $('exportBtn').onclick = ()=>{
@@ -5063,15 +5082,36 @@ function renderComparativo(){
     <div class="sum-card"><div class="n" style="color:var(--blue)">${totals.Sobrante}</div><div class="l">Sobrante</div></div>`;
 
   $('compSectionTitle').textContent = auditModeActive ? 'Mi conteo vs. auditor' : 'Físico vs. sistema';
-  $('compCountLabel').textContent = rows.length ? `${rows.length} productos` : '';
   if(!rows.length){
+    $('compCountLabel').textContent = '';
     $('compLog').innerHTML = auditModeActive
       ? '<div class="empty">Escanea tu conteo de auditoría y/o captura la hoja del auditor para ver la comparativa.</div>'
       : '<div class="empty">Registra conteo físico y/o existencias de sistema para ver la comparativa.</div>';
     return;
   }
 
-  $('compLog').innerHTML = rows.map(r=>{
+  // Marca el filtro activo y aplica estado + buscador (los totales de arriba
+  // siguen mostrando el panorama completo; aquí solo se filtra la lista).
+  document.querySelectorAll('#compFiltros .comp-fchip').forEach(ch=>{
+    ch.classList.toggle('active', ch.dataset.f === compFiltroEstado);
+  });
+  const txt = (compFiltroTexto||'').toLowerCase().trim();
+  let visibles = rows;
+  if(compFiltroEstado !== 'todos') visibles = visibles.filter(r=> r.estatus === compFiltroEstado);
+  if(txt) visibles = visibles.filter(r=>
+    String(r.codigo||'').toLowerCase().includes(txt) ||
+    String(r.barcode||'').toLowerCase().includes(txt) ||
+    String(r.descripcion||'').toLowerCase().includes(txt)
+  );
+  $('compCountLabel').textContent = (visibles.length === rows.length)
+    ? `${rows.length} productos`
+    : `${visibles.length} de ${rows.length}`;
+  if(!visibles.length){
+    $('compLog').innerHTML = `<div class="empty">Sin coincidencias${txt?` para "${cvEsc(compFiltroTexto)}"`:''}${compFiltroEstado!=='todos'?` en ${compFiltroEstado}`:''}.</div>`;
+    return;
+  }
+
+  $('compLog').innerHTML = visibles.map(r=>{
     const statusClass = 'status-' + r.estatus.toLowerCase();
     // Desglose por ubicación (normal) o por marbete (auditoría): solo se
     // muestran los grupos donde sí hay algo contado.
@@ -5094,6 +5134,20 @@ function renderComparativo(){
     </div>`;
   }).join('');
 }
+// Filtros y buscador de la comparativa (Físico vs. sistema).
+document.querySelectorAll('#compFiltros .comp-fchip').forEach(ch=>{
+  ch.onclick = ()=>{ compFiltroEstado = ch.dataset.f; renderComparativo(); };
+});
+(function(){
+  const inp = document.getElementById('compSearch');
+  if(!inp) return;
+  inp.addEventListener('click', ()=>{
+    openTextKeypad('Buscar en comparativa', compFiltroTexto,
+      (val)=>{ compFiltroTexto = val; inp.value = val; renderComparativo(); },
+      (live)=>{ compFiltroTexto = live; inp.value = live; renderComparativo(); });
+  });
+})();
+
 $('compPronBtn').onclick = ()=>{
   if(auditModeActive){ openConfirm('El pronóstico se hace con tu inventario normal. Apaga el Modo auditoría en ☰ Más.', ()=>{}); return; }
   abrirPronostico(cierreActual());
