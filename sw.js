@@ -2,7 +2,7 @@
    Guarda la app en el teléfono para que abra aunque no haya internet.
    Los datos (conteos, recepciones…) los guarda Firebase en el teléfono y
    los sube solos cuando vuelve la señal. */
-const CACHE = 'tiquenda-v2026-10-27e';
+const CACHE = 'tiquenda-v2026-10-27g';
 const ARCHIVOS = [
   './',
   './index.html',
@@ -17,8 +17,13 @@ const ARCHIVOS = [
 ];
 
 self.addEventListener('install', (e)=>{
-  e.waitUntil(caches.open(CACHE).then(c=> Promise.all(ARCHIVOS.map(u=> c.add(u).catch(()=>{})))).then(()=> self.skipWaiting()));
+  // Ya NO se activa sola (sin skipWaiting aquí): la versión nueva ESPERA hasta
+  // que la persona toque "actualizar". Así nadie se recarga a media captura.
+  e.waitUntil(caches.open(CACHE).then(c=> Promise.all(ARCHIVOS.map(u=> c.add(u).catch(()=>{})))));
 });
+
+// La app le avisa cuando la persona toca el botón de actualizar.
+self.addEventListener('message', (e)=>{ if(e.data === 'skipWaiting') self.skipWaiting(); });
 
 self.addEventListener('activate', (e)=>{
   e.waitUntil(caches.keys().then(ks=> Promise.all(ks.filter(k=> k !== CACHE).map(k=> caches.delete(k)))).then(()=> self.clients.claim()));

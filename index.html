@@ -899,7 +899,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 18:35</div>
+    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 21:35</div>
   </div>
 </div>
 
@@ -5034,8 +5034,29 @@ $('sisResetBtn').onclick = ()=>{
     });
     return;
   }
-  pedirNip('vaciar todas las existencias de sistema', ()=>{
-    existenciasMap = {}; persistSistema(); renderSeqList();
+  pedirNip('vaciar todas las existencias de sistema', async ()=>{
+    // Borrado robusto: NO dependemos de la lista en memoria (que a veces llega
+    // vacía al abrir en otra sesión y hacía que "no borrara nada"). Juntamos
+    // todo lo que haya — lo local, lo conocido y lo que realmente está en la
+    // nube — y lo borramos de verdad en Firestore.
+    const prev = Object.keys(existenciasMap);
+    existenciasMap = {};
+    persistSistemaLocal();
+    renderSeqList(); renderComparativo(); renderDashboard();
+    if(!fsReady){ fsExistenciasKnownCodigos = new Set(); return; }
+    const ids = new Set(prev);
+    [...fsExistenciasKnownCodigos].forEach(c=> ids.add(c));
+    try{ const snap = await fsExistenciasCol.get(); snap.docs.forEach(d=> ids.add(d.id)); }catch(e){}
+    const lista = [...ids].filter(Boolean);
+    try{
+      for(let i=0;i<lista.length;i+=450){
+        const batch = fsDb.batch();
+        lista.slice(i,i+450).forEach(id=> batch.delete(fsExistenciasCol.doc(id)));
+        await batch.commit();
+      }
+      fsExistenciasKnownCodigos = new Set();
+      fsSyncBadge('ok');
+    }catch(err){ fsSyncBadge('error'); if(fsEsClienteMuerto(err)) fsMarcarMuerto(); }
   });
 };
 
@@ -7368,8 +7389,49 @@ renderRecepcion();
 
 /* ---------- Sin conexión ---------- */
 // La app queda guardada en el teléfono (sw.js) para abrir aunque no haya internet.
+// Aviso de versión nueva: cuando se publica una actualización, aparece un
+// botón arriba y con un TOQUE se actualiza — sin borrar ni reinstalar el ícono.
+let swReg = null, swRecargando = false;
+function mostrarAvisoActualizar(){
+  if(document.getElementById('updateBanner')) return;
+  const bar = document.createElement('button');
+  bar.id = 'updateBanner';
+  bar.type = 'button';
+  bar.textContent = '🔄 Hay versión nueva — toca para actualizar';
+  bar.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:99999;border:none;width:100%;padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 12px;background:#1f8a63;color:#fff;font-weight:800;font-size:15px;font-family:inherit;cursor:pointer;box-shadow:0 2px 12px rgba(0,0,0,.28);';
+  bar.onclick = ()=>{
+    bar.textContent = 'Actualizando…';
+    swRecargando = true; // marca que la recarga la pediste TÚ
+    try{
+      if(swReg && swReg.waiting) swReg.waiting.postMessage('skipWaiting');
+      else location.reload();
+    }catch(e){ location.reload(); }
+  };
+  document.body.appendChild(bar);
+}
 if('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')){
-  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('sw.js').catch(()=>{}); });
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js').then(reg=>{
+      swReg = reg;
+      // ¿Ya quedó una versión nueva esperando de una visita anterior?
+      if(reg.waiting && navigator.serviceWorker.controller) mostrarAvisoActualizar();
+      reg.addEventListener('updatefound', ()=>{
+        const nw = reg.installing;
+        if(!nw) return;
+        nw.addEventListener('statechange', ()=>{
+          // 'installed' + ya había un controlador = es una ACTUALIZACIÓN (no la 1ª vez).
+          if(nw.state === 'installed' && navigator.serviceWorker.controller) mostrarAvisoActualizar();
+        });
+      });
+      try{ reg.update(); }catch(e){}
+      setInterval(()=>{ try{ reg.update(); }catch(e){} }, 60*60*1000); // revisa cada hora
+    }).catch(()=>{});
+    // Recarga SOLO cuando la persona tocó "actualizar" (no en la 1ª carga).
+    navigator.serviceWorker.addEventListener('controllerchange', ()=>{
+      if(!swRecargando) return;
+      location.reload();
+    });
+  });
 }
 function pintarConexion(){
   const el = byId('fsSyncBadge'); if(!el) return;
