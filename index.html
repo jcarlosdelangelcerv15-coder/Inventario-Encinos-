@@ -230,6 +230,8 @@
     padding:18px 18px calc(18px + env(safe-area-inset-bottom));box-shadow:0 -10px 40px rgba(0,0,0,.2);
   }
   .keypad-label{font-size:13px;font-weight:800;color:#6b6659;text-align:center;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
+  .keypad-prod{font-size:17px;font-weight:800;color:var(--brand-dark);text-align:center;margin:-2px 0 8px;line-height:1.25;padding:8px 10px;background:#eef6f3;border-radius:10px;}
+  .keypad-prod .kp-cod{display:block;font-size:12px;font-weight:700;color:#8a8473;font-family:var(--mono);margin-top:2px;}
   .keypad-display{
     font-family:var(--mono);font-size:34px;font-weight:800;text-align:center;
     padding:16px;background:var(--paper);border-radius:var(--radius-md);margin-bottom:14px;color:var(--ink);
@@ -893,7 +895,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 17:05</div>
+    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 17:50</div>
   </div>
 </div>
 
@@ -1136,6 +1138,7 @@
 <div class="keypad-overlay" id="keypadOverlay">
   <div class="keypad-card">
     <div class="keypad-label" id="keypadLabel">Cantidad</div>
+    <div class="keypad-prod" id="keypadProducto" style="display:none;"></div>
     <div class="keypad-cajas" id="keypadCajasBox" style="display:none;"></div>
     <div class="keypad-display" id="keypadDisplay">0</div>
     <button type="button" id="keypadPasteBtn" style="width:100%;margin-bottom:10px;padding:9px;border-radius:8px;border:1.5px dashed #b7c7c3;background:#f5faf8;color:var(--accent);font-weight:700;font-size:13px;cursor:pointer;">📋 Pegar del portapapeles</button>
@@ -2355,6 +2358,16 @@ const keypadOverlay = $('keypadOverlay'), keypadDisplay = $('keypadDisplay'), ke
 
 function openKeypad(label, initialValue, onConfirm, opts={}){
   keypadLabel.textContent = label;
+  // Muestra qué producto se está contando/corrigiendo dentro del teclado,
+  // para que el panel no "tape" el nombre y no se olvide qué se escanea.
+  const prodEl = document.getElementById('keypadProducto');
+  if(prodEl){
+    if(opts.producto){
+      const pr = opts.producto;
+      prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '');
+      prodEl.style.display = 'block';
+    } else { prodEl.innerHTML = ''; prodEl.style.display = 'none'; }
+  }
   const val = (initialValue !== undefined && initialValue !== null && initialValue !== '') ? String(initialValue) : '';
   keypadOverlay.dataset.value = val;
   keypadDisplay.textContent = val === '' ? '0' : val;
@@ -3112,7 +3125,7 @@ function renderLog(){
       const rec0 = buscarRec(btn.dataset.id);
       if(!rec0) return;
       const hacer = ()=>{
-        openKeypad('Corregir cantidad · ' + (rec0.descripcion || rec0.codigo || ''), rec0.cantidad, (val)=>{
+        openKeypad('Corregir cantidad', rec0.cantidad, (val)=>{
           const n = Number(val);
           if(val === '' || val === null || isNaN(n)) return;
           const rec = buscarRec(rec0.id); if(!rec) return;
@@ -3122,7 +3135,7 @@ function renderLog(){
           const h = historialConteo.find(h=> h.id === rec.id);
           if(h){ h.cantidad = n; persistHistorialItemAdd(h); }
           renderSummary(); renderLog(); renderDashboard();
-        });
+        }, {producto:{nombre: rec0.descripcion || 'Sin descripción', cod: rec0.codigo || ''}});
       };
       if(rec0.capturista && rec0.capturista !== (currentUser || '')) pedirNip(`corregir un escaneo de ${rec0.capturista}`, hacer);
       else hacer();
@@ -3248,7 +3261,7 @@ function openQtyKeypad(){
   openKeypad(auditModeActive ? 'Cantidad · Auditoría' : `Cantidad · ${mode}`, qtyInput.value, (val)=>{
     qtyInput.value = val;
     confirmQtyEntry(val);
-  }, {onCancel: resetBarcodeStage});
+  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || ''} : null});
 }
 
 function selectFoundProduct(item, raw){
