@@ -899,7 +899,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:30</div>
+    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:40</div>
   </div>
 </div>
 
@@ -2813,6 +2813,8 @@ function renderCategoriaSelect(){
   sel.onchange = ()=>{
     categoriaActiva = sel.value;
     lsSet('categoria_activa', categoriaActiva);
+    renderSummary();
+    renderLog();
     renderSeqList();
     renderComparativo();
     if($('capFilter').value.trim()) renderCapProductPick();
@@ -3068,13 +3070,15 @@ function renderSummary(){
     $('summaryMotivos').innerHTML = '';
     return;
   }
+  // Los recuadros reflejan la categoría seleccionada arriba (si es "Todas", todo).
+  const baseCat = recordsDeCategoriaActiva();
   const totals = {}; MODES.forEach(m=>totals[m]=0);
-  records.forEach(r=> totals[r.area] += Number(r.cantidad));
+  baseCat.forEach(r=> totals[r.area] += Number(r.cantidad));
   summaryEl.innerHTML = MODES.map(m=>`
     <div class="sum-card"><div class="n" style="color:${MODE_COLORS[m]}">${totals[m]}</div><div class="l">${m}</div></div>`).join('');
 
   const motivoTotals = {};
-  records.forEach(r=>{ if(r.area==='Movimientos Pendientes' && r.motivo) motivoTotals[r.motivo] = (motivoTotals[r.motivo]||0) + Number(r.cantidad); });
+  baseCat.forEach(r=>{ if(r.area==='Movimientos Pendientes' && r.motivo) motivoTotals[r.motivo] = (motivoTotals[r.motivo]||0) + Number(r.cantidad); });
   const motivosConDatos = Object.keys(motivoTotals);
   $('summaryMotivos').innerHTML = motivosConDatos.length
     ? motivosConDatos.map(mo=>`
@@ -3108,11 +3112,18 @@ function renderLog(){
     });
     return;
   }
-  countLabel.textContent = records.length ? `${records.length} escaneos` : '';
-  if(!records.length){ logEl.innerHTML = '<div class="empty">Aún no hay escaneos en esta sesión.</div>'; return; }
+  // Solo los escaneos de la categoría seleccionada arriba (si es "Todas", todo).
+  const base = recordsDeCategoriaActiva();
+  countLabel.textContent = base.length ? `${base.length} escaneos` : '';
+  if(!base.length){
+    logEl.innerHTML = categoriaActiva === 'todas'
+      ? '<div class="empty">Aún no hay escaneos en esta sesión.</div>'
+      : `<div class="empty">Aún no hay escaneos de ${cvEsc(nombreCategoriaActiva())} en esta sesión.</div>`;
+    return;
+  }
   // Buscador: filtra por código, código de barras o descripción.
   const filtro = (logFiltro||'').toLowerCase().trim();
-  let lista = records.slice().reverse();
+  let lista = base.slice().reverse();
   if(filtro){
     lista = lista.filter(r=>
       String(r.codigo||'').toLowerCase().includes(filtro) ||
