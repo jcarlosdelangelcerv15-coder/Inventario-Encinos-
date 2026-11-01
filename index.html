@@ -899,7 +899,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 27 oct 2026 · 21:55</div>
+    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:30</div>
   </div>
 </div>
 
@@ -4760,7 +4760,7 @@ $('sisImportFile').addEventListener('change', (e)=>{
       let agregados=0, actualizados=0, choques=0, invalidos=0;
       const choqueDetalle = [];
       rows.forEach(row=>{
-        const codCol = findCol(row, ['codigo','código','codigo interno','sku','alfanumerico','alfanumérico']);
+        const codCol = findCol(row, ['codigo','código','codigo interno','clave','sku','alfanumerico','alfanumérico']);
         const descCol = findCol(row, ['descripcion','descripción','producto','nombre']);
         const barCol = findCol(row, ['codigo de barras','código de barras','barcode','barras','upc']);
         const codigo = codCol ? String(row[codCol]).trim().toUpperCase() : '';
@@ -4907,7 +4907,7 @@ function construirCotejoExistencias(rows){
   let invalidos = 0;
   const invalidosDetalle = [];
   rows.forEach((row, i)=>{
-    const codCol  = findCol(row, ['codigo','codigo interno','sku','alfanumerico']);
+    const codCol  = findCol(row, ['codigo','codigo interno','clave','sku','alfanumerico']);
     const cantCol = findCol(row, ['existencia','existencias','existencia sistema','exis','cantidad','stock','disponible']);
     const descCol = findCol(row, ['descripcion','producto','nombre']);
     const barCol  = findCol(row, ['codigo de barras','barcode','barras','upc','ean']);
