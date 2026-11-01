@@ -232,6 +232,8 @@
   .keypad-label{font-size:13px;font-weight:800;color:#6b6659;text-align:center;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
   .keypad-prod{font-size:17px;font-weight:800;color:var(--brand-dark);text-align:center;margin:-2px 0 8px;line-height:1.25;padding:8px 10px;background:#eef6f3;border-radius:10px;}
   .keypad-prod .kp-cod{display:block;font-size:12px;font-weight:700;color:#8a8473;font-family:var(--mono);margin-top:2px;}
+  .keypad-prod .kp-sis{display:inline-block;margin-top:7px;font-size:14px;font-weight:700;color:var(--blue);background:#e9eefb;padding:4px 12px;border-radius:999px;}
+  .keypad-prod .kp-sis b{font-weight:800;}
   #compFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
   .comp-fchip{border:1.5px solid var(--line);background:#fff;color:#57706b;font-weight:700;font-size:13px;font-family:inherit;padding:8px 12px;border-radius:999px;cursor:pointer;}
   .comp-fchip.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff;}
@@ -899,7 +901,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:40</div>
+    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:50</div>
   </div>
 </div>
 
@@ -2377,7 +2379,9 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
   if(prodEl){
     if(opts.producto){
       const pr = opts.producto;
-      prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '');
+      const sis = (pr.sistema!==undefined && pr.sistema!==null && pr.sistema!=='')
+        ? `<span class="kp-sis">📊 Sistema pide: <b>${cvEsc(pr.sistema)}</b></span>` : '';
+      prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '') + sis;
       prodEl.style.display = 'block';
     } else { prodEl.innerHTML = ''; prodEl.style.display = 'none'; }
   }
@@ -3280,12 +3284,21 @@ function confirmQtyEntryInner(qty){
   persistHistorialItemAdd(rec); renderSummary(); renderLog(); resetBarcodeStage(); renderDashboard();
 }
 
+// Existencia que el sistema (POS) pide para este producto, si se cargó.
+function existenciaSistemaDe(item){
+  if(!item) return null;
+  const cod = (item.codigo||'').toUpperCase();
+  if(cod && existenciasMap[cod] && existenciasMap[cod].cantidad!=null) return existenciasMap[cod].cantidad;
+  const bc = normBarcode(item.barcode||'');
+  if(bc){ for(const k in existenciasMap){ const e = existenciasMap[k]; if(e && normBarcode(e.barcode||'') === bc) return e.cantidad; } }
+  return null;
+}
 function openQtyKeypad(){
   const esCerveza = !auditModeActive && pendingItem && getPrefix(pendingItem.codigo) === 'CE';
   openKeypad(auditModeActive ? 'Cantidad · Auditoría' : `Cantidad · ${mode}`, qtyInput.value, (val)=>{
     qtyInput.value = val;
     confirmQtyEntry(val);
-  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || ''} : null});
+  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || '', sistema: existenciaSistemaDe(pendingItem)} : null});
 }
 
 function selectFoundProduct(item, raw){
