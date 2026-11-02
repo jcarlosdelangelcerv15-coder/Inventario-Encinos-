@@ -690,6 +690,10 @@
   .caja-precio .cp-t{font-size:14px;color:#57534a;margin-bottom:8px;}
   .caja-precio .cp-ult{font-size:16px;margin-bottom:8px;}
   .caja-precio .cp-ok{font-size:18px;color:#1e7d4f;margin-bottom:8px;}
+  .caja-precio .exc-live{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;font-size:16px;margin-bottom:6px;}
+  .caja-precio .exc-dif{font-size:20px;font-weight:800;margin-bottom:8px;}
+  .exc-acc{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+  .exc-acc .add-missing-btn{flex:1 1 0;margin:0;}
   .caja-precio .cp-btns{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
   .caja-precio .cp-btns button{padding:14px 18px;border-radius:14px;border:1.5px solid var(--line);background:#fff;font:inherit;font-weight:800;font-size:17px;cursor:pointer;}
   .caja-precio .cp-btns button.on{background:#1e7d4f;border-color:#1e7d4f;color:#fff;}
@@ -889,6 +893,7 @@
       <button type="button" class="sheet-item" data-ir="recepcion"><span>📦</span><div><b>Recepción</b><small>Cuando llega mercancía de un proveedor</small></div></button>
       <button type="button" class="sheet-item" data-ir="etiquetas"><span>🏷️</span><div><b>Etiquetas</b><small>Códigos para escanear en caja</small></div></button>
       <button type="button" class="sheet-item" id="masPreciosBtn"><span>💲</span><div><b>Precios del conteo</b><small>Precio de la etiqueta de lo que tiene diferencia</small></div></button>
+      <button type="button" class="sheet-item" id="masExcepcionBtn"><span>📋</span><div><b>Inventario por excepción</b><small>Solo ciertos productos · existencias desde el POS</small></div></button>
       <button type="button" class="sheet-item" data-ir="caducidades"><span>📅</span><div><b>Caducidades</b><small>Lotes y semáforo</small></div></button>
       <button type="button" class="sheet-item" data-ir="dashboard"><span>📈</span><div><b>Dashboard</b><small>Cobertura de conteo</small></div></button>
     </div>
@@ -6030,6 +6035,15 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="excepcionOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">📋 Inventario por excepción<small>Solo los productos que elijas. Cuéntalos y captura su existencia del POS.</small></div>
+    <div class="cotejo-body" id="excepcionBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="excepcionCerrar">Listo</button></div></div>
+  </div>
+</div>
+<input type="file" id="excepcionFile" accept=".xlsx,.xls,.csv" style="display:none;">
+
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">🧾 Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
@@ -7089,6 +7103,27 @@ function pintarCaja(){
       const n = Number(String(v).replace(',', '.')); if(n > 0){ guardarPrecioConteo(it.codigo, Math.round(n*100)/100); avanzar(); }
     }, {asString:true, decimal:true});
   }
+  if(it.pedirExistencia){
+    const fisico = contadoDe(it);
+    const sis = existenciaSistemaDe(it);
+    const tieneSis = sis !== null && sis !== undefined;
+    const dif = tieneSis ? (fisico - sis) : null;
+    const difHtml = !tieneSis ? '' :
+      dif === 0 ? '<div class="cp-ok">✅ Cuadra (diferencia 0)</div>' :
+      dif < 0 ? `<div class="exc-dif" style="color:var(--red)">➖ Faltan <b>${Math.abs(dif)}</b></div>` :
+      `<div class="exc-dif" style="color:var(--blue)">🔵 Sobran <b>${dif}</b></div>`;
+    byId('cajaCant').innerHTML += `<div class="caja-precio">
+      <div class="cp-t">Escanéalo en el POS y escribe la existencia que marca</div>
+      <div class="exc-live"><span>✅ Contaste: <b>${fisico}</b></span><span>📊 Sistema: <b>${tieneSis ? sis : '—'}</b></span></div>
+      ${difHtml}
+      <div class="cp-btns"><button type="button" id="cpExist" class="on">📊 ${tieneSis ? 'Cambiar existencia' : 'Escribir existencia del POS'}</button></div>
+    </div>`;
+    byId('cpExist').onclick = ()=> openKeypad(`Existencia que marca el POS · ${it.descripcion || it.codigo}`, (sis!=null?String(sis):''), (v)=>{
+      const n = Number(v); if(v === '' || v === null || isNaN(n)) return;
+      guardarExistenciaExcepcion(it.codigo, n);
+      pintarCaja(); // se queda en el mismo producto para que veas la diferencia al instante
+    });
+  }
   byId('cajaAnt').disabled = cajaIdx === 0;
   byId('cajaSig').textContent = cajaIdx === cajaItems.length - 1 ? 'Terminar ✓' : 'Siguiente ›';
 }
@@ -7104,6 +7139,135 @@ byId('cajaSig').onclick = ()=>{ if(cajaIdx < cajaItems.length - 1){ cajaIdx++; p
     if(dx < -60) byId('cajaSig').click(); else if(dx > 60) byId('cajaAnt').click();
   });
 })();
+
+/* ============ INVENTARIO POR EXCEPCIÓN ============
+   Solo ciertos productos (devoluciones, exceso). Se eligen por Excel o a mano,
+   se cuentan normal, y su existencia se captura desde el POS uno por uno con
+   el cotejo (contaste / sistema / diferencia) en vivo. */
+let excepcionLista = [];
+try{ const e = lsGet('excepcion_lista'); if(e) excepcionLista = JSON.parse(e) || []; }catch(e){}
+function persistExcepcion(){
+  lsSet('excepcion_lista', JSON.stringify(excepcionLista));
+  if(fsReady) fsSet('excepcion_lista', excepcionLista);
+}
+function excepcionAgrega(codigo, descripcion, barcode){
+  codigo = String(codigo||'').trim().toUpperCase();
+  if(!codigo || excepcionLista.some(x=> x.codigo === codigo)) return false;
+  excepcionLista.push({codigo, descripcion: descripcion||'', barcode: barcode||''});
+  return true;
+}
+function guardarExistenciaExcepcion(codigo, cantidad){
+  const {byCodigo} = buildIndexes();
+  const cat = byCodigo[codigo] || {};
+  existenciasMap[codigo] = {codigo, descripcion: cat.descripcion||'', barcode: cat.barcode||'', cantidad: Number(cantidad), ts: new Date().toISOString()};
+  persistExistenciaCodigo(codigo);
+  fsExistenciasKnownCodigos.add(codigo);
+}
+function abrirExcepcion(){
+  if(auditModeActive){ openConfirm('El inventario por excepción se hace con tu conteo normal. Apaga el Modo auditoría en ☰ Más.', ()=>{}); return; }
+  byId('excepcionOverlay').style.display = 'flex';
+  pintarExcepcion();
+}
+function excInfo(x, byCodigo){
+  const cat = byCodigo[x.codigo] || {};
+  const desc = cat.descripcion || x.descripcion || x.codigo;
+  const bc = cat.barcode || x.barcode || '';
+  const fisico = contadoDe({codigo:x.codigo, barcode:bc});
+  const sis = existenciaSistemaDe({codigo:x.codigo, barcode:bc});
+  const tieneSis = sis !== null && sis !== undefined;
+  const dif = tieneSis ? (fisico - sis) : null;
+  return {desc, bc, fisico, sis, tieneSis, dif};
+}
+function pintarExcepcion(){
+  const body = byId('excepcionBody');
+  const {byCodigo} = buildIndexes();
+  const botones = `<div class="exc-acc">
+    <button type="button" class="add-missing-btn" id="excCargar">📄 Cargar Excel</button>
+    <button type="button" class="add-missing-btn" id="excAgregar">➕ Agregar a mano</button>
+  </div>`;
+  const wire = ()=>{
+    const c = byId('excCargar'); if(c) c.onclick = ()=> byId('excepcionFile').click();
+    const a = byId('excAgregar'); if(a) a.onclick = excepcionAgregarManual;
+  };
+  if(!excepcionLista.length){
+    body.innerHTML = botones + '<div class="empty">Aún no hay productos en la excepción. Carga un Excel con las claves/códigos, o agrégalos a mano.</div>';
+    wire(); return;
+  }
+  let faltanSis = 0;
+  const filas = excepcionLista.slice().sort((a,b)=> codigoCompare(a.codigo, b.codigo)).map(x=>{
+    const i = excInfo(x, byCodigo);
+    if(!i.tieneSis) faltanSis++;
+    const difChip = !i.tieneSis ? '<span class="chip">falta sistema</span>'
+      : i.dif === 0 ? '<span class="chip status-ok">OK</span>'
+      : i.dif < 0 ? `<span class="chip status-faltante">Faltan ${Math.abs(i.dif)}</span>`
+      : `<span class="chip status-sobrante">Sobran ${i.dif}</span>`;
+    return `<div class="log-item"><div class="info">
+        <div class="desc">${cvEsc(i.desc)}</div>
+        <div class="meta">${cvEsc(x.codigo)} · Contaste <b>${i.fisico}</b> · Sistema <b>${i.tieneSis ? i.sis : '—'}</b> ${difChip}</div>
+      </div><button type="button" class="del" data-excdel="${cvEsc(x.codigo)}">✕</button></div>`;
+  }).join('');
+  body.innerHTML = botones +
+    `<button type="button" class="sis-principal" id="excCapturar" style="background:linear-gradient(135deg,#1f8a63,#156b4c);margin:10px 0;">📲 Capturar existencias en el POS (${excepcionLista.length})<small>Escanea cada uno en caja y teclea lo que marca el sistema</small></button>
+     <div class="section-title"><span>Productos (${excepcionLista.length})</span><span>${faltanSis ? 'faltan '+faltanSis+' de sistema' : '✅ todos con sistema'}</span></div>
+     ${filas}
+     <button type="button" class="add-missing-btn" id="excComparar" style="margin-top:10px;">⚖️ Ver cotejo completo en Comparar</button>
+     <button type="button" class="add-missing-btn" id="excVaciar" style="margin-top:6px;color:var(--red);border-color:var(--red);">🗑️ Vaciar lista de excepción</button>`;
+  wire();
+  body.querySelectorAll('[data-excdel]').forEach(b=> b.onclick = ()=>{ excepcionLista = excepcionLista.filter(x=> x.codigo !== b.dataset.excdel); persistExcepcion(); pintarExcepcion(); });
+  const cap = byId('excCapturar'); if(cap) cap.onclick = capturarExistenciasExcepcion;
+  const cmp = byId('excComparar'); if(cmp) cmp.onclick = ()=>{ byId('excepcionOverlay').style.display = 'none'; const t = document.querySelector('.tab[data-tab="comparativo"]'); if(t) t.click(); };
+  const vac = byId('excVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar la lista de productos en excepción? (No borra conteos ni existencias, solo la lista.)', ()=>{ excepcionLista = []; persistExcepcion(); pintarExcepcion(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
+}
+function capturarExistenciasExcepcion(){
+  const {byCodigo} = buildIndexes();
+  const items = excepcionLista.slice().sort((a,b)=> codigoCompare(a.codigo, b.codigo)).map(x=>{
+    const cat = byCodigo[x.codigo] || {};
+    return {codigo:x.codigo, descripcion: cat.descripcion||x.descripcion||x.codigo, barcode: cat.barcode||x.barcode||'', pedirExistencia:true};
+  });
+  if(!items.length){ openConfirm('No hay productos en la excepción.', ()=>{}); return; }
+  abrirCaja(items);
+}
+function excepcionAgregarManual(){
+  openTextKeypad('Buscar producto (código o nombre)', '', (val)=>{
+    const q = String(val||'').trim();
+    if(!q) return;
+    const matches = searchProducts(q);
+    if(!matches.length){ openConfirm('No encontré ese producto. Escribe parte del código o del nombre.', ()=>{}); return; }
+    elegir('Elige el producto', matches.slice(0,8).map(m=>({icono:'➕', label:`${m.descripcion||m.codigo} · ${m.codigo}`, fn:()=>{ excepcionAgrega(m.codigo, m.descripcion, m.barcode); persistExcepcion(); pintarExcepcion(); }})));
+  });
+}
+byId('excepcionCerrar').onclick = ()=>{ byId('excepcionOverlay').style.display = 'none'; };
+byId('masExcepcionBtn').onclick = ()=>{ cerrarMas(); abrirExcepcion(); };
+byId('excepcionFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu internet.', ()=>{}); e.target.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const wb = XLSX.read(ev.target.result, {type:'array'});
+      const rows = hojaARenglones(wb.Sheets[wb.SheetNames[0]]);
+      const norm = s => String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[_\s]+/g,' ').trim();
+      const findCol = (row, cands)=>{ const ks = Object.keys(row); for(const c of cands){ const k = ks.find(k2=> norm(k2)===c); if(k) return k; } return null; };
+      const {byCodigo, byBarcode} = buildIndexes();
+      let add=0, noEnc=0;
+      rows.forEach(row=>{
+        const cc = findCol(row, ['codigo','clave','codigo interno','sku','alfanumerico']);
+        const bcol = findCol(row, ['codigo de barras','barcode','barras','upc','ean']);
+        let codigo = cc ? String(row[cc]).trim().toUpperCase() : '';
+        const barcode = bcol ? String(row[bcol]).replace(/\D/g,'') : '';
+        if((!codigo || !byCodigo[codigo]) && barcode && byBarcode[normBarcode(barcode)]) codigo = byBarcode[normBarcode(barcode)].codigo;
+        if(!codigo || !isValidCodigo(codigo)){ noEnc++; return; }
+        const cat = byCodigo[codigo];
+        if(excepcionAgrega(codigo, cat?cat.descripcion:'', cat?cat.barcode:barcode)) add++;
+      });
+      persistExcepcion();
+      pintarExcepcion();
+      openConfirm(`Listo: ${add} producto(s) agregados a la excepción${noEnc?`, ${noEnc} renglón(es) sin código válido (ignorados)`:''}.`, ()=>{});
+    }catch(err){ openConfirm('No se pudo leer el archivo. Revisa que sea Excel/CSV con columna de código o código de barras.', ()=>{}); }
+    e.target.value = '';
+  };
+  reader.readAsArrayBuffer(file);
+});
 
 /* ============ RECEPCIÓN DE PROVEEDOR ============ */
 const fsRecepcionesCol = tCol('inventario_recepciones_items');
