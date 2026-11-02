@@ -239,6 +239,8 @@
   .keypad-prod .kp-falta{color:#b8722a;background:#f6ead8;}
   .keypad-prod .kp-sobra{color:#2b64c0;background:#e9eefb;}
   .keypad-prod .kp-chips b{font-weight:800;}
+  .keypad-prod .kp-ajena{display:block;margin-top:8px;font-size:13.5px;font-weight:700;color:#fff;background:#c0392b;padding:6px 12px;border-radius:10px;}
+  .keypad-prod .kp-ajena b{font-weight:800;}
   #compFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
   .comp-fchip{border:1.5px solid var(--line);background:#fff;color:#57706b;font-weight:700;font-size:13px;font-family:inherit;padding:8px 12px;border-radius:999px;cursor:pointer;}
   .comp-fchip.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff;}
@@ -906,7 +908,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 17:50</div>
+    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 19:20</div>
   </div>
 </div>
 
@@ -1249,11 +1251,10 @@ const CATEGORIAS = [
   {prefix:'FA', label:'Farmacia'},
   {prefix:'BO', label:'Botanas'},
   {prefix:'AG', label:'Aguas'},
-  {prefix:'BE', label:'Bebidas Bajas en Azúcar y Alternativas'},
+  {prefix:'BE', label:'Bebidas'},
   {prefix:'PA', label:'Pan'},
   {prefix:'RE', label:'Refrescos'},
   {prefix:'VI', label:'Vinos'},
-  {prefix:'BG', label:'Baja Graduación'},
   {prefix:'TA', label:'Cigarros'},
   {prefix:'DU', label:'Dulces'},
   {prefix:'NV', label:'Tecnología'},
@@ -1266,12 +1267,18 @@ const CATEGORIAS = [
   {prefix:'EV', label:'Envases Retornables'},
   {prefix:'SE', label:'Accesorios y Telecom'},
   {prefix:'AB', label:'Abarrotes'},
-  {prefix:'HO', label:'Detergentes y Limpieza del Hogar'},
+  {prefix:'BA', label:'Básicos de Abarrotes'},
+  {prefix:'MA', label:'Mascotas'},
+  {prefix:'HO', label:'Hogar'},
   {prefix:'LA', label:'Lácteos'},
   {prefix:'HE', label:'Helados'},
   {prefix:'FO', label:'Comida Rápida'},
   {prefix:'DE', label:'Desechables'},
 ];
+// Prefijos que NO son su propia categoría, sino que se cuentan dentro de otra:
+// BI (vinos preparados/refrigerados: Jack Daniels, New Mix) y BG (baja graduación)
+// pertenecen a Vinos (VI).
+const PREFIJO_ALIAS = { 'BI':'VI', 'BG':'VI' };
 let categoriaActiva = 'todas';
 function categoryFilter(items){
   if(categoriaActiva === 'todas') return items;
@@ -2395,8 +2402,10 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
         const txt = falta < 0 ? `🔵 Sobran: <b>${Math.abs(falta)}</b>` : `➖ Faltan: <b>${falta}</b>`;
         chips += `<span class="${clase}">${txt}</span>`;
       }
+      const ajena = pr.familiaAjena
+        ? `<span class="kp-ajena">⚠️ Es de <b>${cvEsc(pr.familiaAjena)}</b>, no de la familia que cuentas</span>` : '';
       prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '') +
-        (chips ? `<span class="kp-chips">${chips}</span>` : '');
+        (chips ? `<span class="kp-chips">${chips}</span>` : '') + ajena;
       prodEl.style.display = 'block';
     } else { prodEl.innerHTML = ''; prodEl.style.display = 'none'; }
   }
@@ -3322,10 +3331,17 @@ function existenciaSistemaDe(item){
 }
 function openQtyKeypad(){
   const esCerveza = !auditModeActive && pendingItem && getPrefix(pendingItem.codigo) === 'CE';
+  // Si el producto pertenece a OTRA familia distinta a la que estás contando,
+  // se avisa para evitar confusiones (ej. escaneas algo de Abarrotes en Lácteos).
+  let familiaAjena = null;
+  if(pendingItem && !auditModeActive && categoriaActiva !== 'todas'){
+    const pf = getPrefix(pendingItem.codigo || '');
+    if(pf && pf !== categoriaActiva) familiaAjena = nombreCategoria(pf);
+  }
   openKeypad(auditModeActive ? 'Cantidad · Auditoría' : `Cantidad · ${mode}`, qtyInput.value, (val)=>{
     qtyInput.value = val;
     confirmQtyEntry(val);
-  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || '', sistema: existenciaSistemaDe(pendingItem), contado: contadoDe(pendingItem)} : null});
+  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || '', sistema: existenciaSistemaDe(pendingItem), contado: contadoDe(pendingItem), familiaAjena} : null});
 }
 
 function selectFoundProduct(item, raw){
@@ -5472,7 +5488,9 @@ const CRIT_LABEL = {alta:'Alta', media:'Media', baja:'Baja'};
 const DEFAULT_CRIT_PREFIJO = { PA:'alta', RE:'media', LA:'alta', FO:'alta', EM:'alta', JU:'alta' };
 function getPrefix(codigo){
   const m = (codigo||'').match(/^[A-Za-z]+/);
-  return m ? m[0].toUpperCase() : '';
+  const p = m ? m[0].toUpperCase() : '';
+  // Aplica los alias (BI/BG → Vinos) para que se cuenten dentro de su categoría real.
+  return (typeof PREFIJO_ALIAS !== 'undefined' && PREFIJO_ALIAS[p]) ? PREFIJO_ALIAS[p] : p;
 }
 function nombreCategoria(prefix){
   const c = CATEGORIAS.find(c=>c.prefix===prefix);
