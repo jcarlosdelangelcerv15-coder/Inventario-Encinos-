@@ -232,8 +232,13 @@
   .keypad-label{font-size:13px;font-weight:800;color:#6b6659;text-align:center;margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
   .keypad-prod{font-size:17px;font-weight:800;color:var(--brand-dark);text-align:center;margin:-2px 0 8px;line-height:1.25;padding:8px 10px;background:#eef6f3;border-radius:10px;}
   .keypad-prod .kp-cod{display:block;font-size:12px;font-weight:700;color:#8a8473;font-family:var(--mono);margin-top:2px;}
-  .keypad-prod .kp-sis{display:inline-block;margin-top:7px;font-size:14px;font-weight:700;color:var(--blue);background:#e9eefb;padding:4px 12px;border-radius:999px;}
-  .keypad-prod .kp-sis b{font-weight:800;}
+  .keypad-prod .kp-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:8px;}
+  .keypad-prod .kp-sis,.keypad-prod .kp-llevo,.keypad-prod .kp-falta,.keypad-prod .kp-sobra{font-size:13.5px;font-weight:700;padding:4px 11px;border-radius:999px;}
+  .keypad-prod .kp-sis{color:var(--blue);background:#e9eefb;}
+  .keypad-prod .kp-llevo{color:#1f7a56;background:#e4f1ea;}
+  .keypad-prod .kp-falta{color:#b8722a;background:#f6ead8;}
+  .keypad-prod .kp-sobra{color:#2b64c0;background:#e9eefb;}
+  .keypad-prod .kp-chips b{font-weight:800;}
   #compFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
   .comp-fchip{border:1.5px solid var(--line);background:#fff;color:#57706b;font-weight:700;font-size:13px;font-family:inherit;padding:8px 12px;border-radius:999px;cursor:pointer;}
   .comp-fchip.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff;}
@@ -2379,9 +2384,19 @@ function openKeypad(label, initialValue, onConfirm, opts={}){
   if(prodEl){
     if(opts.producto){
       const pr = opts.producto;
-      const sis = (pr.sistema!==undefined && pr.sistema!==null && pr.sistema!=='')
-        ? `<span class="kp-sis">📊 Sistema pide: <b>${cvEsc(pr.sistema)}</b></span>` : '';
-      prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '') + sis;
+      const tieneSis = (pr.sistema!==undefined && pr.sistema!==null && pr.sistema!=='');
+      let chips = '';
+      if(tieneSis) chips += `<span class="kp-sis">📊 Sistema pide: <b>${cvEsc(pr.sistema)}</b></span>`;
+      if(pr.contado!==undefined && pr.contado!==null)
+        chips += `<span class="kp-llevo">✅ Llevas contado: <b>${cvEsc(pr.contado)}</b></span>`;
+      if(tieneSis && pr.contado!==undefined && pr.contado!==null){
+        const falta = Number(pr.sistema) - Number(pr.contado);
+        const clase = falta < 0 ? 'kp-sobra' : 'kp-falta';
+        const txt = falta < 0 ? `🔵 Sobran: <b>${Math.abs(falta)}</b>` : `➖ Faltan: <b>${falta}</b>`;
+        chips += `<span class="${clase}">${txt}</span>`;
+      }
+      prodEl.innerHTML = cvEsc(pr.nombre||'') + (pr.cod ? `<span class="kp-cod">${cvEsc(pr.cod)}</span>` : '') +
+        (chips ? `<span class="kp-chips">${chips}</span>` : '');
       prodEl.style.display = 'block';
     } else { prodEl.innerHTML = ''; prodEl.style.display = 'none'; }
   }
@@ -3284,6 +3299,18 @@ function confirmQtyEntryInner(qty){
   persistHistorialItemAdd(rec); renderSummary(); renderLog(); resetBarcodeStage(); renderDashboard();
 }
 
+// Cuánto llevas contado de este producto en esta sesión (suma de todos sus escaneos).
+function contadoDe(item){
+  if(!item || !Array.isArray(records)) return 0;
+  const cod = (item.codigo||'').toUpperCase();
+  const bc = normBarcode(item.barcode||'');
+  let s = 0;
+  records.forEach(r=>{
+    const mismo = (cod && (r.codigo||'').toUpperCase()===cod) || (bc && normBarcode(r.barcode||'')===bc);
+    if(mismo) s += Number(r.cantidad)||0;
+  });
+  return s;
+}
 // Existencia que el sistema (POS) pide para este producto, si se cargó.
 function existenciaSistemaDe(item){
   if(!item) return null;
@@ -3298,7 +3325,7 @@ function openQtyKeypad(){
   openKeypad(auditModeActive ? 'Cantidad · Auditoría' : `Cantidad · ${mode}`, qtyInput.value, (val)=>{
     qtyInput.value = val;
     confirmQtyEntry(val);
-  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || '', sistema: existenciaSistemaDe(pendingItem)} : null});
+  }, {onCancel: resetBarcodeStage, producto: pendingItem ? {nombre: pendingItem.descripcion || 'Sin descripción', cod: pendingItem.codigo || pendingItem.barcode || '', sistema: existenciaSistemaDe(pendingItem), contado: contadoDe(pendingItem)} : null});
 }
 
 function selectFoundProduct(item, raw){
