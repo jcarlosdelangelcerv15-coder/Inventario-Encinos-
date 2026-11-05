@@ -913,7 +913,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 1 nov 2026 · 19:35</div>
+    <div class="version-app">Tiquenda · Versión 4 nov 2026 · 19:55</div>
   </div>
 </div>
 
@@ -6110,9 +6110,10 @@ function aplicarVistaRol(){
   const setTab = (tab, modo)=>{ const el = document.querySelector('.tab[data-tab="'+tab+'"]'); if(!el) return;
     el.classList.remove('tab-sec','tab-oculta'); if(modo==='sec') el.classList.add('tab-sec'); else if(modo==='off') el.classList.add('tab-oculta'); };
   if(soloOp){
-    // Abajo: Contar · Recibir · Etiquetas · Caducidades
-    setTab('conteo','primary'); setTab('recepcion','primary'); setTab('etiquetas','primary'); setTab('caducidades','primary');
-    setTab('sistema','off'); setTab('comparativo','off'); setTab('cobertura','off'); setTab('dashboard','off');
+    // Abajo: Contar · Comparar · Recibir · Etiquetas · Caducidades
+    // Comparar (físico vs. sistema) queda a la vista de auxiliares y encargados de piso para leer sus diferencias.
+    setTab('conteo','primary'); setTab('comparativo','primary'); setTab('recepcion','primary'); setTab('etiquetas','primary'); setTab('caducidades','primary');
+    setTab('sistema','off'); setTab('cobertura','off'); setTab('dashboard','off');
   } else {
     setTab('conteo','primary'); setTab('sistema','primary'); setTab('comparativo','primary'); setTab('cobertura','primary');
     setTab('recepcion','sec'); setTab('etiquetas','sec'); setTab('caducidades','sec'); setTab('dashboard','sec');
