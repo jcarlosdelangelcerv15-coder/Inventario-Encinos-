@@ -969,7 +969,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 04:25</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 05:00</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -6272,6 +6272,7 @@ loadState();
   </div>
 </div>
 <input type="file" id="ocrFile" accept="image/*" capture="environment" style="display:none;">
+<input type="file" id="ocrGaleria" accept="image/*" multiple style="display:none;">
 
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
@@ -7563,14 +7564,18 @@ async function ocrVisionLeer(blob, key){
   }
   return { text, words };
 }
-// Reconstruye los renglones REALES por la posición (y) de cada palabra, y de
-// cada renglón saca: código (uniendo trozos "AB 10 10322" → AB1010322) y
-// Disponible (2º número "N.000"). Así no importa que Vision revuelva columnas.
+// Reconstruye los renglones REALES por la posición (y) de cada palabra.
+// 1) Agrupa en renglones para RECONSTRUIR el código (viene partido "AB 10 10322")
+//    y la descripción. 2) Luego asigna CADA número al código más cercano por
+//    altura — así, aunque la foto vaya un poco chueca o apretada, el Disponible
+//    cae en su código y no se pierde (menos "—"). Disponible = 2º número por X.
 function ocrParseGeo(words){
   if(!words || !words.length) return [];
   const hs = words.map(w=>w.h).filter(h=>h>0).sort((a,b)=>a-b);
   const medH = hs.length ? hs[Math.floor(hs.length/2)] : 12;
   const tol = Math.max(6, medH*0.6);
+  const numRe = /^\d+[.,]\d{3}$/;
+  // --- 1) Renglones por Y (para armar código + descripción) ---
   const ws = words.slice().sort((a,b)=> a.cy - b.cy);
   const filas = []; let cur = [], curY = null;
   ws.forEach(w=>{
@@ -7578,7 +7583,8 @@ function ocrParseGeo(words){
     else { filas.push(cur); cur = [w]; curY = w.cy; }
   });
   if(cur.length) filas.push(cur);
-  const out = [];
+  // --- 2) Anclas: un código por renglón, con su altura (la del lado izquierdo, no la de los números) ---
+  const anclas = [];
   filas.forEach(fila=>{
     fila.sort((a,b)=> a.cx - b.cx);
     const texto = fila.map(w=>w.t).join(' ');
@@ -7588,17 +7594,30 @@ function ocrParseGeo(words){
     const pre = mc[1].toUpperCase();
     const d = mc[2].replace(/[OoDQ]/g,'0').replace(/[lIi]/g,'1').replace(/S/g,'5').replace(/B/g,'8');
     if(!/^[A-Z]{2}$/.test(pre) || !/^\d{7}$/.test(d)) return;
-    const nums = texto.match(/\d+[.,]\d{3}/g) || [];
-    let ex = ''; if(nums.length>=2) ex = parseInt(nums[1],10); else if(nums.length===1) ex = parseInt(nums[0],10);
+    const left = fila.find(w=> !numRe.test(w.t)) || fila[0];   // altura del código/descripción, no de un número
     let desc = texto
-      .replace(/[A-Za-z]{2}[\s\d]{6,13}/, ' ')   // quita el código (aunque venga partido: "AB 10 10322")
-      .replace(/\d+[.,]\d{3}/g, ' ')              // quita las columnas numéricas
-      .replace(/(\s+\d+)+\s*[.,]?\s*$/, '')       // quita números sueltos al final (Compra/Pendiente "0")
-      .replace(/^[\s\d.,|:·ºª-]+/, '')            // quita basura al inicio
+      .replace(/[A-Za-z]{2}[\s\d]{6,13}/, ' ')
+      .replace(/\d+[.,]\d{3}/g, ' ')
+      .replace(/(\s+\d+)+\s*[.,]?\s*$/, '')
+      .replace(/^[\s\d.,|:·ºª-]+/, '')
       .replace(/\s+/g, ' ').trim();
-    out.push({codigo: pre+d, existencia: ex, descripcion: desc});
+    anclas.push({ codigo: pre+d, cy: left.cy, desc, nums: [] });
   });
-  return out;
+  if(!anclas.length) return [];
+  // --- 3) Cada número se va al código MÁS CERCANO por altura (dentro de una banda) ---
+  const banda = medH * 1.8;
+  words.forEach(w=>{
+    if(!numRe.test(w.t)) return;
+    let best = null, bestD = Infinity;
+    anclas.forEach(a=>{ const dd = Math.abs(w.cy - a.cy); if(dd < bestD){ bestD = dd; best = a; } });
+    if(best && bestD <= banda) best.nums.push({ v: w.t, cx: w.cx });
+  });
+  // --- 4) Disponible = 2º número (por posición X: Inicial, Disponible, …) ---
+  return anclas.map(a=>{
+    a.nums.sort((x,y)=> x.cx - y.cx);
+    let ex = ''; if(a.nums.length >= 2) ex = parseInt(a.nums[1].v,10); else if(a.nums.length === 1) ex = parseInt(a.nums[0].v,10);
+    return { codigo: a.codigo, existencia: ex, descripcion: a.desc };
+  });
 }
 // Lee con OCR.space (gratis de prueba). Devuelve texto o null.
 async function ocrSpaceTexto(blob){
@@ -7619,8 +7638,19 @@ async function ocrSpaceTexto(blob){
   }
   return (data.ParsedResults && data.ParsedResults[0] && data.ParsedResults[0].ParsedText) || '';
 }
+// ----- Tope de fotos al mes (para no pasar del tier gratis de Google Vision) -----
+// La app cuenta cuántas fotos mandó a Vision este mes y NO manda más al llegar
+// al límite. Se reinicia solo el día 1. Tú defines el número con ⚙️.
+function ocrLimiteMes(){ try{ const v = parseInt(localStorage.getItem('ocr_limite_mes'),10); return (v>0) ? v : 950; }catch(e){ return 950; } }
+function ocrMesActual(){ return new Date().toISOString().slice(0,7); }
+function ocrUsoActual(){ const mes = ocrMesActual(); try{ const s = JSON.parse(localStorage.getItem('ocr_uso')||'null'); if(s && s.mes===mes) return s; }catch(e){} return {mes, n:0}; }
+function ocrUsoInc(){ const u = ocrUsoActual(); u.n = (u.n||0)+1; try{ localStorage.setItem('ocr_uso', JSON.stringify(u)); }catch(e){} }
 async function ocrProcesar(file){
   const gk = gvisionKey();
+  if(gk){
+    const u = ocrUsoActual(), lim = ocrLimiteMes();
+    if(u.n >= lim){ ocrStatus('🛑 Llegaste a tu tope de ' + lim + ' fotos este mes (para no generar cobro). Se reinicia el día 1 — o súbelo con ⚙️.'); pintarOCR(); return; }
+  }
   ocrStatus('Encogiendo foto…');
   let blob;
   try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; }
@@ -7629,6 +7659,7 @@ async function ocrProcesar(file){
   if(gk){
     const r = await ocrVisionLeer(blob, gk);
     if(r === null) return; // el status ya quedó con el motivo
+    ocrUsoInc();            // cuenta esta foto contra el tope del mes
     ocrDebugTxt = r.text || '';
     nuevas = ocrParseGeo(r.words);               // por posición (renglones reales)
     if(!nuevas.length) nuevas = ocrParse(r.text); // respaldo por texto plano
@@ -7666,10 +7697,12 @@ function ocrPonerClave(){
 function pintarOCR(){
   const body = byId('ocrBody');
   const conVision = !!gvisionKey();
+  const uso = ocrUsoActual(), lim = ocrLimiteMes();
   const motor = conVision
-    ? `<div class="ocr-status" style="color:#0f7a5c;">🟢 Motor: Google Vision (preciso)</div>`
+    ? `<div class="ocr-status" style="color:#0f7a5c;">🟢 Motor: Google Vision (preciso) · Fotos este mes: ${uso.n}/${lim}</div>`
     : `<div class="ocr-status" style="color:#9a5b00;">🟡 Motor: OCR gratis de prueba (falla con fotos de monitor). Pon tu clave de Google Vision con 🔑.</div>`;
   const top = `<button type="button" class="sis-principal" id="ocrFotoBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);margin:4px 0 6px;">📷 Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></button>
+    <button type="button" class="add-missing-btn" id="ocrGaleriaBtn" style="margin:0 0 6px;">🖼️ Elegir de galería (varias a la vez)</button>
     ${motor}
     <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>`;
   let cuerpo;
@@ -7692,13 +7725,16 @@ function pintarOCR(){
         <div style="font-size:11px;line-height:1.5;white-space:pre-wrap;color:#3C4854;background:#f6f7f9;border:1px solid #dce2e7;border-radius:9px;padding:10px;max-height:40vh;overflow:auto;">${cvEsc(ocrDebugTxt.slice(0,1500))}</div>`;
     }
   }
-  const keyBtn = `<button type="button" class="add-missing-btn" id="ocrKey" style="margin-top:10px;">🔑 ${conVision?'Cambiar':'Poner'} mi clave de Google Vision</button>`;
+  const keyBtn = `<button type="button" class="add-missing-btn" id="ocrKey" style="margin-top:10px;">🔑 ${conVision?'Cambiar':'Poner'} mi clave de Google Vision</button>`
+    + (conVision ? `<button type="button" class="add-missing-btn" id="ocrTope" style="margin-top:6px;">⚙️ Tope de fotos al mes (${lim})</button>` : '');
   body.innerHTML = top + cuerpo + keyBtn;
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
+  byId('ocrGaleriaBtn').onclick = ()=> byId('ocrGaleria').click();
   const otra = byId('ocrOtra'); if(otra) otra.onclick = ()=> byId('ocrFile').click();
   const carg = byId('ocrCargarBtn'); if(carg) carg.onclick = ocrCargar;
   const vac = byId('ocrVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar TODO lo compilado? (No borra existencias ya cargadas al sistema.)', ()=>{ ocrFilas = []; ocrStatusTxt = ''; ocrPersist(); pintarOCR(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
   byId('ocrKey').onclick = ocrPonerClave;
+  const tope = byId('ocrTope'); if(tope) tope.onclick = ()=> openKeypad('Máximo de fotos al mes (Vision regala 1000)', String(ocrLimiteMes()), (v)=>{ const n = parseInt(v,10); if(n>0){ try{ localStorage.setItem('ocr_limite_mes', String(n)); }catch(e){} } pintarOCR(); });
   body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); ocrPersist(); pintarOCR(); });
   body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); ocrPersist(); pintarOCR(); }); });
   body.querySelectorAll('[data-ocrcod]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrcod, f=ocrFilas[i]; openTextKeypad('Código', f.codigo, (v)=>{ const nv=String(v||'').trim().toUpperCase(); if(nv) f.codigo=nv; pintarOCR(); }); });
@@ -7706,6 +7742,17 @@ function pintarOCR(){
 byId('sisLeerPantallaBtn').onclick = ()=> abrirOCR();
 byId('ocrCerrar').onclick = ()=>{ byId('ocrOverlay').style.display = 'none'; };
 byId('ocrFile').addEventListener('change', (e)=>{ const file = e.target.files[0]; if(file) ocrProcesar(file); e.target.value = ''; });
+// Galería: procesa VARIAS fotos seleccionadas, una tras otra, y las compila.
+byId('ocrGaleria').addEventListener('change', async (e)=>{
+  const files = Array.from(e.target.files || []); e.target.value = '';
+  if(!files.length) return;
+  for(let i=0;i<files.length;i++){
+    ocrStatus('Procesando foto ' + (i+1) + ' de ' + files.length + '…');
+    await ocrProcesar(files[i]);
+  }
+  ocrStatus('✅ Listas ' + files.length + ' foto(s). Compilado: ' + ocrFilas.length + ' producto(s). Revisa y corrige.');
+  pintarOCR();
+});
 byId('excepcionFile').addEventListener('change', (e)=>{
   const file = e.target.files[0]; if(!file) return;
   if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Revisa tu internet.', ()=>{}); e.target.value=''; return; }
