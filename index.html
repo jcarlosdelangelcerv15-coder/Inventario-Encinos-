@@ -970,7 +970,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 00:05</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 03:45</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -7514,9 +7514,10 @@ function ocrParse(txt){
   }
   return out;
 }
-// Lee con Google Vision (preciso, ideal para foto de monitor). Devuelve el
-// texto o null si falló (dejando el mensaje en el status).
-async function ocrVisionTexto(blob, key){
+// Lee con Google Vision (preciso, ideal para foto de monitor). Devuelve
+// {text, words} con la posición de cada palabra (para reconstruir renglones),
+// o null si falló (dejando el mensaje en el status).
+async function ocrVisionLeer(blob, key){
   let b64; try{ b64 = await blobABase64(blob); }catch(e){ ocrStatus('No pude preparar la imagen.'); return null; }
   const body = { requests:[{ image:{content:b64}, features:[{type:'DOCUMENT_TEXT_DETECTION'}] }] };
   let data;
@@ -7529,7 +7530,50 @@ async function ocrVisionTexto(blob, key){
   if(data && data.error){ ocrStatus('Google Vision: ' + (data.error.message || 'revisa tu clave')); return null; }
   const resp = data && data.responses && data.responses[0];
   if(resp && resp.error){ ocrStatus('Google Vision: ' + (resp.error.message || 'error')); return null; }
-  return (resp && resp.fullTextAnnotation && resp.fullTextAnnotation.text) || '';
+  const text = (resp && resp.fullTextAnnotation && resp.fullTextAnnotation.text) || '';
+  // Palabras con su posición (textAnnotations[0] es todo el bloque; [1..] son palabras).
+  const words = [];
+  const anns = (resp && resp.textAnnotations) || [];
+  for(let i=1;i<anns.length;i++){
+    const v = (anns[i].boundingPoly && anns[i].boundingPoly.vertices) || [];
+    if(!v.length) continue;
+    const xs = v.map(p=> p.x||0), ys = v.map(p=> p.y||0);
+    const minY = Math.min.apply(null,ys), maxY = Math.max.apply(null,ys);
+    words.push({ t: anns[i].description || '', cx:(Math.min.apply(null,xs)+Math.max.apply(null,xs))/2, cy:(minY+maxY)/2, h:maxY-minY });
+  }
+  return { text, words };
+}
+// Reconstruye los renglones REALES por la posición (y) de cada palabra, y de
+// cada renglón saca: código (uniendo trozos "AB 10 10322" → AB1010322) y
+// Disponible (2º número "N.000"). Así no importa que Vision revuelva columnas.
+function ocrParseGeo(words){
+  if(!words || !words.length) return [];
+  const hs = words.map(w=>w.h).filter(h=>h>0).sort((a,b)=>a-b);
+  const medH = hs.length ? hs[Math.floor(hs.length/2)] : 12;
+  const tol = Math.max(6, medH*0.6);
+  const ws = words.slice().sort((a,b)=> a.cy - b.cy);
+  const filas = []; let cur = [], curY = null;
+  ws.forEach(w=>{
+    if(curY === null || Math.abs(w.cy - curY) <= tol){ cur.push(w); curY = cur.reduce((s,x)=>s+x.cy,0)/cur.length; }
+    else { filas.push(cur); cur = [w]; curY = w.cy; }
+  });
+  if(cur.length) filas.push(cur);
+  const out = [];
+  filas.forEach(fila=>{
+    fila.sort((a,b)=> a.cx - b.cx);
+    const texto = fila.map(w=>w.t).join(' ');
+    const sinEsp = texto.replace(/\s+/g,'');
+    const mc = sinEsp.match(/([A-Za-z]{2})([0-9OolISB]{7})(?![0-9])/);
+    if(!mc) return;
+    const pre = mc[1].toUpperCase();
+    const d = mc[2].replace(/[OoDQ]/g,'0').replace(/[lIi]/g,'1').replace(/S/g,'5').replace(/B/g,'8');
+    if(!/^[A-Z]{2}$/.test(pre) || !/^\d{7}$/.test(d)) return;
+    const nums = texto.match(/\d+\.\d{3}/g) || [];
+    let ex = ''; if(nums.length>=2) ex = parseInt(nums[1],10); else if(nums.length===1) ex = parseInt(nums[0],10);
+    let desc = texto.replace(/\d+\.\d{3}/g,'').replace(/[A-Za-z]{2}[\s\d]{6,13}/,' ').replace(/\s+/g,' ').trim();
+    out.push({codigo: pre+d, existencia: ex, descripcion: desc});
+  });
+  return out;
 }
 // Lee con OCR.space (gratis de prueba). Devuelve texto o null.
 async function ocrSpaceTexto(blob){
@@ -7556,10 +7600,19 @@ async function ocrProcesar(file){
   let blob;
   try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; }
   ocrStatus(gk ? 'Leyendo con Google Vision…' : 'Leyendo con OCR gratis… (tarda unos segundos)');
-  const txt = gk ? await ocrVisionTexto(blob, gk) : await ocrSpaceTexto(blob);
-  if(txt === null) return; // el status ya quedó con el motivo
-  ocrDebugTxt = txt || '';
-  const nuevas = ocrParse(txt);
+  let nuevas;
+  if(gk){
+    const r = await ocrVisionLeer(blob, gk);
+    if(r === null) return; // el status ya quedó con el motivo
+    ocrDebugTxt = r.text || '';
+    nuevas = ocrParseGeo(r.words);               // por posición (renglones reales)
+    if(!nuevas.length) nuevas = ocrParse(r.text); // respaldo por texto plano
+  } else {
+    const txt = await ocrSpaceTexto(blob);
+    if(txt === null) return;
+    ocrDebugTxt = txt || '';
+    nuevas = ocrParse(txt);
+  }
   if(!nuevas.length){ ocrStatus('No encontré códigos (AB/LA/RE… + 7 dígitos) en lo que leyó. Abajo te muestro el texto leído — mándame captura si no cuadra.'); pintarOCR(); return; }
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
