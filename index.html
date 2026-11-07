@@ -970,7 +970,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 03:45</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 04:00</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -7505,11 +7505,11 @@ function ocrParse(txt){
   const out = [];
   for(let i=0;i<marks.length;i++){
     const seg = s.slice(marks[i].end, i+1<marks.length ? marks[i+1].idx : s.length);
-    const nums = seg.match(/\d+\.\d{3}/g) || [];           // Inicial, Disponible, Compra, Pendiente…
+    const nums = seg.match(/\d+[.,]\d{3}/g) || [];           // Inicial, Disponible, Compra, Pendiente…
     let ex = '';
     if(nums.length >= 2) ex = parseInt(nums[1],10);          // Disponible = 2º
     else if(nums.length === 1) ex = parseInt(nums[0],10);
-    const desc = seg.split(/\d+\.\d{3}/)[0].replace(/[|:·\-\s]+/g,' ').trim();
+    const desc = seg.split(/\d+[.,]\d{3}/)[0].replace(/[|:·\-\s]+/g,' ').trim();
     out.push({codigo:marks[i].codigo, existencia:ex, descripcion:desc});
   }
   return out;
@@ -7568,9 +7568,14 @@ function ocrParseGeo(words){
     const pre = mc[1].toUpperCase();
     const d = mc[2].replace(/[OoDQ]/g,'0').replace(/[lIi]/g,'1').replace(/S/g,'5').replace(/B/g,'8');
     if(!/^[A-Z]{2}$/.test(pre) || !/^\d{7}$/.test(d)) return;
-    const nums = texto.match(/\d+\.\d{3}/g) || [];
+    const nums = texto.match(/\d+[.,]\d{3}/g) || [];
     let ex = ''; if(nums.length>=2) ex = parseInt(nums[1],10); else if(nums.length===1) ex = parseInt(nums[0],10);
-    let desc = texto.replace(/\d+\.\d{3}/g,'').replace(/[A-Za-z]{2}[\s\d]{6,13}/,' ').replace(/\s+/g,' ').trim();
+    let desc = texto
+      .replace(/[A-Za-z]{2}[\s\d]{6,13}/, ' ')   // quita el código (aunque venga partido: "AB 10 10322")
+      .replace(/\d+[.,]\d{3}/g, ' ')              // quita las columnas numéricas
+      .replace(/(\s+\d+)+\s*[.,]?\s*$/, '')       // quita números sueltos al final (Compra/Pendiente "0")
+      .replace(/^[\s\d.,|:·ºª-]+/, '')            // quita basura al inicio
+      .replace(/\s+/g, ' ').trim();
     out.push({codigo: pre+d, existencia: ex, descripcion: desc});
   });
   return out;
