@@ -2,7 +2,7 @@
    Guarda la app en el teléfono para que abra aunque no haya internet.
    Los datos (conteos, recepciones…) los guarda Firebase en el teléfono y
    los sube solos cuando vuelve la señal. */
-const CACHE = 'tiquenda-v2026-11-07e';
+const CACHE = 'tiquenda-v2026-11-07h';
 const ARCHIVOS = [
   './',
   './index.html',

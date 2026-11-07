@@ -249,7 +249,7 @@
   .keypad-prod .kp-chips b{font-weight:800;}
   .keypad-prod .kp-ajena{display:block;margin-top:8px;font-size:13.5px;font-weight:700;color:#fff;background:#c0392b;padding:6px 12px;border-radius:10px;}
   .keypad-prod .kp-ajena b{font-weight:800;}
-  #compFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
+  #compFiltros,#sisFiltros{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0 8px;}
   .comp-fchip{border:1.5px solid var(--line);background:#fff;color:#57706b;font-weight:700;font-size:13px;font-family:inherit;padding:8px 12px;border-radius:999px;cursor:pointer;}
   .comp-fchip.active{background:var(--brand-dark);border-color:var(--brand-dark);color:#fff;}
   #compSearch{width:100%;box-sizing:border-box;padding:12px 14px;margin:0 0 10px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;background:#fff;}
@@ -950,7 +950,6 @@
       <button type="button" class="sheet-item" data-ir="etiquetas"><span>🏷️</span><div><b>Etiquetas</b><small>Códigos para escanear en caja</small></div></button>
       <button type="button" class="sheet-item" id="masPreciosBtn"><span>💲</span><div><b>Precios del conteo</b><small>Precio de la etiqueta de lo que tiene diferencia</small></div></button>
       <button type="button" class="sheet-item" id="masExcepcionBtn"><span>📋</span><div><b>Inventario por excepción</b><small>Solo ciertos productos · existencias desde el POS</small></div></button>
-      <button type="button" class="sheet-item" id="masLeerPantallaBtn"><span>📷</span><div><b>Leer pantalla (existencias)</b><small>Foto del sistema → carga existencias con OCR</small></div></button>
       <button type="button" class="sheet-item" data-ir="caducidades"><span>📅</span><div><b>Caducidades</b><small>Lotes y semáforo</small></div></button>
       <button type="button" class="sheet-item" data-ir="dashboard"><span>📈</span><div><b>Dashboard</b><small>Cobertura de conteo</small></div></button>
     </div>
@@ -970,7 +969,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 04:00</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 04:25</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1028,10 +1027,15 @@
     <div id="sisImportBlock">
       <button class="sis-principal" id="sisImportCantBtn">📊 Cargar existencias del sistema<small>Excel o CSV de tu POS · antes de guardar ves el cotejo</small></button>
       <input type="file" id="sisImportCantFile" accept=".xlsx,.xls,.csv" style="display:none;">
+      <button class="sis-principal" id="sisLeerPantallaBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);">📷 Leer pantalla (foto)<small>Foto a la pantalla del sistema · compila varias y carga al terminar</small></button>
     </div>
 
     <div class="filter-row">
       <input type="text" id="sisFilter" placeholder="Busca por código, código de barras o descripción…" autocomplete="off">
+    </div>
+    <div id="sisFiltros">
+      <button type="button" class="comp-fchip active" data-sf="todos">Todos</button>
+      <button type="button" class="comp-fchip" data-sf="sinbarra">🚫 Sin código de barras</button>
     </div>
 
     <details class="mas-opciones">
@@ -1386,6 +1390,7 @@ function categoryFilter(items){
 let mode = MODES[0];
 let soloManuales = false;
 let soloContados = true; // por defecto, Existencias Sistema solo pide lo que ya escaneaste hoy
+let sisFiltroBarra = 'todos'; // 'todos' | 'sinbarra' — filtro de la pestaña Sistema
 let motivoActivo = MOTIVOS_PENDIENTES[0];
 let records = [];
 let currentUser = '';
@@ -4737,13 +4742,15 @@ function renderSeqList(){
   const filterVal = sisFilter.value.trim().toLowerCase();
   let list = sortedCatalog();
   const activeMap = activeExistenciasMap();
-  if(soloContados){
+  // El filtro "sin código de barras" muestra TODO el catálogo sin barra (de la
+  // categoría activa), sin limitarse a lo escaneado hoy.
+  if(soloContados && sisFiltroBarra !== 'sinbarra'){
     const contadosCodigos = auditModeActive
       ? new Set(auditoriaPropio.map(r=>r.codigo).filter(Boolean))
       : new Set(records.map(r=>r.codigo).filter(Boolean));
     list = list.filter(it=> contadosCodigos.has(it.codigo) || activeMap[it.codigo]);
   }
-  if(soloManuales){
+  if(soloManuales && sisFiltroBarra !== 'sinbarra'){
     const manualCodigos = new Set(extraCatalog.map(e=>e.codigo));
     list = list.filter(it=>manualCodigos.has(it.codigo));
   }
@@ -4754,10 +4761,16 @@ function renderSeqList(){
       (it.descripcion||'').toLowerCase().includes(filterVal)
     );
   }
+  // Filtro "Sin código de barras" — NO reordena, solo oculta los que sí tienen barra.
+  if(sisFiltroBarra === 'sinbarra'){ list = list.filter(it=> !it.barcode); }
+  const sfChips = document.querySelectorAll('#sisFiltros .comp-fchip');
+  if(sfChips.length) sfChips.forEach(ch=> ch.classList.toggle('active', ch.dataset.sf === sisFiltroBarra));
   if(!list.length){
-    seqList.innerHTML = soloContados
+    seqList.innerHTML = sisFiltroBarra === 'sinbarra'
+      ? '<div class="empty">🎉 Ningún producto quedó sin código de barras en esta vista. (Cambia de categoría arriba si quieres revisar otra.)</div>'
+      : (soloContados
       ? `<div class="empty">Todavía no escaneas nada en ${auditModeActive ? 'tu conteo de auditoría' : 'Conteo Físico'}. En cuanto escanees un producto, aparecerá aquí para que le pongas su ${auditModeActive ? 'cantidad de la hoja del auditor' : 'existencia de sistema'}.</div>`
-      : '<div class="empty">Sin resultados. Prueba otro filtro o agrega el producto que falta arriba.</div>';
+      : '<div class="empty">Sin resultados. Prueba otro filtro o agrega el producto que falta arriba.</div>');
     sisSummary.innerHTML = '';
     return;
   }
@@ -4900,6 +4913,9 @@ function renderSisSummary(){
 }
 
 sisFilter.addEventListener('input', renderSeqList);
+document.querySelectorAll('#sisFiltros .comp-fchip').forEach(ch=>{
+  ch.onclick = ()=>{ sisFiltroBarra = ch.dataset.sf; renderSeqList(); };
+});
 sisFilter.addEventListener('click', ()=>{
   openTextKeypad('Filtrar existencias', sisFilter.value, (val)=>{
     sisFilter.value = val; renderSeqList();
@@ -7466,7 +7482,11 @@ function ocrApiKey(){ try{ return localStorage.getItem('ocr_apikey') || 'hellowo
 function gvisionKey(){ try{ return (localStorage.getItem('gvision_key')||'').trim(); }catch(e){ return ''; } }
 function blobABase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=> res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(blob); }); }
 function ocrStatus(t){ ocrStatusTxt = t; const el = byId('ocrStatus'); if(el) el.textContent = t; }
-function abrirOCR(){ byId('ocrOverlay').style.display = 'flex'; pintarOCR(); }
+// Guarda lo que se va compilando para que NO se pierda si cierras la pantalla
+// o la app. Se borra solo cuando terminas y cargas (o cuando vacías).
+function ocrPersist(){ try{ localStorage.setItem('ocr_compilado', JSON.stringify(ocrFilas)); }catch(e){} }
+function ocrCargarCompilado(){ try{ const g = JSON.parse(localStorage.getItem('ocr_compilado')||'[]'); if(Array.isArray(g)) ocrFilas = g; }catch(e){} }
+function abrirOCR(){ ocrCargarCompilado(); byId('ocrOverlay').style.display = 'flex'; pintarOCR(); }
 function ocrEncoger(file, maxW){
   return new Promise((resolve, reject)=>{
     const img = new Image();
@@ -7622,6 +7642,7 @@ async function ocrProcesar(file){
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
   ocrFilas.sort((a,b)=> codigoCompare(a.codigo, b.codigo));
+  ocrPersist();
   ocrStatus('✅ Leí ' + nuevas.length + ' renglón(es) (' + add + ' nuevos). Revisa y corrige lo que haga falta.');
   pintarOCR();
 }
@@ -7631,7 +7652,7 @@ function ocrCargar(){
     .map(f=> ({'codigo':f.codigo, 'existencia':Number(f.existencia), 'descripcion':f.descripcion||''}));
   if(!rows.length){ openConfirm('No hay renglones válidos (necesitan código y existencia).', ()=>{}); return; }
   const sinEx = ocrFilas.filter(f=> f.existencia === '' || isNaN(Number(f.existencia))).length;
-  const seguir = ()=>{ const cotejo = construirCotejoExistencias(rows); byId('ocrOverlay').style.display = 'none'; ocrFilas = []; ocrStatusTxt = ''; abrirCotejo(cotejo); };
+  const seguir = ()=>{ const cotejo = construirCotejoExistencias(rows); byId('ocrOverlay').style.display = 'none'; ocrFilas = []; ocrStatusTxt = ''; try{ localStorage.removeItem('ocr_compilado'); }catch(e){} abrirCotejo(cotejo); };
   if(sinEx){ openConfirm(sinEx + ' renglón(es) sin cantidad se van a ignorar. ¿Continuar?', seguir, {yesLabel:'Continuar', noLabel:'Volver'}); }
   else seguir();
 }
@@ -7659,11 +7680,11 @@ function pintarOCR(){
       </div>
       <button type="button" class="ocr-ex" data-ocrex="${idx}">${f.existencia===''?'—':f.existencia}</button>
       <button type="button" class="del" data-ocrdel="${idx}">✕</button></div>`).join('');
-    cuerpo = `<div class="section-title"><span>Leídos (${ocrFilas.length})</span><span>toca el código o la cantidad para corregir</span></div>
+    cuerpo = `<div class="section-title"><span>Compilado: ${ocrFilas.length} producto(s)</span><span>toca el código o la cantidad para corregir</span></div>
       ${filas}
-      <button type="button" class="sis-principal" id="ocrCargarBtn" style="margin:10px 0;">✅ Cargar existencias (${ocrFilas.length})</button>
-      <button type="button" class="add-missing-btn" id="ocrOtra">➕ Agregar otra foto</button>
-      <button type="button" class="add-missing-btn" id="ocrVaciar" style="margin-top:6px;color:var(--red);border-color:var(--red);">🗑️ Vaciar lectura</button>`;
+      <button type="button" class="sis-principal" id="ocrOtra" style="margin:10px 0;background:linear-gradient(135deg,#1f8a63,#156b4c);">📷 Tomar otra foto (sigue sumando)</button>
+      <button type="button" class="sis-principal" id="ocrCargarBtn" style="margin:0 0 6px;">✅ Terminar y cargar (${ocrFilas.length})</button>
+      <button type="button" class="add-missing-btn" id="ocrVaciar" style="margin-top:6px;color:var(--red);border-color:var(--red);">🗑️ Vaciar todo lo compilado</button>`;
   } else {
     cuerpo = `<div class="empty">Aún no hay lectura. En el sistema, filtra por alfanumérico para que salga ordenado y toma la foto. Puedes tomar varias (yo las junto).</div>`;
     if(ocrDebugTxt){
@@ -7676,13 +7697,13 @@ function pintarOCR(){
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
   const otra = byId('ocrOtra'); if(otra) otra.onclick = ()=> byId('ocrFile').click();
   const carg = byId('ocrCargarBtn'); if(carg) carg.onclick = ocrCargar;
-  const vac = byId('ocrVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar lo leído? (No borra existencias ya cargadas.)', ()=>{ ocrFilas = []; ocrStatusTxt = ''; pintarOCR(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
+  const vac = byId('ocrVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar TODO lo compilado? (No borra existencias ya cargadas al sistema.)', ()=>{ ocrFilas = []; ocrStatusTxt = ''; ocrPersist(); pintarOCR(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
   byId('ocrKey').onclick = ocrPonerClave;
-  body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); pintarOCR(); });
-  body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); pintarOCR(); }); });
+  body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); ocrPersist(); pintarOCR(); });
+  body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); ocrPersist(); pintarOCR(); }); });
   body.querySelectorAll('[data-ocrcod]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrcod, f=ocrFilas[i]; openTextKeypad('Código', f.codigo, (v)=>{ const nv=String(v||'').trim().toUpperCase(); if(nv) f.codigo=nv; pintarOCR(); }); });
 }
-byId('masLeerPantallaBtn').onclick = ()=>{ cerrarMas(); abrirOCR(); };
+byId('sisLeerPantallaBtn').onclick = ()=> abrirOCR();
 byId('ocrCerrar').onclick = ()=>{ byId('ocrOverlay').style.display = 'none'; };
 byId('ocrFile').addEventListener('change', (e)=>{ const file = e.target.files[0]; if(file) ocrProcesar(file); e.target.value = ''; });
 byId('excepcionFile').addEventListener('change', (e)=>{
