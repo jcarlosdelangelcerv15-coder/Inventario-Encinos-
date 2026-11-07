@@ -853,6 +853,17 @@
   .comp-fchip{border:none;background:#E7ECEF;color:var(--ink-soft);padding:8px 14px;font-weight:700;}
   .comp-fchip.active{background:var(--brand);color:#fff;}
   #compFiltros,#sisFiltros{gap:7px;}
+  /* Chip "En 0" cuando hay quiebres/0: foco rojo */
+  .comp-fchip.foco{background:#FBE7E4;color:#B0281A;}
+  .comp-fchip.foco.active{background:#B0281A;color:#fff;}
+
+  /* ---- Filas EN 0: resaltar sin romper el orden alfanumérico ---- */
+  .seq-row-cero{background:#FDF1EF;box-shadow:inset 3px 0 0 #C0392B;}
+  .seq-tag{display:inline-block;margin-left:7px;font-size:11px;font-weight:800;padding:2px 8px;border-radius:999px;vertical-align:middle;}
+  .seq-tag-cero{background:#FBE1DC;color:#B0281A;}
+  .seq-tag-quiebre{background:#C0392B;color:#fff;}
+  .en0-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;background:#FDF1EF;border:1px solid #F3D3CC;border-radius:12px;padding:10px 12px;margin-bottom:10px;font-size:13px;font-weight:700;color:#B0281A;}
+  .en0-bar .mini-btn{flex:0 0 auto;border-color:#E6B6AD;color:#B0281A;}
 
   /* ---- Mini botones (pastilla) ---- */
   .mini-btn{border:1px solid var(--line);background:#fff;color:var(--ink);box-shadow:var(--shadow-sm);}
@@ -1095,7 +1106,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 08:45</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 09:20 · quiebres / en 0 · exportar</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1161,6 +1172,7 @@
     </div>
     <div id="sisFiltros">
       <button type="button" class="comp-fchip active" data-sf="todos">Todos</button>
+      <button type="button" class="comp-fchip" data-sf="en0" id="sisChipEn0">En 0</button>
       <button type="button" class="comp-fchip" data-sf="sinbarra">Sin código de barras</button>
     </div>
 
@@ -4919,22 +4931,43 @@ function sortedCatalog(){
 function activeExistenciasMap(){ return auditModeActive ? auditoriaExterna : existenciasMap; }
 function persistActiveExistencias(){ if(auditModeActive) persistAuditExterna(); else persistSistema(); }
 
+// ¿El producto se vende y está en 0? (quiebre) — solo si ya cargaste ventas en Cobertura.
+function esQuiebreCod(cod){
+  try{ const c = coberturaMap[cod]; return !!(c && c.ventaMes && Number(c.ventaMes.piezas) > 0); }catch(e){ return false; }
+}
+// Exporta a CSV (abre en Excel) los productos en 0 de la vista actual, en orden alfanumérico.
+function exportarEn0(){
+  const map = activeExistenciasMap();
+  const items = sortedCatalog().filter(it=>{ const e = map[it.codigo]; return e && Number(e.cantidad) === 0; });
+  if(!items.length){ openConfirm('No hay productos en 0 en esta vista. Carga las existencias primero.', ()=>{}); return; }
+  const header = ['Codigo','Descripcion','Codigo de Barras','Existencia','Quiebre'];
+  const rows = items.map(it=> [it.codigo, csvSafe(it.descripcion||''), it.barcode||'', 0, esQuiebreCod(it.codigo)?'Se vende':''].join(','));
+  const cat = (categoriaActiva && categoriaActiva !== 'todas') ? '_'+categoriaActiva : '';
+  const hoy = new Date().toISOString().slice(0,10);
+  downloadCsv([header.join(','), ...rows].join('\n'), 'productos_en_0'+cat+'_'+hoy);
+}
 function renderSeqList(){
   const filterVal = sisFilter.value.trim().toLowerCase();
   let list = sortedCatalog();
   const activeMap = activeExistenciasMap();
   // El filtro "sin código de barras" muestra TODO el catálogo sin barra (de la
   // categoría activa), sin limitarse a lo escaneado hoy.
-  if(soloContados && sisFiltroBarra !== 'sinbarra'){
+  // Cuenta de productos EN 0 (existencia cargada = 0) en la vista actual → "foco"
+  const en0Count = list.filter(it=>{ const e = activeMap[it.codigo]; return e && Number(e.cantidad) === 0; }).length;
+  const chipEn0 = document.getElementById('sisChipEn0');
+  if(chipEn0){ chipEn0.textContent = en0Count ? ('En 0 · ' + en0Count) : 'En 0'; chipEn0.classList.toggle('foco', en0Count > 0); }
+  if(soloContados && sisFiltroBarra === 'todos'){
     const contadosCodigos = auditModeActive
       ? new Set(auditoriaPropio.map(r=>r.codigo).filter(Boolean))
       : new Set(records.map(r=>r.codigo).filter(Boolean));
     list = list.filter(it=> contadosCodigos.has(it.codigo) || activeMap[it.codigo]);
   }
-  if(soloManuales && sisFiltroBarra !== 'sinbarra'){
+  if(soloManuales && sisFiltroBarra === 'todos'){
     const manualCodigos = new Set(extraCatalog.map(e=>e.codigo));
     list = list.filter(it=>manualCodigos.has(it.codigo));
   }
+  // Filtro "En 0" — NO reordena, solo deja los que tienen existencia cargada en 0.
+  if(sisFiltroBarra === 'en0'){ list = list.filter(it=>{ const e = activeMap[it.codigo]; return e && Number(e.cantidad) === 0; }); }
   if(filterVal){
     list = list.filter(it =>
       it.codigo.toLowerCase().includes(filterVal) ||
@@ -4947,8 +4980,10 @@ function renderSeqList(){
   const sfChips = document.querySelectorAll('#sisFiltros .comp-fchip');
   if(sfChips.length) sfChips.forEach(ch=> ch.classList.toggle('active', ch.dataset.sf === sisFiltroBarra));
   if(!list.length){
-    seqList.innerHTML = sisFiltroBarra === 'sinbarra'
-      ? '<div class="empty">🎉 Ningún producto quedó sin código de barras en esta vista. (Cambia de categoría arriba si quieres revisar otra.)</div>'
+    seqList.innerHTML = sisFiltroBarra === 'en0'
+      ? '<div class="empty">Ningún producto en 0 en esta vista. Carga las existencias (foto o Excel) para detectar quiebres.</div>'
+      : sisFiltroBarra === 'sinbarra'
+      ? '<div class="empty">Ningún producto quedó sin código de barras en esta vista. (Cambia de categoría arriba si quieres revisar otra.)</div>'
       : (soloContados
       ? `<div class="empty">Todavía no escaneas nada en ${auditModeActive ? 'tu conteo de auditoría' : 'Conteo Físico'}. En cuanto escanees un producto, aparecerá aquí para que le pongas su ${auditModeActive ? 'cantidad de la hoja del auditor' : 'existencia de sistema'}.</div>`
       : '<div class="empty">Sin resultados. Prueba otro filtro o agrega el producto que falta arriba.</div>');
@@ -4958,6 +4993,13 @@ function renderSeqList(){
   seqList.innerHTML = list.map((it,i)=>{
     const existing = activeMap[it.codigo];
     const val = existing ? existing.cantidad : '';
+    const enCero = existing && Number(existing.cantidad) === 0;
+    const esQuiebre = enCero && esQuiebreCod(it.codigo);
+    const tagCero = enCero
+      ? (esQuiebre
+          ? '<span class="seq-tag seq-tag-quiebre">Se vende · en 0</span>'
+          : '<span class="seq-tag seq-tag-cero">En 0</span>')
+      : '';
     const barLabel = it.barcode ? it.barcode : 'sin código de barras';
     const barClass = it.barcode ? '' : 'missing';
     const prevPrefix = i>0 ? getPrefix(list[i-1].codigo) : null;
@@ -4968,11 +5010,11 @@ function renderSeqList(){
       const label = catInfo ? catInfo.label : thisPrefix;
       groupHeader = `<div class="seq-group-header" style="font-weight:800;font-size:13px;color:#57706b;text-transform:uppercase;letter-spacing:.4px;margin:${i>0?'16px':'0'} 0 6px;padding-bottom:4px;border-bottom:1.5px solid var(--line);">${thisPrefix} · ${label}</div>`;
     }
-    return `${groupHeader}<div class="seq-row ${existing?'filled':''}" data-codigo="${it.codigo}">
+    return `${groupHeader}<div class="seq-row ${existing?'filled':''} ${enCero?'seq-row-cero':''}" data-codigo="${it.codigo}">
       <div class="seq-info">
         <div class="seq-cod">${it.codigo} <button class="edit-codigo-btn" data-editcodigo="${it.codigo}" title="Corregir código interno" style="font-size:12px;padding:2px 6px;border:1px solid var(--line);border-radius:6px;background:#fff;cursor:pointer;">✎ código</button></div>
         <button class="edit-bar-btn ${barClass}" data-editcod="${it.codigo}">✎ ${barLabel}</button>
-        <div class="seq-desc">${it.descripcion || 'Sin descripción'}</div>
+        <div class="seq-desc">${it.descripcion || 'Sin descripción'}${tagCero}</div>
       </div>
       <div class="seq-qtycol">
         <input type="number" inputmode="numeric" readonly class="seq-qty" data-idx="${i}" value="${val}" placeholder="—">
@@ -4980,6 +5022,17 @@ function renderSeqList(){
       </div>
     </div>`;
   }).join('');
+
+  // Barra de exportar cuando estás viendo "En 0" (para compartir con el equipo)
+  if(sisFiltroBarra === 'en0'){
+    const q = list.filter(it=> esQuiebreCod(it.codigo)).length;
+    const barra = `<div class="en0-bar">
+        <span>${list.length} en 0${q?` · <b>${q}</b> se venden (quiebre)`:''}</span>
+        <button type="button" class="mini-btn" id="en0ExportBtn">Exportar</button>
+      </div>`;
+    seqList.innerHTML = barra + seqList.innerHTML;
+    const eb = byId('en0ExportBtn'); if(eb) eb.onclick = exportarEn0;
+  }
 
   seqList.querySelectorAll('[data-editcodigo]').forEach(btn=>{
     btn.addEventListener('click', (e)=>{
