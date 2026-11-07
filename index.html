@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!--
+  Tiquenda — Sistema de inventario para tienda.
+  © 2026 Juan Carlos del Ángel Gallegos Cervantes. Todos los derechos reservados.
+  Software propietario. Prohibida la copia, distribución, uso o modificación sin
+  autorización escrita del autor. Ver archivo LICENSE.
+-->
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -12,6 +18,8 @@
 <meta name="theme-color" content="#151a2e">
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2">
 <link rel="icon" type="image/png" href="apple-touch-icon.png?v=2">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="manifest" href="manifest.json">
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -356,17 +364,34 @@
   .cob-item .info{min-width:0;}
   .cob-right{display:flex;flex-direction:column;align-items:flex-end;gap:4px;}
   .cob-desc{background:none;border:1px solid var(--line);border-radius:999px;font-size:10.5px;color:#8a8577;padding:3px 8px;font-family:inherit;white-space:nowrap;}
-  .auth-screen{position:fixed;inset:0;background:radial-gradient(circle at 50% 0%,#232a4d 0%,#0f1226 65%);color:#fff;display:flex;align-items:center;justify-content:center;z-index:9999;padding:24px;}
-  .auth-card{width:100%;max-width:360px;text-align:center;}
-  .auth-card .lock-title{font-size:20px;font-weight:800;margin-bottom:4px;}
-  .auth-card .lock-sub{font-size:13.5px;opacity:.65;margin-bottom:26px;}
-  .auth-card input{display:block;width:100%;box-sizing:border-box;margin:0 0 10px;padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:#fff;font-size:16px;font-family:inherit;}
-  .auth-card input::placeholder{color:rgba(255,255,255,.45);}
-  .auth-btn{display:block;width:100%;padding:14px;border:none;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;font-weight:800;font-size:15px;font-family:inherit;margin:6px 0 10px;cursor:pointer;}
-  .auth-btn:disabled{opacity:.6;}
-  .auth-link{display:block;width:100%;background:none;border:none;color:rgba(255,255,255,.75);font-size:13.5px;padding:8px;font-family:inherit;cursor:pointer;}
-  .auth-error{min-height:18px;color:#ffb3b3;font-size:13px;margin:2px 0 6px;}
-  .auth-msg{font-size:14px;line-height:1.45;margin:0 0 12px;word-break:break-word;}
+  /* ----- Login: identidad propia · tema claro "ledger", acento petróleo, firma de código de barras ----- */
+  .auth-screen{position:fixed;inset:0;background:#E7ECEF;color:#16222C;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px;overflow:auto;font-family:'Hanken Grotesk',system-ui,-apple-system,sans-serif;}
+  .auth-card{width:100%;max-width:400px;text-align:left;background:#fff;border:1px solid #D8DEE4;border-radius:14px;padding:30px 28px 26px;box-shadow:0 18px 44px -26px rgba(16,34,44,.5);}
+  .auth-brand{margin-bottom:20px;}
+  .auth-wordmark{display:block;font-size:30px;font-weight:800;letter-spacing:-.02em;line-height:1;color:#16222C;margin-bottom:11px;}
+  .auth-barcode{display:block;height:32px;width:168px;background:repeating-linear-gradient(90deg,#16222C 0 2px,#fff 2px 5px,#16222C 5px 6px,#fff 6px 9px,#16222C 9px 12px,#fff 12px 13px,#16222C 13px 15px,#fff 15px 19px,#16222C 19px 20px,#fff 20px 23px,#16222C 23px 26px,#fff 26px 28px);}
+  .auth-sub{font-size:13.5px;color:#5C6974;margin:0 0 22px;}
+  .auth-field-label{display:block;text-align:left;font-size:12.5px;font-weight:700;color:#16222C;margin:0 0 6px;}
+  .auth-card input{display:block;width:100%;box-sizing:border-box;margin:0 0 14px;padding:13px;border-radius:9px;border:1px solid #CBD3DA;background:#FBFCFD;color:#16222C;font-size:16px;font-family:inherit;}
+  .auth-card input:focus{outline:none;border-color:#0C6B70;box-shadow:0 0 0 3px rgba(12,107,112,.15);}
+  .auth-card input::placeholder{color:#9AA6AF;}
+  .auth-btn{display:block;width:100%;padding:14px;border:none;border-radius:9px;background:#0C6B70;color:#fff;font-weight:700;font-size:15.5px;font-family:inherit;margin:6px 0 4px;cursor:pointer;transition:background .12s;}
+  .auth-btn:hover{background:#0A595D;}
+  .auth-btn:disabled{background:#B7C2C9;color:#EEF1F3;cursor:not-allowed;}
+  .auth-links{display:flex;flex-direction:column;align-items:flex-start;gap:0;margin-top:10px;padding-top:14px;border-top:1px solid #E6EAEE;}
+  .auth-link{background:none;border:none;color:#0C6B70;font-size:13.5px;padding:6px 0;font-family:inherit;cursor:pointer;text-align:left;}
+  .auth-link:hover{text-decoration:underline;text-underline-offset:3px;}
+  .auth-error{min-height:18px;color:#B3261E;font-size:13px;margin:2px 0 6px;}
+  .auth-msg{font-size:14px;line-height:1.45;color:#16222C;margin:0 0 12px;word-break:break-word;}
+  .auth-msg-soft{color:#5C6974;}
+  .auth-aviso{margin-top:20px;padding-top:18px;border-top:1px solid #E6EAEE;}
+  .auth-aviso-head{font-size:13px;font-weight:700;color:#16222C;margin-bottom:8px;}
+  .auth-aviso-head span{display:block;font-size:11.5px;font-weight:400;color:#5C6974;margin-top:2px;}
+  .auth-terms{font-size:12px;line-height:1.55;color:#3C4854;text-align:left;padding:13px;border:1px solid #DCE2E7;border-radius:9px;background:#FAFBFC;max-height:34vh;overflow:auto;}
+  .auth-terms b{color:#16222C;}
+  .auth-acepto{display:flex;gap:10px;align-items:flex-start;font-size:12.5px;color:#3C4854;margin-top:14px;cursor:not-allowed;opacity:.55;line-height:1.4;}
+  .auth-acepto input{width:19px;height:19px;flex:none;margin-top:1px;accent-color:#0C6B70;}
+  .auth-acepto-hint{font-size:11.5px;color:#5C6974;margin:7px 0 0;}
   .equipo-form{display:flex;flex-direction:column;gap:8px;margin-bottom:6px;}
   .eq-rol{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:999px;background:#e3f3ec;color:#0f7a5c;vertical-align:middle;}
   .eq-rol.off{background:#fbe7e7;color:#b3261e;}
@@ -779,28 +804,56 @@
 
 <div id="authScreen" class="auth-screen" style="display:none;">
   <div class="auth-card">
-    <div class="lock-title" id="authTitulo">Tiquenda</div>
-    <div class="lock-sub" id="authSub">Entra con tu correo y contraseña</div>
+    <div class="auth-brand">
+      <span class="auth-wordmark" id="authTitulo">Tiquenda</span>
+      <span class="auth-barcode" aria-hidden="true"></span>
+    </div>
+    <p class="auth-sub" id="authSub">Control de inventario de tu tienda</p>
     <form id="authForm" autocomplete="on">
-      <div id="authNombreWrap" style="display:none;"><input id="authNombre" type="text" placeholder="Tu nombre (ej. Juan)" autocomplete="name"></div>
-      <input id="authEmail" type="email" placeholder="Correo" autocomplete="email" inputmode="email" required>
-      <input id="authPass" type="password" placeholder="Contraseña (mínimo 6)" autocomplete="current-password" required minlength="6">
+      <div id="authNombreWrap" style="display:none;">
+        <label class="auth-field-label" for="authNombre">Tu nombre</label>
+        <input id="authNombre" type="text" placeholder="Ej. Juan" autocomplete="name">
+      </div>
+      <label class="auth-field-label" for="authEmail">Correo</label>
+      <input id="authEmail" type="email" placeholder="correo@ejemplo.com" autocomplete="email" inputmode="email" required>
+      <label class="auth-field-label" for="authPass">Contraseña</label>
+      <input id="authPass" type="password" placeholder="Mínimo 6 caracteres" autocomplete="current-password" required minlength="6">
       <div id="authError" class="auth-error"></div>
       <button type="submit" id="authEntrar" class="auth-btn">Entrar</button>
-      <button type="button" id="authToggle" class="auth-link">¿Primera vez? Crear mi cuenta</button>
-      <button type="button" id="authOlvide" class="auth-link">Olvidé mi contraseña</button>
+      <div class="auth-links">
+        <button type="button" id="authToggle" class="auth-link">¿Primera vez? Crear mi cuenta</button>
+        <button type="button" id="authOlvide" class="auth-link">Olvidé mi contraseña</button>
+      </div>
     </form>
     <div id="authSinAcceso" style="display:none;">
-      <p class="auth-msg">🔒 La cuenta <b id="authSinAccesoEmail"></b> todavía no tiene acceso.</p>
-      <p class="auth-msg" style="opacity:.75;">Pídele al encargado que te agregue en <b>👥 Equipo</b> con este mismo correo.</p>
+      <p class="auth-msg">La cuenta <b id="authSinAccesoEmail"></b> todavía no tiene acceso.</p>
+      <p class="auth-msg auth-msg-soft">Pídele al encargado que te agregue en Equipo con este mismo correo.</p>
       <button type="button" id="authReintentar" class="auth-btn">Ya me agregaron · Reintentar</button>
       <button type="button" id="authSalir" class="auth-link">Usar otro correo</button>
     </div>
     <div id="authVencida" style="display:none;">
-      <p class="auth-msg">⏸️ <span id="authVencidaMsg"></span></p>
-      <p class="auth-msg" style="opacity:.75;">Comunícate con el administrador de la app para renovar.</p>
+      <p class="auth-msg" id="authVencidaMsg"></p>
+      <p class="auth-msg auth-msg-soft">Comunícate con el administrador de la app para renovar.</p>
       <button type="button" id="authReintentar2" class="auth-btn">Ya renové · Reintentar</button>
       <button type="button" id="authSalir2" class="auth-link">Usar otro correo</button>
+    </div>
+    <div class="auth-aviso">
+      <div class="auth-aviso-head">Términos y condiciones · Aviso legal<span>Desliza el texto hasta el final para poder aceptar.</span></div>
+      <div id="authAvisoTexto" class="auth-terms">
+        <b>Tiquenda</b> es una herramienta independiente de apoyo para inventarios, propiedad de Juan Carlos del Ángel Gallegos Cervantes.<br><br>
+        • <b>No es software oficial</b> de Circle K, CK, ni de ninguna cadena, marca o empresa, ni está afiliada, patrocinada o avalada por ellas. Las marcas mencionadas pertenecen a sus dueños.<br>
+        • La app es una <b>ayuda</b> y <b>no sustituye</b> los sistemas, reportes ni procesos oficiales de la empresa. La información oficial es la de los sistemas de la empresa.<br>
+        • <b>El usuario es el único responsable</b> de la información que captura, de su veracidad y del uso que le da dentro de su trabajo.<br>
+        • El autor <b>no se hace responsable</b> de la exactitud de los datos capturados, de las decisiones tomadas con base en ellos, ni de cualquier consecuencia ante terceros (incluyendo la empresa o el empleo del usuario).<br>
+        • Los datos capturados son responsabilidad de quien los ingresa; el autor solo provee la herramienta.<br><br>
+        Al iniciar sesión y usar la app, <b>aceptas estos términos</b>.<br>
+        © 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados.
+      </div>
+      <label id="authAceptoLabel" class="auth-acepto">
+        <input type="checkbox" id="authAcepto" disabled>
+        <span>He leído completamente y <b>acepto</b> los términos y condiciones y el aviso legal.</span>
+      </label>
+      <p id="authAceptoHint" class="auth-acepto-hint">Desliza el texto hasta abajo para activar la casilla.</p>
     </div>
   </div>
 </div>
@@ -917,7 +970,8 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 6 nov 2026 · 21:20</div>
+    <div class="version-app">Tiquenda · Versión 6 nov 2026 · 23:50</div>
+    <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
 
@@ -1236,6 +1290,41 @@
 </div>
 
 <script>
+/* ================= TIQUENDA — PROPIEDAD DE JUAN CARLOS DEL ÁNGEL GALLEGOS CERVANTES =================
+   © 2026 Juan Carlos del Ángel Gallegos Cervantes. Todos los derechos reservados.
+   Software propietario. Prohibida su copia, distribución, uso o modificación sin
+   autorización escrita del autor. El acceso a los datos está protegido por
+   autenticación y por las reglas de seguridad del servidor. */
+
+/* ----- Candado de dominio -----
+   La app solo corre en los dominios autorizados. Una copia servida en otro
+   dominio se niega a funcionar. (El muro de verdad son los "Dominios
+   autorizados" de Firebase Authentication: sin ellos, una copia tampoco puede
+   iniciar sesión ni tocar los datos.) EDITA esta lista si cambias de dominio. */
+(function(){
+  var DOMINIOS_AUTORIZADOS = [
+    'jcarlosdelangelcerv15-coder.github.io', // ← tu GitHub Pages (ajústalo si cambia)
+    'localhost', '127.0.0.1', ''             // pruebas locales (file:// da hostname vacío)
+  ];
+  try{
+    var h = (location && location.hostname) ? location.hostname : '';
+    if(DOMINIOS_AUTORIZADOS.indexOf(h) === -1){
+      window.__TIQUENDA_BLOQUEADO__ = true;
+      document.documentElement.innerHTML =
+        '<head><meta name="viewport" content="width=device-width, initial-scale=1"></head>' +
+        '<body style="margin:0;font-family:system-ui,sans-serif;background:#0f1b2d;color:#fff;' +
+        'display:flex;min-height:100vh;align-items:center;justify-content:center;text-align:center;padding:24px;">' +
+        '<div><div style="font-size:42px;">🔒</div>' +
+        '<h2 style="margin:12px 0;">Aplicación no autorizada</h2>' +
+        '<p style="opacity:.8;max-width:420px;">Esta copia de <b>Tiquenda</b> no está autorizada para ejecutarse en este dominio.</p>' +
+        '<p style="opacity:.6;font-size:13px;margin-top:20px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</p>' +
+        '</div></body>';
+      try{ window.stop(); }catch(e){}
+      throw new Error('Tiquenda: dominio no autorizado');
+    }
+  }catch(e){ if(window.__TIQUENDA_BLOQUEADO__) throw e; }
+})();
+
 /* ============ MULTI-TIENDA ============
    Cada tienda guarda sus datos en tiendas/{id}/... dentro del mismo proyecto
    de Firebase. La tienda activa se decide al cargar la página (y si la cuenta
@@ -1307,6 +1396,10 @@ let auditoriaPropio = [];    // mi conteo en paralelo al del equipo de auditorí
 let auditoriaExterna = {};   // lo que el equipo de auditoría me entrega en papel (como "existenciasMap")
 let marbeteActivo = 'A';     // letra de zona/marbete que estoy contando ahorita en Modo Auditoría
 let extraCatalog = [];
+// Productos dados de alta en ESTE equipo que la nube aún no confirma. Se
+// reaseguran tras cada actualización de la nube para que no se borre un alta
+// reciente (bug: "se agregan productos y al siguiente conteo los vuelve a pedir").
+let extraCatPend = {};
 let barcodeOverrides = {};
 let deletedCodigos = [];
 let caducidades = [];
@@ -1399,7 +1492,6 @@ function fsFlush(key){
 
 const FS_KEYS_TO_VARS = {
   auditoria_externa:       (v)=>{ auditoriaExterna = v; persistAuditExternaLocal(); renderSeqList(); renderComparativo(); },
-  codigo_barras_overrides: (v)=>{ barcodeOverrides = v; persistOverridesLocal(); },
   codigos_eliminados:      (v)=>{ deletedCodigos = v; persistDeletedLocal(); },
   caducidades_lotes:       (v)=>{ caducidades = v; persistCaducidadesLocal(); renderCapList(); renderDashboard(); },
   prefijo_criticidad:      (v)=>{ prefixCriticidad = v; persistPrefixCfgLocal(); renderPrefixCfg(); },
@@ -1408,7 +1500,6 @@ const FS_KEYS_TO_VARS = {
 
 const FS_LOCAL_GETTERS = {
   auditoria_externa:       ()=> auditoriaExterna,
-  codigo_barras_overrides: ()=> barcodeOverrides,
   codigos_eliminados:      ()=> deletedCodigos,
   caducidades_lotes:       ()=> caducidades,
   prefijo_criticidad:      ()=> prefixCriticidad,
@@ -1498,7 +1589,7 @@ function cambiarTienda(tid){
 }
 function pintarNombreTienda(){
   const t = byId('tiendaTitulo'); if(t) t.textContent = TIENDA_NOMBRE;
-  const a = byId('authTitulo'); if(a) a.textContent = 'Tiquenda · ' + TIENDA_NOMBRE;
+  // El login queda genérico (sin nombre de tienda), para que sirva igual en cualquier tienda.
   document.title = 'Tiquenda · ' + TIENDA_NOMBRE;
 }
 if(lsRaw('tienda_actual')) pintarNombreTienda();
@@ -1514,6 +1605,7 @@ function iniciarDatos(){
   fsMigrateOldCierresDoc().then(fsListenCierres);
   fsListenCobertura();
   fsMigrateOldCatalogoExtraDoc().then(fsListenCatalogoExtra);
+  fsMigrateOldOverridesDoc().then(fsListenOverrides);
   fsListenAuditoria();
   if(typeof iniciarDatosNuevos === 'function') iniciarDatosNuevos();
   Object.keys(fsPendingWrites).forEach(fsFlush);
@@ -1559,6 +1651,32 @@ function authMensaje(err){
 }
 
 byId('authToggle').onclick = ()=> authMostrar(byId('authScreen').dataset.modo === 'registro' ? 'login' : 'registro');
+/* ----- Puerta de términos y condiciones -----
+   El botón Entrar queda BLOQUEADO hasta que la persona desliza el texto hasta
+   el final (lo lee) y marca la casilla. Se recuerda la aceptación por versión:
+   si cambian los términos, se vuelve a pedir. */
+(function(){
+  const TERMS_VERSION = 'tyc-2026-11-06';
+  const box = byId('authAvisoTexto'), chk = byId('authAcepto'), lbl = byId('authAceptoLabel'),
+        hint = byId('authAceptoHint'), entrar = byId('authEntrar');
+  if(!box || !chk || !entrar) return;
+  const yaAcepto = ()=>{ try{ return localStorage.getItem('tyc_aceptado') === TERMS_VERSION; }catch(e){ return false; } };
+  const setEntrar = (on)=>{ entrar.disabled = !on; entrar.style.opacity = on ? '' : '.45'; entrar.style.cursor = on ? '' : 'not-allowed'; };
+  const habilitarCasilla = ()=>{ chk.disabled = false; lbl.style.opacity = '1'; lbl.style.cursor = 'pointer'; if(hint) hint.style.display = 'none'; };
+  if(yaAcepto()){
+    chk.checked = true; habilitarCasilla(); setEntrar(true);
+  } else {
+    setEntrar(false);
+    box.addEventListener('scroll', ()=>{ if(box.scrollTop + box.clientHeight >= box.scrollHeight - 6) habilitarCasilla(); });
+    // Si el texto cabe sin scroll (pantalla grande), no se puede "deslizar": se habilita sola.
+    setTimeout(()=>{ if(box.scrollHeight <= box.clientHeight + 6) habilitarCasilla(); }, 350);
+  }
+  chk.addEventListener('change', ()=>{
+    setEntrar(chk.checked);
+    if(chk.checked){ try{ localStorage.setItem('tyc_aceptado', TERMS_VERSION); }catch(e){} }
+    else { try{ localStorage.removeItem('tyc_aceptado'); }catch(e){} }
+  });
+})();
 byId('authForm').addEventListener('submit', async (e)=>{
   e.preventDefault();
   const email = byId('authEmail').value.trim().toLowerCase();
@@ -2268,6 +2386,69 @@ function fsListenHistorial(){
 const fsCatalogoExtraCol = tCol('inventario_catalogo_extra_items');
 let fsCatalogoExtraMigrated = true; // ya migrado a multi-tienda: nunca resubir copias locales viejas
 let fsCatalogoExtraKnownCodigos = new Set();
+
+/* ===== Barras ligadas (overrides): UN DOCUMENTO POR BARRA =====
+   Antes todas las barras ligadas vivían en UN solo documento compartido. Si
+   dos personas ligaban una barra casi al mismo tiempo, quien guardaba al
+   último subía TODO el paquete sin la barra del otro y la pisaba — por eso un
+   producto se "registraba" varias veces y nunca se quedaba. Con un documento
+   por código, ligar una barra ya no borra las demás. */
+const fsOverridesCol = tCol('inventario_barras_overrides_items');
+let overridesPend = {};          // cambios locales no confirmados aún por la nube
+let overridesMigrated = false;
+let fsOverridesKnown = new Set(); // códigos con barra ligada que ya conocemos
+function fsSaveOverrideItem(codigo, barcode){
+  if(!fsReady || !codigo) return;
+  fsOverridesCol.doc(codigo).set({codigo, barcode: barcode==null?'':String(barcode)})
+    .then(()=> fsSyncBadge('ok')).catch((err)=>{ fsSyncBadge('error'); if(fsEsClienteMuerto(err)) fsMarcarMuerto(); });
+}
+function fsDeleteOverrideItem(codigo){
+  if(!fsReady || !codigo) return;
+  fsOverridesCol.doc(codigo).delete().then(()=> fsSyncBadge('ok')).catch(()=> fsSyncBadge('error'));
+}
+// Pasa las barras del documento viejo (modelo compartido) a documentos propios.
+async function fsMigrateOldOverridesDoc(){
+  try{
+    const ref = tCol(FS_COLLECTION).doc('codigo_barras_overrides');
+    const d = await ref.get();
+    if(!d.exists) return;
+    let obj = {}; try{ obj = JSON.parse(d.data().value || '{}') || {}; }catch(e){ obj = {}; }
+    const cods = Object.keys(obj);
+    await Promise.all(cods.map(c=> fsOverridesCol.doc(c).set({codigo:c, barcode: obj[c]==null?'':String(obj[c])}).catch(()=>{})));
+    await ref.delete().catch(()=>{});
+  }catch(e){}
+}
+function fsListenOverrides(){
+  fsOverridesCol.onSnapshot((snap)=>{
+    fsSyncBadge('ok');
+    if(snap.empty && !overridesMigrated && fsHasData(barcodeOverrides)){
+      overridesMigrated = true;
+      Object.keys(barcodeOverrides).forEach(c=> fsSaveOverrideItem(c, barcodeOverrides[c]));
+      fsOverridesKnown = new Set(Object.keys(barcodeOverrides));
+      return;
+    }
+    overridesMigrated = true;
+    const nube = {};
+    snap.docs.forEach(d=>{ const x = d.data(); if(x && x.codigo) nube[x.codigo] = x.barcode; });
+    // Reasegurar mis cambios que la nube todavía no refleja (para que NUNCA se
+    // pierda una barra recién ligada por culpa de una actualización de otro equipo).
+    const servidorConfirma = !(snap.metadata && snap.metadata.hasPendingWrites);
+    Object.keys(overridesPend).forEach(c=>{
+      const val = overridesPend[c];
+      if(val === null){ // borrado pendiente
+        if(c in nube){ delete nube[c]; fsDeleteOverrideItem(c); }
+        else if(servidorConfirma) delete overridesPend[c];
+      } else {
+        if(nube[c] === val){ if(servidorConfirma) delete overridesPend[c]; }
+        else { nube[c] = val; fsSaveOverrideItem(c, val); }
+      }
+    });
+    barcodeOverrides = nube;
+    fsOverridesKnown = new Set(Object.keys(nube));
+    persistOverridesLocal();
+    renderSeqList(); renderComparativo();
+  }, ()=> fsSyncBadge('error'));
+}
 function fsSaveCatalogoExtraItem(entry){
   if(!fsReady || !entry || !entry.codigo) return;
   fsCatalogoExtraCol.doc(entry.codigo).set(entry).then(()=> fsSyncBadge('ok')).catch(()=> fsSyncBadge('error'));
@@ -2314,6 +2495,15 @@ function fsListenCatalogoExtra(){
     }
     fsCatalogoExtraMigrated = true;
     extraCatalog = snap.docs.map(d=>d.data());
+    // Reasegurar las altas hechas en este equipo que la nube todavía no refleja:
+    // si no vienen en este snapshot, se reponen y se reintenta subirlas, para que
+    // nunca se pierda un producto recién agregado.
+    const servidorConfirma = !(snap.metadata && snap.metadata.hasPendingWrites);
+    const enNube = new Set(extraCatalog.map(e=>e.codigo).filter(Boolean));
+    Object.keys(extraCatPend).forEach(cod=>{
+      if(enNube.has(cod)){ if(servidorConfirma) delete extraCatPend[cod]; }
+      else if(!deletedCodigos.includes(cod)){ extraCatalog.push(extraCatPend[cod]); fsSaveCatalogoExtraItem(extraCatPend[cod]); }
+    });
     fsCatalogoExtraKnownCodigos = new Set(extraCatalog.map(e=>e.codigo).filter(Boolean));
     persistExtraCatLocal();
     renderSeqList(); renderComparativo(); renderDashboard();
@@ -2913,16 +3103,26 @@ const persistExtraCat   = ()=>{
 // dispositivo esté agregando al mismo tiempo para un producto distinto
 // (la causa del bug de productos "desaparecidos").
 function persistExtraCatItemAdd(item){
+  if(item && item.codigo) extraCatPend[item.codigo] = item; // reasegurar hasta que la nube lo confirme
   persistExtraCatLocal();
   fsSaveCatalogoExtraItem(item);
   fsCatalogoExtraKnownCodigos.add(item.codigo);
 }
 function persistExtraCatItemRemove(codigo){
+  delete extraCatPend[codigo];
   persistExtraCatLocal();
   fsDeleteCatalogoExtraItem(codigo);
   fsCatalogoExtraKnownCodigos.delete(codigo);
 }
-const persistOverrides  = ()=>{ persistOverridesLocal(); fsSet('codigo_barras_overrides', barcodeOverrides); };
+// Guarda las barras ligadas documento por documento (no el paquete completo),
+// así ligar/cambiar/borrar una barra nunca pisa las de otro equipo.
+const persistOverrides  = ()=>{
+  persistOverridesLocal();
+  const setActual = new Set(Object.keys(barcodeOverrides));
+  setActual.forEach(c=>{ overridesPend[c] = barcodeOverrides[c]; fsSaveOverrideItem(c, barcodeOverrides[c]); });
+  [...fsOverridesKnown].forEach(c=>{ if(!setActual.has(c)){ overridesPend[c] = null; fsDeleteOverrideItem(c); } });
+  fsOverridesKnown = setActual;
+};
 const persistDeleted    = ()=>{ persistDeletedLocal();   fsSet('codigos_eliminados', deletedCodigos); };
 const persistCaducidades = ()=>{ persistCaducidadesLocal(); fsSet('caducidades_lotes', caducidades); };
 const persistPrefixCfg   = ()=>{ persistPrefixCfgLocal();   fsSet('prefijo_criticidad', prefixCriticidad); };
@@ -7262,6 +7462,8 @@ byId('masExcepcionBtn').onclick = ()=>{ cerrarMas(); abrirExcepcion(); };
 let ocrFilas = [];
 let ocrStatusTxt = '';
 function ocrApiKey(){ try{ return localStorage.getItem('ocr_apikey') || 'helloworld'; }catch(e){ return 'helloworld'; } }
+function gvisionKey(){ try{ return (localStorage.getItem('gvision_key')||'').trim(); }catch(e){ return ''; } }
+function blobABase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=> res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(blob); }); }
 function ocrStatus(t){ ocrStatusTxt = t; const el = byId('ocrStatus'); if(el) el.textContent = t; }
 function abrirOCR(){ byId('ocrOverlay').style.display = 'flex'; pintarOCR(); }
 function ocrEncoger(file, maxW){
@@ -7283,54 +7485,80 @@ function ocrEncoger(file, maxW){
     img.src = URL.createObjectURL(file);
   });
 }
+// Parser por FLUJO de tokens (no por renglón): sirve igual si el OCR entrega
+// la tabla renglón por renglón (OCR.space) o partida en columnas (Google
+// Vision a veces lista los códigos juntos y luego los números). Cada vez que
+// aparece un código empieza un producto; los "N.000" que siguen son, en orden,
+// Inicial, Disponible, Compra, Pendiente… → Disponible es el 2º.
 function ocrParse(txt){
-  const out = [];
-  String(txt||'').split(/\r?\n/).forEach(line=>{
-    const compact = line.replace(/[ \t]+/g,' ').trim();
-    if(!compact) return;
-    const mc = compact.replace(/\s+/g,'').match(/([A-Z]{2}\d{7})/);
-    if(!mc) return;
-    const codigo = mc[1];
-    // Inicial, Disponible, Compra, Pendiente vienen como "N.000"; Disponible = 2º.
-    const nums = compact.match(/\d+\.\d{3}/g) || [];
-    let ex = '';
-    if(nums.length >= 2) ex = parseInt(nums[1], 10);
-    else if(nums.length === 1) ex = parseInt(nums[0], 10);
-    let desc = compact.replace(/[A-Z]{2}\s?\d[\d\s]{5,8}/,' ').replace(/\d+\.\d{3}/g,' ').replace(/\s+/g,' ').trim();
-    out.push({codigo, existencia: ex, descripcion: desc});
+  const tokens = String(txt||'').split(/\s+/).filter(Boolean);
+  const out = []; let cur = null;
+  const esNum = t=> /^\d+\.\d{3}$/.test(t);
+  const normCod = t=>{ const m = t.match(/^([A-Z]{2})([0-9OolI]{7})$/); if(!m) return null;
+    const d = m[2].replace(/[Oo]/g,'0').replace(/[lI]/g,'1'); return /^\d{7}$/.test(d) ? m[1]+d : null; };
+  const push = ()=>{ if(!cur) return;
+    let ex = ''; if(cur.nums.length >= 2) ex = parseInt(cur.nums[1],10); else if(cur.nums.length === 1) ex = parseInt(cur.nums[0],10);
+    out.push({codigo:cur.codigo, existencia:ex, descripcion:cur.desc.join(' ').replace(/\s+/g,' ').trim()}); };
+  tokens.forEach(t=>{
+    const nc = normCod(t);
+    if(nc){ push(); cur = {codigo:nc, nums:[], desc:[]}; return; }
+    if(!cur) return;
+    if(esNum(t)) cur.nums.push(t);
+    else if(!cur.nums.length) cur.desc.push(t);
   });
+  push();
   return out;
 }
-async function ocrProcesar(file){
-  ocrStatus('Encogiendo foto…');
-  let blob;
-  try{ blob = await ocrEncoger(file, 1600); }catch(e){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; }
-  ocrStatus('Leyendo con OCR… (tarda unos segundos)');
+// Lee con Google Vision (preciso, ideal para foto de monitor). Devuelve el
+// texto o null si falló (dejando el mensaje en el status).
+async function ocrVisionTexto(blob, key){
+  let b64; try{ b64 = await blobABase64(blob); }catch(e){ ocrStatus('No pude preparar la imagen.'); return null; }
+  const body = { requests:[{ image:{content:b64}, features:[{type:'DOCUMENT_TEXT_DETECTION'}] }] };
+  let data;
+  try{
+    const ctrl = new AbortController(); const to = setTimeout(()=> ctrl.abort(), 45000);
+    const r = await fetch('https://vision.googleapis.com/v1/images:annotate?key=' + encodeURIComponent(key),
+      {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body), signal:ctrl.signal});
+    clearTimeout(to); data = await r.json();
+  }catch(e){ ocrStatus('No se pudo conectar a Google Vision. Revisa tu internet y tu clave (🔑).'); return null; }
+  if(data && data.error){ ocrStatus('Google Vision: ' + (data.error.message || 'revisa tu clave')); return null; }
+  const resp = data && data.responses && data.responses[0];
+  if(resp && resp.error){ ocrStatus('Google Vision: ' + (resp.error.message || 'error')); return null; }
+  return (resp && resp.fullTextAnnotation && resp.fullTextAnnotation.text) || '';
+}
+// Lee con OCR.space (gratis de prueba). Devuelve texto o null.
+async function ocrSpaceTexto(blob){
   const fd = new FormData();
   fd.append('apikey', ocrApiKey());
-  fd.append('language', 'spa');
-  fd.append('OCREngine', '2');
-  fd.append('isTable', 'true');
-  fd.append('scale', 'true');
+  fd.append('language', 'spa'); fd.append('OCREngine', '2');
+  fd.append('isTable', 'true'); fd.append('scale', 'true');
   fd.append('file', blob, 'pantalla.jpg');
   let data;
   try{
     const ctrl = new AbortController(); const to = setTimeout(()=> ctrl.abort(), 45000);
     const r = await fetch('https://api.ocr.space/parse/image', {method:'POST', body:fd, signal:ctrl.signal});
-    clearTimeout(to);
-    data = await r.json();
-  }catch(e){ ocrStatus('No se pudo conectar al OCR (revisa tu internet). También puedes poner tu propia clave con 🔑.'); return; }
+    clearTimeout(to); data = await r.json();
+  }catch(e){ ocrStatus('No se pudo conectar al OCR (revisa tu internet).'); return null; }
   if(!data || data.IsErroredOnProcessing){
-    const em = (data && data.ErrorMessage && [].concat(data.ErrorMessage).join(' ')) || 'intenta otra foto o pon tu propia clave';
-    ocrStatus('El OCR no pudo: ' + em); return;
+    const em = (data && data.ErrorMessage && [].concat(data.ErrorMessage).join(' ')) || 'intenta otra foto';
+    ocrStatus('El OCR gratis no pudo: ' + em + '. Mejor pon tu clave de Google Vision (🔑).'); return null;
   }
-  const txt = (data.ParsedResults && data.ParsedResults[0] && data.ParsedResults[0].ParsedText) || '';
+  return (data.ParsedResults && data.ParsedResults[0] && data.ParsedResults[0].ParsedText) || '';
+}
+async function ocrProcesar(file){
+  const gk = gvisionKey();
+  ocrStatus('Encogiendo foto…');
+  let blob;
+  try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; }
+  ocrStatus(gk ? 'Leyendo con Google Vision…' : 'Leyendo con OCR gratis… (tarda unos segundos)');
+  const txt = gk ? await ocrVisionTexto(blob, gk) : await ocrSpaceTexto(blob);
+  if(txt === null) return; // el status ya quedó con el motivo
   const nuevas = ocrParse(txt);
-  if(!nuevas.length){ ocrStatus('No reconocí códigos. Acércate más, endereza la foto y evita reflejos.'); return; }
+  if(!nuevas.length){ ocrStatus('No reconocí códigos. Acércate (6-8 renglones por foto), endereza y evita reflejos.'); return; }
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
   ocrFilas.sort((a,b)=> codigoCompare(a.codigo, b.codigo));
-  ocrStatus('✅ Leí ' + nuevas.length + ' renglón(es) (' + add + ' nuevos). Revisa y corrige los que haga falta.');
+  ocrStatus('✅ Leí ' + nuevas.length + ' renglón(es) (' + add + ' nuevos). Revisa y corrige lo que haga falta.');
   pintarOCR();
 }
 function ocrCargar(){
@@ -7344,17 +7572,20 @@ function ocrCargar(){
   else seguir();
 }
 function ocrPonerClave(){
-  const actual = (()=>{ try{ return localStorage.getItem('ocr_apikey') || ''; }catch(e){ return ''; } })();
-  openTextKeypad('Clave de OCR (vacía = gratuita de prueba)', actual, (v)=>{
+  openTextKeypad('Pega tu clave de Google Vision (vacía = OCR gratis de prueba)', gvisionKey(), (v)=>{
     const k = String(v||'').trim();
-    try{ if(k) localStorage.setItem('ocr_apikey', k); else localStorage.removeItem('ocr_apikey'); }catch(e){}
+    try{ if(k) localStorage.setItem('gvision_key', k); else localStorage.removeItem('gvision_key'); }catch(e){}
     pintarOCR();
   });
 }
 function pintarOCR(){
   const body = byId('ocrBody');
-  let keyPuesta = false; try{ keyPuesta = !!localStorage.getItem('ocr_apikey'); }catch(e){}
-  const top = `<button type="button" class="sis-principal" id="ocrFotoBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);margin:4px 0 10px;">📷 Tomar foto de la pantalla<small>Acércate; que se lean el código y la columna Disponible</small></button>
+  const conVision = !!gvisionKey();
+  const motor = conVision
+    ? `<div class="ocr-status" style="color:#0f7a5c;">🟢 Motor: Google Vision (preciso)</div>`
+    : `<div class="ocr-status" style="color:#9a5b00;">🟡 Motor: OCR gratis de prueba (falla con fotos de monitor). Pon tu clave de Google Vision con 🔑.</div>`;
+  const top = `<button type="button" class="sis-principal" id="ocrFotoBtn" style="background:linear-gradient(135deg,#1f8a63,#156b4c);margin:4px 0 6px;">📷 Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></button>
+    ${motor}
     <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>`;
   let cuerpo;
   if(ocrFilas.length){
@@ -7372,7 +7603,7 @@ function pintarOCR(){
   } else {
     cuerpo = `<div class="empty">Aún no hay lectura. En el sistema, filtra por alfanumérico para que salga ordenado y toma la foto. Puedes tomar varias (yo las junto).</div>`;
   }
-  const keyBtn = `<button type="button" class="add-missing-btn" id="ocrKey" style="margin-top:10px;">🔑 ${keyPuesta?'Cambiar':'Poner'} mi clave de OCR (opcional)</button>`;
+  const keyBtn = `<button type="button" class="add-missing-btn" id="ocrKey" style="margin-top:10px;">🔑 ${conVision?'Cambiar':'Poner'} mi clave de Google Vision</button>`;
   body.innerHTML = top + cuerpo + keyBtn;
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
   const otra = byId('ocrOtra'); if(otra) otra.onclick = ()=> byId('ocrFile').click();
