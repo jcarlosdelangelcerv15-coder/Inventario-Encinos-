@@ -970,7 +970,7 @@
       <button type="button" class="sheet-item" id="sesionBtn"><span>👤</span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 6 nov 2026 · 23:50</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 00:05</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -7461,6 +7461,7 @@ byId('masExcepcionBtn').onclick = ()=>{ cerrarMas(); abrirExcepcion(); };
    manda directo al servicio de OCR. Nada se guarda hasta "Aplicar" en el cotejo. */
 let ocrFilas = [];
 let ocrStatusTxt = '';
+let ocrDebugTxt = '';   // último texto que leyó el OCR (para diagnóstico cuando no encuentra códigos)
 function ocrApiKey(){ try{ return localStorage.getItem('ocr_apikey') || 'helloworld'; }catch(e){ return 'helloworld'; } }
 function gvisionKey(){ try{ return (localStorage.getItem('gvision_key')||'').trim(); }catch(e){ return ''; } }
 function blobABase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=> res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(blob); }); }
@@ -7491,22 +7492,26 @@ function ocrEncoger(file, maxW){
 // aparece un código empieza un producto; los "N.000" que siguen son, en orden,
 // Inicial, Disponible, Compra, Pendiente… → Disponible es el 2º.
 function ocrParse(txt){
-  const tokens = String(txt||'').split(/\s+/).filter(Boolean);
-  const out = []; let cur = null;
-  const esNum = t=> /^\d+\.\d{3}$/.test(t);
-  const normCod = t=>{ const m = t.match(/^([A-Z]{2})([0-9OolI]{7})$/); if(!m) return null;
-    const d = m[2].replace(/[Oo]/g,'0').replace(/[lI]/g,'1'); return /^\d{7}$/.test(d) ? m[1]+d : null; };
-  const push = ()=>{ if(!cur) return;
-    let ex = ''; if(cur.nums.length >= 2) ex = parseInt(cur.nums[1],10); else if(cur.nums.length === 1) ex = parseInt(cur.nums[0],10);
-    out.push({codigo:cur.codigo, existencia:ex, descripcion:cur.desc.join(' ').replace(/\s+/g,' ').trim()}); };
-  tokens.forEach(t=>{
-    const nc = normCod(t);
-    if(nc){ push(); cur = {codigo:nc, nums:[], desc:[]}; return; }
-    if(!cur) return;
-    if(esNum(t)) cur.nums.push(t);
-    else if(!cur.nums.length) cur.desc.push(t);
-  });
-  push();
+  const s = String(txt||'');
+  // Busca cada código AUNQUE venga pegado a otro texto o con O/l/I por 0/1.
+  // Un código = 2 letras + 7 dígitos, sin más dígitos pegados.
+  const codRe = /([A-Za-z]{2})([0-9OolISB]{7})(?![0-9])/g;
+  const marks = []; let m;
+  while((m = codRe.exec(s))){
+    const pre = m[1].toUpperCase();
+    const d = m[2].replace(/[OoDQ]/g,'0').replace(/[lIi]/g,'1').replace(/S/g,'5').replace(/B/g,'8');
+    if(/^[A-Z]{2}$/.test(pre) && /^\d{7}$/.test(d)) marks.push({codigo:pre+d, end:codRe.lastIndex, idx:m.index});
+  }
+  const out = [];
+  for(let i=0;i<marks.length;i++){
+    const seg = s.slice(marks[i].end, i+1<marks.length ? marks[i+1].idx : s.length);
+    const nums = seg.match(/\d+\.\d{3}/g) || [];           // Inicial, Disponible, Compra, Pendiente…
+    let ex = '';
+    if(nums.length >= 2) ex = parseInt(nums[1],10);          // Disponible = 2º
+    else if(nums.length === 1) ex = parseInt(nums[0],10);
+    const desc = seg.split(/\d+\.\d{3}/)[0].replace(/[|:·\-\s]+/g,' ').trim();
+    out.push({codigo:marks[i].codigo, existencia:ex, descripcion:desc});
+  }
   return out;
 }
 // Lee con Google Vision (preciso, ideal para foto de monitor). Devuelve el
@@ -7553,8 +7558,9 @@ async function ocrProcesar(file){
   ocrStatus(gk ? 'Leyendo con Google Vision…' : 'Leyendo con OCR gratis… (tarda unos segundos)');
   const txt = gk ? await ocrVisionTexto(blob, gk) : await ocrSpaceTexto(blob);
   if(txt === null) return; // el status ya quedó con el motivo
+  ocrDebugTxt = txt || '';
   const nuevas = ocrParse(txt);
-  if(!nuevas.length){ ocrStatus('No reconocí códigos. Acércate (6-8 renglones por foto), endereza y evita reflejos.'); return; }
+  if(!nuevas.length){ ocrStatus('No encontré códigos (AB/LA/RE… + 7 dígitos) en lo que leyó. Abajo te muestro el texto leído — mándame captura si no cuadra.'); pintarOCR(); return; }
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
   ocrFilas.sort((a,b)=> codigoCompare(a.codigo, b.codigo));
@@ -7602,6 +7608,10 @@ function pintarOCR(){
       <button type="button" class="add-missing-btn" id="ocrVaciar" style="margin-top:6px;color:var(--red);border-color:var(--red);">🗑️ Vaciar lectura</button>`;
   } else {
     cuerpo = `<div class="empty">Aún no hay lectura. En el sistema, filtra por alfanumérico para que salga ordenado y toma la foto. Puedes tomar varias (yo las junto).</div>`;
+    if(ocrDebugTxt){
+      cuerpo += `<div class="section-title" style="margin-top:14px;"><span>🔎 Texto que leyó Vision</span><span>mándame captura de esto</span></div>
+        <div style="font-size:11px;line-height:1.5;white-space:pre-wrap;color:#3C4854;background:#f6f7f9;border:1px solid #dce2e7;border-radius:9px;padding:10px;max-height:40vh;overflow:auto;">${cvEsc(ocrDebugTxt.slice(0,1500))}</div>`;
+    }
   }
   const keyBtn = `<button type="button" class="add-missing-btn" id="ocrKey" style="margin-top:10px;">🔑 ${conVision?'Cambiar':'Poner'} mi clave de Google Vision</button>`;
   body.innerHTML = top + cuerpo + keyBtn;
