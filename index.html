@@ -915,6 +915,11 @@
 
   /* ---- OCR: filas de resultado más limpias ---- */
   .ocr-ex{background:var(--brand-tint);color:var(--brand-dark);border:none;border-radius:11px;font-size:16px;}
+  .ocr-nom{color:var(--ink-soft);font-weight:600;}
+  .ocr-nuevo{color:#9a5b00;font-weight:800;}
+  .ocr-nuevo.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  .ocr-bar{display:inline-block;margin-top:4px;color:var(--brand-dark);font-weight:700;font-size:12.5px;}
+  .ocr-bar.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
 
   /* ---- Búsquedas con lupa (sin emoji) ---- */
   #logSearch,#compSearch,#sisFilter,#cobBuscar{
@@ -1106,7 +1111,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 09:20 · quiebres / en 0 · exportar</div>
+    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 10:45 · Sistema para todo el equipo</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -6574,18 +6579,20 @@ function aplicarVistaRol(){
   const setTab = (tab, modo)=>{ const el = document.querySelector('.tab[data-tab="'+tab+'"]'); if(!el) return;
     el.classList.remove('tab-sec','tab-oculta'); if(modo==='sec') el.classList.add('tab-sec'); else if(modo==='off') el.classList.add('tab-oculta'); };
   if(soloOp){
-    // Abajo: Contar · Comparar · Recibir · Etiquetas · Caducidades
-    // Comparar (físico vs. sistema) queda a la vista de auxiliares y encargados de piso para leer sus diferencias.
-    setTab('conteo','primary'); setTab('comparativo','primary'); setTab('recepcion','primary'); setTab('etiquetas','primary'); setTab('caducidades','primary');
-    setTab('sistema','off'); setTab('cobertura','off'); setTab('dashboard','off');
+    // Abajo: Contar · Sistema · Comparar (todos pueden cargar existencias: foto, Excel, nuevos, en 0).
+    // Recibir · Etiquetas · Caducidades pasan al menú ☰. Cobertura y Dashboard (análisis) quedan solo para el aliado.
+    setTab('conteo','primary'); setTab('sistema','primary'); setTab('comparativo','primary');
+    setTab('recepcion','sec'); setTab('etiquetas','sec'); setTab('caducidades','sec');
+    setTab('cobertura','off'); setTab('dashboard','off');
   } else {
     setTab('conteo','primary'); setTab('sistema','primary'); setTab('comparativo','primary'); setTab('cobertura','primary');
     setTab('recepcion','sec'); setTab('etiquetas','sec'); setTab('caducidades','sec'); setTab('dashboard','sec');
   }
-  // Menú ☰ Más: en operación se ocultan los que ya están abajo y el análisis
+  // Menú ☰ Más: en operación solo se oculta el análisis (Dashboard). Recibir/Etiquetas/Caducidades
+  // ahora viven aquí para que todos las alcancen.
   document.querySelectorAll('#masSheet [data-ir]').forEach(btn=>{
     const t = btn.dataset.ir;
-    btn.style.display = soloOp && ['recepcion','etiquetas','caducidades','dashboard'].includes(t) ? 'none' : '';
+    btn.style.display = soloOp && ['dashboard'].includes(t) ? 'none' : '';
   });
   byId('papeleraBtn').style.display = soloOp ? 'none' : '';
   const ar = byId('auditModeRow'); if(ar) ar.style.display = '';
@@ -7914,7 +7921,7 @@ async function ocrProcesar(file){
 function ocrCargar(){
   const rows = ocrFilas
     .filter(f=> f.codigo && f.existencia !== '' && !isNaN(Number(f.existencia)))
-    .map(f=> ({'codigo':f.codigo, 'existencia':Number(f.existencia), 'descripcion':f.descripcion||''}));
+    .map(f=> ({'codigo':f.codigo, 'existencia':Number(f.existencia), 'descripcion':f.descripcion||'', 'codigo de barras':f.barcode||''}));
   if(!rows.length){ openConfirm('No hay renglones válidos (necesitan código y existencia).', ()=>{}); return; }
   const sinEx = ocrFilas.filter(f=> f.existencia === '' || isNaN(Number(f.existencia))).length;
   const seguir = ()=>{ const cotejo = construirCotejoExistencias(rows); byId('ocrOverlay').style.display = 'none'; ocrFilas = []; ocrStatusTxt = ''; try{ localStorage.removeItem('ocr_compilado'); }catch(e){} abrirCotejo(cotejo); };
@@ -7942,19 +7949,37 @@ function pintarOCR(){
     <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>`;
   let cuerpo;
   if(ocrFilas.length){
-    const filas = ocrFilas.map((f, idx)=>`<div class="log-item"><div class="info">
+    // Mostramos el nombre REAL del catálogo cuando el código empata (así se lee,
+    // aunque el OCR haya leído mal la descripción). Si no está, se marca "Nuevo".
+    const { byCodigo } = buildIndexes();
+    const filas = ocrFilas.map((f, idx)=>{
+      const cat = byCodigo[String(f.codigo||'').toUpperCase()];
+      let meta;
+      if(cat){
+        meta = `<span class="ocr-nom">${cvEsc(cat.descripcion || 'Sin nombre en catálogo')}</span>`;
+      } else {
+        const nom = f.descripcion
+          ? `<span class="ocr-nuevo tocable" data-ocrnom="${idx}">${cvEsc(f.descripcion)} · nuevo ✎</span>`
+          : `<span class="ocr-nuevo tocable" data-ocrnom="${idx}">Nuevo · toca para ponerle nombre</span>`;
+        const bar = `<span class="ocr-bar tocable" data-ocrbar="${idx}">${f.barcode ? ('Barras: '+cvEsc(f.barcode)+' ✎') : '+ código de barras'}</span>`;
+        meta = nom + '<br>' + bar;
+      }
+      return `<div class="log-item"><div class="info">
         <div class="desc"><span class="ocr-cod" data-ocrcod="${idx}">${cvEsc(f.codigo)}</span></div>
-        <div class="meta">${cvEsc(f.descripcion||'')}</div>
+        <div class="meta">${meta}</div>
       </div>
       <button type="button" class="ocr-ex" data-ocrex="${idx}">${f.existencia===''?'—':f.existencia}</button>
-      <button type="button" class="del" data-ocrdel="${idx}">✕</button></div>`).join('');
+      <button type="button" class="del" data-ocrdel="${idx}">✕</button></div>`;
+    }).join('');
     cuerpo = `<div class="section-title"><span>Compilado: ${ocrFilas.length} producto(s)</span><span>toca el código o la cantidad para corregir</span></div>
       ${filas}
       <button type="button" class="sis-principal sis-alt has-ic" id="ocrOtra" style="margin:10px 0;">${icBtn('camera')}<span class="bt-tx">Tomar otra foto (sigue sumando)</span></button>
+      <button type="button" class="add-missing-btn has-ic" id="ocrManual" style="margin:0 0 8px;">${icBtn('plus')}<span class="bt-tx">Agregar renglón a mano (sin foto · no gasta crédito)</span></button>
       <button type="button" class="sis-principal has-ic" id="ocrCargarBtn" style="margin:0 0 6px;">${icBtn('check')}<span class="bt-tx">Terminar y cargar (${ocrFilas.length})</span></button>
       <button type="button" class="add-missing-btn has-ic" id="ocrVaciar" style="margin-top:6px;color:var(--red);border-color:#F0D5D5;">${icBtn('trash')}<span class="bt-tx">Vaciar todo lo compilado</span></button>`;
   } else {
-    cuerpo = `<div class="empty">Aún no hay lectura. En el sistema, filtra por alfanumérico para que salga ordenado y toma la foto. Puedes tomar varias (yo las junto).</div>`;
+    cuerpo = `<div class="empty">Aún no hay lectura. En el sistema, filtra por alfanumérico para que salga ordenado y toma la foto. Puedes tomar varias (yo las junto).</div>
+      <button type="button" class="add-missing-btn has-ic" id="ocrManual" style="margin:8px 0 0;">${icBtn('plus')}<span class="bt-tx">Agregar renglón a mano (sin foto · no gasta crédito)</span></button>`;
     if(ocrDebugTxt){
       cuerpo += `<div class="section-title" style="margin-top:14px;"><span>Texto que leyó Vision</span><span>mándame captura de esto</span></div>
         <div style="font-size:11px;line-height:1.5;white-space:pre-wrap;color:#3C4854;background:#f6f7f9;border:1px solid #dce2e7;border-radius:9px;padding:10px;max-height:40vh;overflow:auto;">${cvEsc(ocrDebugTxt.slice(0,1500))}</div>`;
@@ -7972,7 +7997,20 @@ function pintarOCR(){
   const tope = byId('ocrTope'); if(tope) tope.onclick = ()=> openKeypad('Máximo de fotos al mes (Vision regala 1000)', String(ocrLimiteMes()), (v)=>{ const n = parseInt(v,10); if(n>0){ try{ localStorage.setItem('ocr_limite_mes', String(n)); }catch(e){} } pintarOCR(); });
   body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); ocrPersist(); pintarOCR(); });
   body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); ocrPersist(); pintarOCR(); }); });
-  body.querySelectorAll('[data-ocrcod]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrcod, f=ocrFilas[i]; openTextKeypad('Código', f.codigo, (v)=>{ const nv=String(v||'').trim().toUpperCase(); if(nv) f.codigo=nv; pintarOCR(); }); });
+  body.querySelectorAll('[data-ocrcod]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrcod, f=ocrFilas[i]; openTextKeypad('Código', f.codigo, (v)=>{ const nv=String(v||'').trim().toUpperCase(); if(nv) f.codigo=nv; ocrPersist(); pintarOCR(); }); });
+  body.querySelectorAll('[data-ocrnom]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrnom, f=ocrFilas[i]; openTextKeypad('Nombre del producto nuevo', f.descripcion||'', (v)=>{ f.descripcion = String(v||'').trim(); ocrPersist(); pintarOCR(); }); });
+  body.querySelectorAll('[data-ocrbar]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrbar, f=ocrFilas[i]; openKeypad('Código de barras (tecléalo) · '+f.codigo, f.barcode||'', (v)=>{ f.barcode = String(v||'').replace(/\D/g,''); ocrPersist(); pintarOCR(); }, {asString:true}); });
+  const manualBtn = byId('ocrManual');
+  if(manualBtn) manualBtn.onclick = ()=>{
+    openTextKeypad('Código del producto (tecléalo, sin foto)', '', (c)=>{
+      const cod = String(c||'').trim().toUpperCase(); if(!cod) return;
+      openKeypad('Existencia de ' + cod, '', (v)=>{
+        const ex = (v===''||isNaN(Number(v))) ? '' : parseInt(v,10);
+        ocrFilas.push({codigo:cod, existencia:ex, descripcion:''});
+        ocrPersist(); pintarOCR();
+      });
+    });
+  };
 }
 byId('sisLeerPantallaBtn').onclick = ()=> abrirOCR();
 byId('ocrCerrar').onclick = ()=>{ byId('ocrOverlay').style.display = 'none'; };
