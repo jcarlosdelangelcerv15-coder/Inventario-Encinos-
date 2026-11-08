@@ -926,10 +926,11 @@
   .ocr-prev img{display:block;width:100%;max-height:180px;object-fit:cover;object-position:top;cursor:zoom-in;}
   .ocr-prev-tx{padding:8px 11px;font-size:12px;color:var(--ink-soft);}
   .ocr-viewer{position:fixed;inset:0;z-index:9999;background:rgba(10,20,24,.94);display:none;flex-direction:column;}
-  .ocr-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;color:#dfeceb;font-size:13px;}
-  .ocr-viewer-x{background:#fff;color:var(--ink);border:none;border-radius:10px;padding:8px 16px;font-weight:800;font-size:14px;}
-  .ocr-viewer-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-start;justify-content:center;padding:0 0 24px;}
+  .ocr-viewer-bar{flex:none;text-align:center;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;color:#dfeceb;font-size:13px;font-weight:600;}
+  .ocr-viewer-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-start;justify-content:center;padding:0 0 12px;}
   .ocr-viewer-scroll img{width:100%;max-width:1400px;height:auto;}
+  .ocr-viewer-foot{flex:none;padding:12px 16px calc(14px + env(safe-area-inset-bottom));background:rgba(10,20,24,.6);}
+  .ocr-viewer-x{display:block;width:100%;background:#fff;color:var(--ink);border:none;border-radius:14px;padding:16px;font-weight:800;font-size:17px;font-family:inherit;}
 
   /* ---- Búsquedas con lupa (sin emoji) ---- */
   #logSearch,#compSearch,#sisFilter,#cobBuscar{
@@ -1121,7 +1122,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 16:00 · pendientes fijos</div>
+    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 15:55 · clave y tope de Vision compartidos</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1553,6 +1554,11 @@ let records = [];
 // Movimientos pendientes FIJOS: lista compartida que NO se borra al cerrar inventario.
 // Se cargan a mano en el área "Movimientos Pendientes" y se quedan hasta que los quites.
 let pendientesFijos = [];  // [{id, codigo, descripcion, barcode, cantidad, motivo}]
+// Google Vision COMPARTIDO con el equipo: clave + tope + contador, todo en la nube.
+// Así se pone la clave una vez y todos los teléfonos leen, con UN solo contador
+// contra las 1000 gratis del mes (para que entre todos no se pasen).
+let visionCfg = { key:'', limiteMes:950 };   // clave y tope compartidos
+let visionUso = { mes:'', n:0 };              // contador compartido del mes
 let currentUser = '';
 let existenciasMap = {};
 let auditModeActive = false; // "Modo Auditoría": Conteo Físico, Existencias Sistema y Comparativo
@@ -1661,7 +1667,9 @@ const FS_KEYS_TO_VARS = {
   caducidades_lotes:       (v)=>{ caducidades = v; persistCaducidadesLocal(); renderCapList(); renderDashboard(); },
   prefijo_criticidad:      (v)=>{ prefixCriticidad = v; persistPrefixCfgLocal(); renderPrefixCfg(); },
   etiquetas_pendientes:    (v)=>{ etiquetas = v; persistEtiquetasLocal(); renderEtiList(); },
-  pendientes_fijos:        (v)=>{ pendientesFijos = v; persistPendientesFijosLocal(); renderFijosUI(); }
+  pendientes_fijos:        (v)=>{ pendientesFijos = v; persistPendientesFijosLocal(); renderFijosUI(); },
+  vision_cfg:              (v)=>{ const inc = Object.assign({key:'',limiteMes:950}, v||{}); if(!inc.key && visionCfg.key){ inc.key = visionCfg.key; setTimeout(()=>{ try{ persistVisionCfg(); }catch(e){} }, 0); } visionCfg = inc; persistVisionCfgLocal(); try{ if(visionCfg.key) localStorage.setItem('gvision_key', visionCfg.key); }catch(e){} pintarOCRSiAbierto(); },
+  vision_uso:              (v)=>{ visionUso = Object.assign({mes:'',n:0}, v||{}); persistVisionUsoLocal(); pintarOCRSiAbierto(); }
 };
 
 const FS_LOCAL_GETTERS = {
@@ -1670,7 +1678,9 @@ const FS_LOCAL_GETTERS = {
   caducidades_lotes:       ()=> caducidades,
   prefijo_criticidad:      ()=> prefixCriticidad,
   etiquetas_pendientes:    ()=> etiquetas,
-  pendientes_fijos:        ()=> pendientesFijos
+  pendientes_fijos:        ()=> pendientesFijos,
+  vision_cfg:              ()=> visionCfg,
+  vision_uso:              ()=> visionUso
 };
 function fsHasData(val){
   if(Array.isArray(val)) return val.length > 0;
@@ -3239,6 +3249,14 @@ function loadState(){
   try{ const cc = lsGet('cierres_conteo'); if(cc) cierresConteo = JSON.parse(cc); }catch(e){}
   try{ const et = lsGet('etiquetas_pendientes'); if(et) etiquetas = JSON.parse(et); }catch(e){}
   try{ const pf = lsGet('pendientes_fijos'); if(pf) pendientesFijos = JSON.parse(pf); }catch(e){}
+  try{ const vc = lsGet('vision_cfg'); if(vc) visionCfg = Object.assign({key:'',limiteMes:950}, JSON.parse(vc)); }catch(e){}
+  try{ const vu = lsGet('vision_uso_sh'); if(vu) visionUso = Object.assign({mes:'',n:0}, JSON.parse(vu)); }catch(e){}
+  // Migración: si este teléfono ya tenía clave/tope locales y aún no hay compartidos, súbelos.
+  try{
+    if(!visionCfg.key){ const k = localStorage.getItem('gvision_key'); if(k && k.trim()) visionCfg.key = k.trim(); }
+    const limOld = parseInt(localStorage.getItem('ocr_limite_mes'),10); if(limOld>0 && visionCfg.limiteMes===950) visionCfg.limiteMes = limOld;
+    persistVisionCfgLocal();
+  }catch(e){}
   try{ const u = lsGet('usuario_actual'); if(u) currentUser = u; }catch(e){}
   renderUserBadge();
   renderAuditModeToggle();
@@ -3284,6 +3302,11 @@ const persistCierresLocal     = ()=> lsSet('cierres_conteo', JSON.stringify(cier
 const persistEtiquetasLocal   = ()=> lsSet('etiquetas_pendientes', JSON.stringify(etiquetas));
 const persistPendientesFijosLocal = ()=> lsSet('pendientes_fijos', JSON.stringify(pendientesFijos));
 const persistPendientesFijos  = ()=>{ persistPendientesFijosLocal(); fsSet('pendientes_fijos', pendientesFijos); };
+const persistVisionCfgLocal   = ()=> lsSet('vision_cfg', JSON.stringify(visionCfg));
+const persistVisionCfg        = ()=>{ persistVisionCfgLocal(); fsSet('vision_cfg', visionCfg); };
+const persistVisionUsoLocal   = ()=> lsSet('vision_uso_sh', JSON.stringify(visionUso));
+const persistVisionUso        = ()=>{ persistVisionUsoLocal(); fsSet('vision_uso', visionUso); };
+function pintarOCRSiAbierto(){ const o = byId('ocrOverlay'); if(o && o.style.display && o.style.display !== 'none') pintarOCR(); }
 const persistUser        = ()=> lsSet('usuario_actual', currentUser);
 
 // Estas son las que debe llamar el resto del código: guardan localmente al
@@ -7810,7 +7833,7 @@ let ocrStatusTxt = '';
 let ocrDebugTxt = '';   // último texto que leyó el OCR (para diagnóstico cuando no encuentra códigos)
 let ocrUltimaImg = '';  // dataURL de la última foto YA procesada (la que vio Vision) — para que la verifiques
 function ocrApiKey(){ try{ return localStorage.getItem('ocr_apikey') || 'helloworld'; }catch(e){ return 'helloworld'; } }
-function gvisionKey(){ try{ return (localStorage.getItem('gvision_key')||'').trim(); }catch(e){ return ''; } }
+function gvisionKey(){ try{ return String((visionCfg && visionCfg.key) || localStorage.getItem('gvision_key') || '').trim(); }catch(e){ return String((visionCfg&&visionCfg.key)||'').trim(); } }
 function blobABase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=> res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(blob); }); }
 function ocrStatus(t){ ocrStatusTxt = t; const el = byId('ocrStatus'); if(el) el.textContent = t; }
 // Guarda lo que se va compilando para que NO se pierda si cierras la pantalla
@@ -7838,7 +7861,7 @@ function ocrEncoger(file, maxW){
   });
 }
 // ¿Aplicar el filtro anti-reflejo? (activado por defecto)
-function ocrFiltroOn(){ try{ return localStorage.getItem('ocr_filtro') !== '0'; }catch(e){ return true; } }
+function ocrFiltroOn(){ try{ return localStorage.getItem('ocr_filtro') === '1'; }catch(e){ return false; } }
 function ocrSetFiltro(on){ try{ localStorage.setItem('ocr_filtro', on?'1':'0'); }catch(e){} }
 function ocrPct(hist, n, p){ let t = n*p, c = 0; for(let v=0; v<256; v++){ c += hist[v]; if(c >= t) return v; } return 255; }
 // Realza la foto del monitor ANTES de mandarla a Vision:
@@ -7860,7 +7883,7 @@ function ocrRealzar(file, maxW){
         const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
         const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
         const comprimir = (q)=> cv.toBlob(b=>{ if(!b) return reject(new Error('blob')); if(b.size > 1000000 && q > 0.4) return comprimir(q - 0.15); resolve(b); }, 'image/jpeg', q);
-        if(!filtrar){ return comprimir(0.7); }
+        if(!filtrar){ return comprimir(0.6); }
         const n = w*h;
         const id = ctx.getImageData(0,0,w,h); const p = id.data;
         // 1) gris, tomado de una copia LIGERAMENTE borrosa para matar el moiré
@@ -7939,8 +7962,9 @@ function ocrParse(txt){
 // Lee con Google Vision (preciso, ideal para foto de monitor). Devuelve
 // {text, words} con la posición de cada palabra (para reconstruir renglones),
 // o null si falló (dejando el mensaje en el status).
-async function ocrVisionLeer(blob, key){
-  let b64; try{ b64 = await blobABase64(blob); }catch(e){ ocrStatus('No pude preparar la imagen.'); return null; }
+async function ocrVisionLeer(blob, key, preB64){
+  let b64 = preB64;
+  if(!b64){ try{ b64 = await blobABase64(blob); }catch(e){ ocrStatus('No pude preparar la imagen.'); return null; } }
   const body = { requests:[{ image:{content:b64}, features:[{type:'DOCUMENT_TEXT_DETECTION'}] }] };
   let data;
   try{
@@ -8043,26 +8067,29 @@ async function ocrSpaceTexto(blob){
 // ----- Tope de fotos al mes (para no pasar del tier gratis de Google Vision) -----
 // La app cuenta cuántas fotos mandó a Vision este mes y NO manda más al llegar
 // al límite. Se reinicia solo el día 1. Tú defines el número con ⚙️.
-function ocrLimiteMes(){ try{ const v = parseInt(localStorage.getItem('ocr_limite_mes'),10); return (v>0) ? v : 950; }catch(e){ return 950; } }
+function ocrLimiteMes(){ const v = Number(visionCfg && visionCfg.limiteMes); return v>0 ? v : 950; }
 function ocrMesActual(){ return new Date().toISOString().slice(0,7); }
-function ocrUsoActual(){ const mes = ocrMesActual(); try{ const s = JSON.parse(localStorage.getItem('ocr_uso')||'null'); if(s && s.mes===mes) return s; }catch(e){} return {mes, n:0}; }
-function ocrUsoInc(){ const u = ocrUsoActual(); u.n = (u.n||0)+1; try{ localStorage.setItem('ocr_uso', JSON.stringify(u)); }catch(e){} }
+// Contador COMPARTIDO del mes (todos los teléfonos suman al mismo).
+function ocrUsoActual(){ const mes = ocrMesActual(); if(visionUso && visionUso.mes===mes) return visionUso; return {mes, n:0}; }
+function ocrUsoInc(){ const mes = ocrMesActual(); const cur = (visionUso && visionUso.mes===mes) ? visionUso : {mes, n:0}; visionUso = {mes, n:(Number(cur.n)||0)+1}; persistVisionUso(); }
 async function ocrProcesar(file){
   const gk = gvisionKey();
   if(gk){
     const u = ocrUsoActual(), lim = ocrLimiteMes();
     if(u.n >= lim){ ocrStatus('🛑 Llegaste a tu tope de ' + lim + ' fotos este mes (para no generar cobro). Se reinicia el día 1 — o súbelo con ⚙️.'); pintarOCR(); return; }
   }
-  ocrStatus(ocrFiltroOn() ? 'Mejorando foto (quitando reflejos)…' : 'Encogiendo foto…');
+  ocrStatus(ocrFiltroOn() ? 'Mejorando foto (quitando reflejos)…' : 'Preparando foto…');
   let blob;
-  try{ blob = await ocrRealzar(file, gk ? 2000 : 1600); }
-  catch(e){ try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e2){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; } }
-  // Guarda la imagen ya procesada (la que verá Vision) para que puedas verificarla tú mismo
-  try{ ocrUltimaImg = 'data:image/jpeg;base64,' + await blobABase64(blob); }catch(e){ ocrUltimaImg = ''; }
-  ocrStatus(gk ? 'Leyendo con Google Vision…' : 'Leyendo con OCR gratis… (tarda unos segundos)');
+  // Para Vision mandamos 1500px (suficiente para la tabla y MUCHO más rápido de subir).
+  try{ blob = await ocrRealzar(file, gk ? 1500 : 1600); }
+  catch(e){ try{ blob = await ocrEncoger(file, gk ? 1500 : 1600); }catch(e2){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; } }
+  // Convertimos a base64 UNA sola vez: se reutiliza para la vista previa y para Vision.
+  let b64 = '';
+  try{ b64 = await blobABase64(blob); ocrUltimaImg = 'data:image/jpeg;base64,' + b64; }catch(e){ ocrUltimaImg = ''; }
+  ocrStatus(gk ? 'Leyendo con Google Vision… (unos segundos según tu internet)' : 'Leyendo con OCR gratis… (tarda unos segundos)');
   let nuevas;
   if(gk){
-    const r = await ocrVisionLeer(blob, gk);
+    const r = await ocrVisionLeer(blob, gk, b64);
     if(r === null) return; // el status ya quedó con el motivo
     ocrUsoInc();            // cuenta esta foto contra el tope del mes
     ocrDebugTxt = r.text || '';
@@ -8074,7 +8101,7 @@ async function ocrProcesar(file){
     ocrDebugTxt = txt || '';
     nuevas = ocrParse(txt);
   }
-  if(!nuevas.length){ ocrStatus('No encontré códigos (AB/LA/RE… + 7 dígitos) en lo que leyó. Abajo te muestro el texto leído — mándame captura si no cuadra.'); pintarOCR(); return; }
+  if(!nuevas.length){ ocrStatus('No encontré códigos. Casi siempre es por BRILLO encima de los renglones: muévete un poco para quitar el reflejo y toma de nuevo (6-8 renglones, de frente). Abajo ves lo que alcanzó a leer Vision.'); pintarOCR(); return; }
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
   ocrFilas.sort((a,b)=> codigoCompare(a.codigo, b.codigo));
@@ -8093,8 +8120,10 @@ function ocrCargar(){
   else seguir();
 }
 function ocrPonerClave(){
-  openTextKeypad('Pega tu clave de Google Vision (vacía = OCR gratis de prueba)', gvisionKey(), (v)=>{
+  openTextKeypad('Pega tu clave de Google Vision — se comparte con TODO el equipo (vacía = OCR gratis)', gvisionKey(), (v)=>{
     const k = String(v||'').trim();
+    visionCfg = Object.assign({}, visionCfg, {key:k});
+    persistVisionCfg();   // sube a la nube → aparece sola en los demás teléfonos
     try{ if(k) localStorage.setItem('gvision_key', k); else localStorage.removeItem('gvision_key'); }catch(e){}
     pintarOCR();
   });
@@ -8106,10 +8135,11 @@ function ocrVerImagen(src){
   let ov = byId('ocrImgViewer');
   if(!ov){
     ov = document.createElement('div'); ov.id = 'ocrImgViewer'; ov.className = 'ocr-viewer';
-    ov.innerHTML = '<div class="ocr-viewer-bar"><span>Pellizca para hacer zoom · verifica los números</span><button type="button" class="ocr-viewer-x">Cerrar</button></div><div class="ocr-viewer-scroll"><img></div>';
+    ov.innerHTML = '<div class="ocr-viewer-bar">Pellizca para hacer zoom · verifica los números</div><div class="ocr-viewer-scroll"><img></div><div class="ocr-viewer-foot"><button type="button" class="ocr-viewer-x">Cerrar</button></div>';
     document.body.appendChild(ov);
-    ov.querySelector('.ocr-viewer-x').onclick = ()=> ov.style.display='none';
-    ov.onclick = (e)=>{ if(e.target === ov) ov.style.display='none'; };
+    const cerrar = ()=> ov.style.display='none';
+    ov.querySelector('.ocr-viewer-x').onclick = cerrar;
+    ov.querySelector('.ocr-viewer-scroll').addEventListener('click', (e)=>{ if(e.target.tagName !== 'IMG') cerrar(); });
   }
   ov.querySelector('img').src = src;
   ov.style.display = 'flex';
@@ -8120,7 +8150,7 @@ function pintarOCR(){
   const uso = ocrUsoActual(), lim = ocrLimiteMes();
   const dot = (c)=>`<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${c};margin-right:7px;vertical-align:middle;"></span>`;
   const motor = conVision
-    ? `<div class="ocr-status" style="color:#0f7a5c;">${dot('#0f7a5c')}Motor: Google Vision (preciso) · Fotos este mes: ${uso.n}/${lim}</div>`
+    ? `<div class="ocr-status" style="color:#0f7a5c;">${dot('#0f7a5c')}Motor: Google Vision (preciso · clave compartida) · Fotos del equipo este mes: ${uso.n}/${lim}</div>`
     : `<div class="ocr-status" style="color:#9a5b00;">${dot('#c99a00')}Motor: OCR gratis de prueba (falla con fotos de monitor). Pon tu clave de Google Vision abajo.</div>`;
   const top = `<button type="button" class="sis-principal sis-alt has-ic" id="ocrFotoBtn" style="margin:4px 0 8px;">${icBtn('camera')}<span class="bt-tx">Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></span></button>
     <button type="button" class="add-missing-btn has-ic" id="ocrGaleriaBtn" style="margin:0 0 6px;">${icBtn('image')}<span class="bt-tx">Elegir de galería (varias a la vez)</span></button>
@@ -8168,7 +8198,7 @@ function pintarOCR(){
   const filtroOn = ocrFiltroOn();
   const keyBtn = `<button type="button" class="add-missing-btn has-ic${filtroOn?' on':''}" id="ocrFiltro" style="margin-top:10px;">${icBtn('image')}<span class="bt-tx">Quitar reflejos de la pantalla: ${filtroOn?'SÍ':'No'}</span></button>`
     + `<button type="button" class="add-missing-btn has-ic" id="ocrKey" style="margin-top:6px;">${icBtn('key')}<span class="bt-tx">${conVision?'Cambiar':'Poner'} mi clave de Google Vision</span></button>`
-    + (conVision ? `<button type="button" class="add-missing-btn has-ic" id="ocrTope" style="margin-top:6px;">${icBtn('sliders')}<span class="bt-tx">Tope de fotos al mes (${lim})</span></button>` : '');
+    + (conVision ? `<button type="button" class="add-missing-btn has-ic" id="ocrTope" style="margin-top:6px;">${icBtn('sliders')}<span class="bt-tx">Tope de fotos al mes · equipo (${lim})</span></button>` : '');
   body.innerHTML = top + cuerpo + keyBtn;
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
   byId('ocrGaleriaBtn').onclick = ()=> byId('ocrGaleria').click();
@@ -8178,7 +8208,7 @@ function pintarOCR(){
   const vac = byId('ocrVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar TODO lo compilado? (No borra existencias ya cargadas al sistema.)', ()=>{ ocrFilas = []; ocrStatusTxt = ''; ocrPersist(); pintarOCR(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
   byId('ocrKey').onclick = ocrPonerClave;
   const filtroBtn = byId('ocrFiltro'); if(filtroBtn) filtroBtn.onclick = ()=>{ ocrSetFiltro(!ocrFiltroOn()); pintarOCR(); };
-  const tope = byId('ocrTope'); if(tope) tope.onclick = ()=> openKeypad('Máximo de fotos al mes (Vision regala 1000)', String(ocrLimiteMes()), (v)=>{ const n = parseInt(v,10); if(n>0){ try{ localStorage.setItem('ocr_limite_mes', String(n)); }catch(e){} } pintarOCR(); });
+  const tope = byId('ocrTope'); if(tope) tope.onclick = ()=> openKeypad('Tope de fotos al mes para TODO el equipo (Vision regala 1000)', String(ocrLimiteMes()), (v)=>{ const n = parseInt(v,10); if(n>0){ visionCfg = Object.assign({}, visionCfg, {limiteMes:n}); persistVisionCfg(); } pintarOCR(); });
   body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); ocrPersist(); pintarOCR(); });
   body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); ocrPersist(); pintarOCR(); }); });
   body.querySelectorAll('[data-ocrcod]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrcod, f=ocrFilas[i]; openTextKeypad('Código', f.codigo, (v)=>{ const nv=String(v||'').trim().toUpperCase(); if(nv) f.codigo=nv; ocrPersist(); pintarOCR(); }); });
