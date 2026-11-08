@@ -916,10 +916,20 @@
   /* ---- OCR: filas de resultado más limpias ---- */
   .ocr-ex{background:var(--brand-tint);color:var(--brand-dark);border:none;border-radius:11px;font-size:16px;}
   .ocr-nom{color:var(--ink-soft);font-weight:600;}
+  .fijo-motivo{color:#8b3fa6;font-weight:800;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
   .ocr-nuevo{color:#9a5b00;font-weight:800;}
   .ocr-nuevo.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
   .ocr-bar{display:inline-block;margin-top:4px;color:var(--brand-dark);font-weight:700;font-size:12.5px;}
   .ocr-bar.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  /* Vista previa de la foto procesada (la que leyó Vision) */
+  .ocr-prev{margin-top:10px;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;box-shadow:var(--shadow-sm);}
+  .ocr-prev img{display:block;width:100%;max-height:180px;object-fit:cover;object-position:top;cursor:zoom-in;}
+  .ocr-prev-tx{padding:8px 11px;font-size:12px;color:var(--ink-soft);}
+  .ocr-viewer{position:fixed;inset:0;z-index:9999;background:rgba(10,20,24,.94);display:none;flex-direction:column;}
+  .ocr-viewer-bar{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;color:#dfeceb;font-size:13px;}
+  .ocr-viewer-x{background:#fff;color:var(--ink);border:none;border-radius:10px;padding:8px 16px;font-weight:800;font-size:14px;}
+  .ocr-viewer-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;display:flex;align-items:flex-start;justify-content:center;padding:0 0 24px;}
+  .ocr-viewer-scroll img{width:100%;max-width:1400px;height:auto;}
 
   /* ---- Búsquedas con lupa (sin emoji) ---- */
   #logSearch,#compSearch,#sisFilter,#cobBuscar{
@@ -1111,7 +1121,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 7 nov 2026 · 10:45 · Sistema para todo el equipo</div>
+    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 16:00 · pendientes fijos</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1133,6 +1143,10 @@
     <div id="motivoBlock" style="display:none;">
       <div class="field-label">Motivo del movimiento pendiente</div>
       <div class="modes" id="motivos"></div>
+      <div id="fijosBar" style="display:flex;gap:8px;margin-top:10px;">
+        <button type="button" class="add-missing-btn has-ic" id="fijosCargarBtn" data-ic="download" style="flex:1;margin:0;">Cargar pendientes fijos</button>
+        <button type="button" class="add-missing-btn has-ic" id="fijosAdminBtn" data-ic="sliders" style="flex:0 0 auto;margin:0;width:54px;justify-content:center;"></button>
+      </div>
     </div>
 
     <div class="capture">
@@ -1536,6 +1550,9 @@ let soloContados = true; // por defecto, Existencias Sistema solo pide lo que ya
 let sisFiltroBarra = 'todos'; // 'todos' | 'sinbarra' — filtro de la pestaña Sistema
 let motivoActivo = MOTIVOS_PENDIENTES[0];
 let records = [];
+// Movimientos pendientes FIJOS: lista compartida que NO se borra al cerrar inventario.
+// Se cargan a mano en el área "Movimientos Pendientes" y se quedan hasta que los quites.
+let pendientesFijos = [];  // [{id, codigo, descripcion, barcode, cantidad, motivo}]
 let currentUser = '';
 let existenciasMap = {};
 let auditModeActive = false; // "Modo Auditoría": Conteo Físico, Existencias Sistema y Comparativo
@@ -1643,7 +1660,8 @@ const FS_KEYS_TO_VARS = {
   codigos_eliminados:      (v)=>{ deletedCodigos = v; persistDeletedLocal(); },
   caducidades_lotes:       (v)=>{ caducidades = v; persistCaducidadesLocal(); renderCapList(); renderDashboard(); },
   prefijo_criticidad:      (v)=>{ prefixCriticidad = v; persistPrefixCfgLocal(); renderPrefixCfg(); },
-  etiquetas_pendientes:    (v)=>{ etiquetas = v; persistEtiquetasLocal(); renderEtiList(); }
+  etiquetas_pendientes:    (v)=>{ etiquetas = v; persistEtiquetasLocal(); renderEtiList(); },
+  pendientes_fijos:        (v)=>{ pendientesFijos = v; persistPendientesFijosLocal(); renderFijosUI(); }
 };
 
 const FS_LOCAL_GETTERS = {
@@ -1651,7 +1669,8 @@ const FS_LOCAL_GETTERS = {
   codigos_eliminados:      ()=> deletedCodigos,
   caducidades_lotes:       ()=> caducidades,
   prefijo_criticidad:      ()=> prefixCriticidad,
-  etiquetas_pendientes:    ()=> etiquetas
+  etiquetas_pendientes:    ()=> etiquetas,
+  pendientes_fijos:        ()=> pendientesFijos
 };
 function fsHasData(val){
   if(Array.isArray(val)) return val.length > 0;
@@ -3219,6 +3238,7 @@ function loadState(){
   try{ const h = lsGet('historial_conteo'); if(h) historialConteo = JSON.parse(h); }catch(e){}
   try{ const cc = lsGet('cierres_conteo'); if(cc) cierresConteo = JSON.parse(cc); }catch(e){}
   try{ const et = lsGet('etiquetas_pendientes'); if(et) etiquetas = JSON.parse(et); }catch(e){}
+  try{ const pf = lsGet('pendientes_fijos'); if(pf) pendientesFijos = JSON.parse(pf); }catch(e){}
   try{ const u = lsGet('usuario_actual'); if(u) currentUser = u; }catch(e){}
   renderUserBadge();
   renderAuditModeToggle();
@@ -3262,6 +3282,8 @@ const persistPrefixCfgLocal   = ()=> lsSet('prefijo_criticidad', JSON.stringify(
 const persistHistorialLocal   = ()=> lsSet('historial_conteo', JSON.stringify(historialConteo));
 const persistCierresLocal     = ()=> lsSet('cierres_conteo', JSON.stringify(cierresConteo));
 const persistEtiquetasLocal   = ()=> lsSet('etiquetas_pendientes', JSON.stringify(etiquetas));
+const persistPendientesFijosLocal = ()=> lsSet('pendientes_fijos', JSON.stringify(pendientesFijos));
+const persistPendientesFijos  = ()=>{ persistPendientesFijosLocal(); fsSet('pendientes_fijos', pendientesFijos); };
 const persistUser        = ()=> lsSet('usuario_actual', currentUser);
 
 // Estas son las que debe llamar el resto del código: guardan localmente al
@@ -3474,7 +3496,7 @@ function renderModes(){
   });
   barcodeLabel.textContent = `Escanea o escribe · ${mode}`;
   $('motivoBlock').style.display = (mode === 'Movimientos Pendientes') ? '' : 'none';
-  if(mode === 'Movimientos Pendientes') renderMotivos();
+  if(mode === 'Movimientos Pendientes'){ renderMotivos(); renderFijosUI(); }
 }
 
 function renderMotivos(){
@@ -3501,6 +3523,58 @@ function renderMotivos(){
     });
   };
   motivosEl.appendChild(otroBtn);
+}
+
+// ===== Movimientos pendientes FIJOS (se cargan a mano, se quedan guardados) =====
+function renderFijosUI(){
+  const btn = byId('fijosCargarBtn');
+  if(btn) btnTexto(btn, pendientesFijos.length ? ('Cargar pendientes fijos ('+pendientesFijos.length+')') : 'Cargar pendientes fijos');
+}
+function cargarPendientesFijos(){
+  if(!pendientesFijos.length){ openConfirm('Aún no tienes pendientes fijos guardados. Toca el botón de ajustes de al lado (⚙) para agregarlos.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  const { byCodigo } = buildIndexes();
+  let add = 0, dup = 0;
+  pendientesFijos.forEach(f=>{
+    const cod = String(f.codigo||'').toUpperCase();
+    const ya = records.some(r=> r.area==='Movimientos Pendientes' && String(r.codigo||'').toUpperCase()===cod && (r.motivo||'')===(f.motivo||''));
+    if(ya){ dup++; return; }
+    const cat = byCodigo[cod];
+    const rec = { id: uid(), barcode: f.barcode || (cat&&cat.barcode) || '', codigo: f.codigo, descripcion: f.descripcion || (cat&&cat.descripcion) || '', area:'Movimientos Pendientes', cantidad: Number(f.cantidad)||0, ts: new Date().toISOString(), capturista: currentUser || 'Sin nombre', motivo: f.motivo || MOTIVOS_PENDIENTES[0] };
+    records.push(rec); persistRecordsLocal(); fsSaveRecord(rec);
+    historialConteo.push(Object.assign({}, rec)); persistHistorialItemAdd(rec);
+    add++;
+  });
+  renderSummary(); renderLog(); renderDashboard();
+  openConfirm('Cargué ' + add + ' pendiente(s) fijo(s) a este inventario' + (dup ? ' (' + dup + ' ya estaban cargados)' : '') + '.', ()=>{}, {yesLabel:'Entendido'});
+}
+function abrirFijos(){ byId('fijosOverlay').style.display = 'flex'; renderFijos(); }
+function cerrarFijos(){ byId('fijosOverlay').style.display = 'none'; }
+function renderFijos(){
+  const body = byId('fijosBody');
+  const filas = pendientesFijos.map((f,idx)=>
+    `<div class="log-item"><div class="info">
+        <div class="desc">${cvEsc(f.codigo)}</div>
+        <div class="meta">${cvEsc(f.descripcion||'(sin nombre — tócalo al cargar para nombrarlo)')}<br><span class="fijo-motivo" data-fmot="${idx}">${cvEsc(f.motivo||MOTIVOS_PENDIENTES[0])} ✎</span></div>
+      </div>
+      <button type="button" class="ocr-ex" data-fcant="${idx}">${Number(f.cantidad)||0}</button>
+      <button type="button" class="del" data-fdel="${idx}">✕</button></div>`).join('');
+  body.innerHTML = `<button type="button" class="sis-principal has-ic" id="fijoAddBtn" style="margin:4px 0 10px;">${icBtn('plus')}<span class="bt-tx">Agregar un pendiente fijo</span></button>`
+    + (pendientesFijos.length ? filas : '<div class="empty">Aún no hay pendientes fijos. Agrega los que se repiten en cada inventario (como la cerveza de la mala recepción). Toca la cantidad o el motivo para corregirlos.</div>');
+  byId('fijoAddBtn').onclick = fijoAgregar;
+  body.querySelectorAll('[data-fdel]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fdel; openConfirm('¿Quitar este pendiente fijo? Dejará de cargarse en los inventarios (úsalo cuando ya se dio de baja la corrección).', ()=>{ pendientesFijos.splice(i,1); persistPendientesFijos(); renderFijos(); renderFijosUI(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
+  body.querySelectorAll('[data-fcant]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fcant; openKeypad('Cantidad pendiente de ' + pendientesFijos[i].codigo, String(pendientesFijos[i].cantidad||0), (v)=>{ const n=parseInt(v,10); pendientesFijos[i].cantidad = isNaN(n)?0:n; persistPendientesFijos(); renderFijos(); }); });
+  body.querySelectorAll('[data-fmot]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fmot; const cur=MOTIVOS_PENDIENTES.indexOf(pendientesFijos[i].motivo); const next=MOTIVOS_PENDIENTES[(cur+1)%MOTIVOS_PENDIENTES.length]; pendientesFijos[i].motivo=next; persistPendientesFijos(); renderFijos(); });
+}
+function fijoAgregar(){
+  openTextKeypad('Código del producto', '', (c)=>{
+    const cod = String(c||'').trim().toUpperCase(); if(!cod) return;
+    const { byCodigo } = buildIndexes(); const cat = byCodigo[cod];
+    openKeypad('Cantidad pendiente de ' + cod, '', (v)=>{
+      const n = parseInt(v,10);
+      pendientesFijos.push({ id: uid(), codigo: cod, descripcion: (cat&&cat.descripcion)||'', barcode: (cat&&cat.barcode)||'', cantidad: isNaN(n)?0:n, motivo: MOTIVOS_PENDIENTES[0] });
+      persistPendientesFijos(); renderFijos(); renderFijosUI();
+    });
+  });
 }
 
 function renderSummary(){
@@ -6513,6 +6587,14 @@ loadState();
 <input type="file" id="ocrFile" accept="image/*" capture="environment" style="display:none;">
 <input type="file" id="ocrGaleria" accept="image/*" multiple style="display:none;">
 
+<div class="cotejo-overlay" id="fijosOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Pendientes fijos<small>Se guardan y aparecen en cada inventario hasta que los quites. Compartidos con el equipo.</small></div>
+    <div class="cotejo-body" id="fijosBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="fijosCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
@@ -6650,6 +6732,12 @@ function actualizarSesionSheet(){
 }
 byId('masBtn').onclick = ()=>{ actualizarSesionSheet(); byId('masSheet').style.display = 'flex'; };
 byId('masCerrar').onclick = cerrarMas;
+// Pendientes fijos
+(function(){ const c=byId('fijosCargarBtn'); if(c) c.onclick = cargarPendientesFijos;
+  const a=byId('fijosAdminBtn'); if(a) a.onclick = abrirFijos;
+  const x=byId('fijosCerrar'); if(x) x.onclick = cerrarFijos;
+  const ov=byId('fijosOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='fijosOverlay') cerrarFijos(); });
+})();
 byId('masSheet').addEventListener('click', (e)=>{ if(e.target.id === 'masSheet') cerrarMas(); });
 document.querySelectorAll('#masSheet [data-ir]').forEach(b=> b.onclick = ()=>{
   cerrarMas();
@@ -7720,6 +7808,7 @@ byId('masExcepcionBtn').onclick = ()=>{ cerrarMas(); abrirExcepcion(); };
 let ocrFilas = [];
 let ocrStatusTxt = '';
 let ocrDebugTxt = '';   // último texto que leyó el OCR (para diagnóstico cuando no encuentra códigos)
+let ocrUltimaImg = '';  // dataURL de la última foto YA procesada (la que vio Vision) — para que la verifiques
 function ocrApiKey(){ try{ return localStorage.getItem('ocr_apikey') || 'helloworld'; }catch(e){ return 'helloworld'; } }
 function gvisionKey(){ try{ return (localStorage.getItem('gvision_key')||'').trim(); }catch(e){ return ''; } }
 function blobABase64(blob){ return new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=> res(String(r.result).split(',')[1]||''); r.onerror=rej; r.readAsDataURL(blob); }); }
@@ -7748,6 +7837,75 @@ function ocrEncoger(file, maxW){
     img.src = URL.createObjectURL(file);
   });
 }
+// ¿Aplicar el filtro anti-reflejo? (activado por defecto)
+function ocrFiltroOn(){ try{ return localStorage.getItem('ocr_filtro') !== '0'; }catch(e){ return true; } }
+function ocrSetFiltro(on){ try{ localStorage.setItem('ocr_filtro', on?'1':'0'); }catch(e){} }
+function ocrPct(hist, n, p){ let t = n*p, c = 0; for(let v=0; v<256; v++){ c += hist[v]; if(c >= t) return v; } return 255; }
+// Realza la foto del monitor ANTES de mandarla a Vision:
+//  1) escala de grises
+//  2) corrección de iluminación "flat-field": estima el brillo de fondo (que es
+//     justo el reflejo/degradado de la pantalla) y lo divide → aplana el reflejo
+//  3) estira el contraste por percentiles y oscurece un poco el texto
+// Si el filtro está apagado, solo encoge/comprime como antes.
+function ocrRealzar(file, maxW){
+  return new Promise((resolve, reject)=>{
+    const img = new Image();
+    img.onload = ()=>{
+      try{
+        const filtrar = ocrFiltroOn();
+        // Con filtro limitamos a 1600px: baja el moiré (patrón de la pantalla) sin perder texto.
+        const lim = filtrar ? Math.min(maxW, 1600) : maxW;
+        let w = img.width, h = img.height;
+        if(w > lim){ h = Math.round(h*lim/w); w = lim; }
+        const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+        const ctx = cv.getContext('2d'); ctx.drawImage(img, 0, 0, w, h);
+        const comprimir = (q)=> cv.toBlob(b=>{ if(!b) return reject(new Error('blob')); if(b.size > 1000000 && q > 0.4) return comprimir(q - 0.15); resolve(b); }, 'image/jpeg', q);
+        if(!filtrar){ return comprimir(0.7); }
+        const n = w*h;
+        const id = ctx.getImageData(0,0,w,h); const p = id.data;
+        // 1) gris, tomado de una copia LIGERAMENTE borrosa para matar el moiré
+        const bl = document.createElement('canvas'); bl.width=w; bl.height=h;
+        const blx = bl.getContext('2d'); blx.filter='blur(1px)'; blx.drawImage(img,0,0,w,h); blx.filter='none';
+        const sid = blx.getImageData(0,0,w,h).data;
+        const gr = new Float32Array(n);
+        for(let i=0,j=0;i<n;i++,j+=4){ gr[i] = 0.299*sid[j] + 0.587*sid[j+1] + 0.114*sid[j+2]; }
+        // 2) fondo suave (iluminación/reflejo) por reducir y reescalar
+        const g2 = document.createElement('canvas'); g2.width=w; g2.height=h; const gx=g2.getContext('2d');
+        const gid = gx.createImageData(w,h);
+        for(let i=0,j=0;i<n;i++,j+=4){ const v=gr[i]; gid.data[j]=gid.data[j+1]=gid.data[j+2]=v; gid.data[j+3]=255; }
+        gx.putImageData(gid,0,0);
+        const sw = Math.max(16, Math.round(w/24)), sh = Math.max(16, Math.round(h/24));
+        const sm = document.createElement('canvas'); sm.width=sw; sm.height=sh;
+        const smx = sm.getContext('2d'); smx.imageSmoothingEnabled=true; smx.drawImage(g2,0,0,sw,sh);
+        const bgc = document.createElement('canvas'); bgc.width=w; bgc.height=h;
+        const bgx = bgc.getContext('2d'); bgx.imageSmoothingEnabled=true; bgx.drawImage(sm,0,0,w,h);
+        const bg = bgx.getImageData(0,0,w,h).data;
+        // 3) flat-field + percentiles
+        let mean=0; for(let i=0,j=0;i<n;i++,j+=4) mean += bg[j]; mean /= n;
+        const corr = new Float32Array(n);
+        for(let i=0,j=0;i<n;i++,j+=4){ const b = bg[j] || 1; corr[i] = gr[i]*mean/b; }
+        const hist = new Uint32Array(256);
+        for(let i=0;i<n;i++){ let v=corr[i]|0; if(v<0)v=0; else if(v>255)v=255; hist[v]++; }
+        const lo = ocrPct(hist,n,0.03), hi = ocrPct(hist,n,0.97), span = Math.max(1, hi-lo);
+        // gamma <1 aclara el fondo (el ruido/moiré se va hacia el blanco) y deja el texto oscuro
+        for(let i=0,j=0;i<n;i++,j+=4){ let v = (corr[i]-lo)*255/span; if(v<0)v=0; else if(v>255)v=255; v = 255*Math.pow(v/255, 0.8); const q=v|0; p[j]=p[j+1]=p[j+2]=q; }
+        ctx.putImageData(id,0,0);
+        comprimir(0.85);
+      }catch(e){ reject(e); }
+    };
+    img.onerror = reject;
+    img.src = URL.createObjectURL(file);
+  });
+}
+// Convierte ese token a la cantidad entera: quita la coma de miles y toma el entero
+// antes del ".000". "1,112.000"→1112 · "16.000"→16 · "2,000"→2.
+function ocrCantidad(tok){
+  const m = String(tok||'').match(/^(\d[\d,.]*)[.,](\d{3})$/);
+  if(!m) return null;
+  const entero = m[1].replace(/[.,]/g,'');   // fuera separadores de miles
+  const v = parseInt(entero, 10);
+  return isNaN(v) ? null : v;
+}
 // Parser por FLUJO de tokens (no por renglón): sirve igual si el OCR entrega
 // la tabla renglón por renglón (OCR.space) o partida en columnas (Google
 // Vision a veces lista los códigos juntos y luego los números). Cada vez que
@@ -7767,11 +7925,13 @@ function ocrParse(txt){
   const out = [];
   for(let i=0;i<marks.length;i++){
     const seg = s.slice(marks[i].end, i+1<marks.length ? marks[i+1].idx : s.length);
-    const nums = seg.match(/\d+[.,]\d{3}/g) || [];           // Inicial, Disponible, Compra, Pendiente…
+    const numG = /\d[\d,.]*[.,]\d{3}/g;                      // número POS: miles + decimal .000
+    const nums = seg.match(numG) || [];                      // Inicial, Disponible, Compra, Pendiente…
     let ex = '';
-    if(nums.length >= 2) ex = parseInt(nums[1],10);          // Disponible = 2º
-    else if(nums.length === 1) ex = parseInt(nums[0],10);
-    const desc = seg.split(/\d+[.,]\d{3}/)[0].replace(/[|:·\-\s]+/g,' ').trim();
+    if(nums.length >= 2) ex = ocrCantidad(nums[1]);          // Disponible = 2º
+    else if(nums.length === 1) ex = ocrCantidad(nums[0]);
+    if(ex === null) ex = '';
+    const desc = seg.split(/\d[\d,.]*[.,]\d{3}/)[0].replace(/[|:·\-\s]+/g,' ').trim();
     out.push({codigo:marks[i].codigo, existencia:ex, descripcion:desc});
   }
   return out;
@@ -7815,7 +7975,7 @@ function ocrParseGeo(words){
   const hs = words.map(w=>w.h).filter(h=>h>0).sort((a,b)=>a-b);
   const medH = hs.length ? hs[Math.floor(hs.length/2)] : 12;
   const tol = Math.max(6, medH*0.6);
-  const numRe = /^\d+[.,]\d{3}$/;
+  const numRe = /^\d[\d,]*[.,]\d{3}$/;   // incluye coma de miles: "1,112.000", "275.000", "2,000"
   // --- 1) Renglones por Y (para armar código + descripción) ---
   const ws = words.slice().sort((a,b)=> a.cy - b.cy);
   const filas = []; let cur = [], curY = null;
@@ -7838,7 +7998,7 @@ function ocrParseGeo(words){
     const left = fila.find(w=> !numRe.test(w.t)) || fila[0];   // altura del código/descripción, no de un número
     let desc = texto
       .replace(/[A-Za-z]{2}[\s\d]{6,13}/, ' ')
-      .replace(/\d+[.,]\d{3}/g, ' ')
+      .replace(/\d[\d,.]*[.,]\d{3}/g, ' ')
       .replace(/(\s+\d+)+\s*[.,]?\s*$/, '')
       .replace(/^[\s\d.,|:·ºª-]+/, '')
       .replace(/\s+/g, ' ').trim();
@@ -7856,7 +8016,8 @@ function ocrParseGeo(words){
   // --- 4) Disponible = 2º número (por posición X: Inicial, Disponible, …) ---
   return anclas.map(a=>{
     a.nums.sort((x,y)=> x.cx - y.cx);
-    let ex = ''; if(a.nums.length >= 2) ex = parseInt(a.nums[1].v,10); else if(a.nums.length === 1) ex = parseInt(a.nums[0].v,10);
+    let ex = ''; if(a.nums.length >= 2) ex = ocrCantidad(a.nums[1].v); else if(a.nums.length === 1) ex = ocrCantidad(a.nums[0].v);
+    if(ex === null) ex = '';
     return { codigo: a.codigo, existencia: ex, descripcion: a.desc };
   });
 }
@@ -7892,9 +8053,12 @@ async function ocrProcesar(file){
     const u = ocrUsoActual(), lim = ocrLimiteMes();
     if(u.n >= lim){ ocrStatus('🛑 Llegaste a tu tope de ' + lim + ' fotos este mes (para no generar cobro). Se reinicia el día 1 — o súbelo con ⚙️.'); pintarOCR(); return; }
   }
-  ocrStatus('Encogiendo foto…');
+  ocrStatus(ocrFiltroOn() ? 'Mejorando foto (quitando reflejos)…' : 'Encogiendo foto…');
   let blob;
-  try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; }
+  try{ blob = await ocrRealzar(file, gk ? 2000 : 1600); }
+  catch(e){ try{ blob = await ocrEncoger(file, gk ? 2000 : 1600); }catch(e2){ ocrStatus('No pude procesar la imagen. Intenta otra foto.'); return; } }
+  // Guarda la imagen ya procesada (la que verá Vision) para que puedas verificarla tú mismo
+  try{ ocrUltimaImg = 'data:image/jpeg;base64,' + await blobABase64(blob); }catch(e){ ocrUltimaImg = ''; }
   ocrStatus(gk ? 'Leyendo con Google Vision…' : 'Leyendo con OCR gratis… (tarda unos segundos)');
   let nuevas;
   if(gk){
@@ -7935,6 +8099,21 @@ function ocrPonerClave(){
     pintarOCR();
   });
 }
+// Visor a pantalla completa de la foto procesada: puedes hacer zoom con los dedos
+// y verificar si los números se leen. Se cierra tocando fuera o el botón.
+function ocrVerImagen(src){
+  if(!src) return;
+  let ov = byId('ocrImgViewer');
+  if(!ov){
+    ov = document.createElement('div'); ov.id = 'ocrImgViewer'; ov.className = 'ocr-viewer';
+    ov.innerHTML = '<div class="ocr-viewer-bar"><span>Pellizca para hacer zoom · verifica los números</span><button type="button" class="ocr-viewer-x">Cerrar</button></div><div class="ocr-viewer-scroll"><img></div>';
+    document.body.appendChild(ov);
+    ov.querySelector('.ocr-viewer-x').onclick = ()=> ov.style.display='none';
+    ov.onclick = (e)=>{ if(e.target === ov) ov.style.display='none'; };
+  }
+  ov.querySelector('img').src = src;
+  ov.style.display = 'flex';
+}
 function pintarOCR(){
   const body = byId('ocrBody');
   const conVision = !!gvisionKey();
@@ -7946,7 +8125,8 @@ function pintarOCR(){
   const top = `<button type="button" class="sis-principal sis-alt has-ic" id="ocrFotoBtn" style="margin:4px 0 8px;">${icBtn('camera')}<span class="bt-tx">Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></span></button>
     <button type="button" class="add-missing-btn has-ic" id="ocrGaleriaBtn" style="margin:0 0 6px;">${icBtn('image')}<span class="bt-tx">Elegir de galería (varias a la vez)</span></button>
     ${motor}
-    <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>`;
+    <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>
+    ${ocrUltimaImg ? `<div class="ocr-prev"><img id="ocrPrevImg" src="${ocrUltimaImg}" alt="foto procesada"><div class="ocr-prev-tx">Así quedó la foto que leyó Vision · <b>toca para verla grande y verificar</b></div></div>` : ''}`;
   let cuerpo;
   if(ocrFilas.length){
     // Mostramos el nombre REAL del catálogo cuando el código empata (así se lee,
@@ -7985,15 +8165,19 @@ function pintarOCR(){
         <div style="font-size:11px;line-height:1.5;white-space:pre-wrap;color:#3C4854;background:#f6f7f9;border:1px solid #dce2e7;border-radius:9px;padding:10px;max-height:40vh;overflow:auto;">${cvEsc(ocrDebugTxt.slice(0,1500))}</div>`;
     }
   }
-  const keyBtn = `<button type="button" class="add-missing-btn has-ic" id="ocrKey" style="margin-top:10px;">${icBtn('key')}<span class="bt-tx">${conVision?'Cambiar':'Poner'} mi clave de Google Vision</span></button>`
+  const filtroOn = ocrFiltroOn();
+  const keyBtn = `<button type="button" class="add-missing-btn has-ic${filtroOn?' on':''}" id="ocrFiltro" style="margin-top:10px;">${icBtn('image')}<span class="bt-tx">Quitar reflejos de la pantalla: ${filtroOn?'SÍ':'No'}</span></button>`
+    + `<button type="button" class="add-missing-btn has-ic" id="ocrKey" style="margin-top:6px;">${icBtn('key')}<span class="bt-tx">${conVision?'Cambiar':'Poner'} mi clave de Google Vision</span></button>`
     + (conVision ? `<button type="button" class="add-missing-btn has-ic" id="ocrTope" style="margin-top:6px;">${icBtn('sliders')}<span class="bt-tx">Tope de fotos al mes (${lim})</span></button>` : '');
   body.innerHTML = top + cuerpo + keyBtn;
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
   byId('ocrGaleriaBtn').onclick = ()=> byId('ocrGaleria').click();
+  const prev = byId('ocrPrevImg'); if(prev) prev.onclick = ()=> ocrVerImagen(ocrUltimaImg);
   const otra = byId('ocrOtra'); if(otra) otra.onclick = ()=> byId('ocrFile').click();
   const carg = byId('ocrCargarBtn'); if(carg) carg.onclick = ocrCargar;
   const vac = byId('ocrVaciar'); if(vac) vac.onclick = ()=> openConfirm('¿Vaciar TODO lo compilado? (No borra existencias ya cargadas al sistema.)', ()=>{ ocrFilas = []; ocrStatusTxt = ''; ocrPersist(); pintarOCR(); }, {yesLabel:'Vaciar', noLabel:'Cancelar'});
   byId('ocrKey').onclick = ocrPonerClave;
+  const filtroBtn = byId('ocrFiltro'); if(filtroBtn) filtroBtn.onclick = ()=>{ ocrSetFiltro(!ocrFiltroOn()); pintarOCR(); };
   const tope = byId('ocrTope'); if(tope) tope.onclick = ()=> openKeypad('Máximo de fotos al mes (Vision regala 1000)', String(ocrLimiteMes()), (v)=>{ const n = parseInt(v,10); if(n>0){ try{ localStorage.setItem('ocr_limite_mes', String(n)); }catch(e){} } pintarOCR(); });
   body.querySelectorAll('[data-ocrdel]').forEach(b=> b.onclick = ()=>{ ocrFilas.splice(+b.dataset.ocrdel, 1); ocrPersist(); pintarOCR(); });
   body.querySelectorAll('[data-ocrex]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.ocrex, f=ocrFilas[i]; openKeypad('Existencia de ' + f.codigo, f.existencia===''?'':String(f.existencia), (v)=>{ f.existencia = (v===''||isNaN(Number(v)))?'':parseInt(v,10); ocrPersist(); pintarOCR(); }); });
