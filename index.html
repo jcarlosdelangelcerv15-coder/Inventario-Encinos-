@@ -917,6 +917,29 @@
   .ocr-ex{background:var(--brand-tint);color:var(--brand-dark);border:none;border-radius:11px;font-size:16px;}
   .ocr-nom{color:var(--ink-soft);font-weight:600;}
   .fijo-motivo{color:#8b3fa6;font-weight:800;cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
+  /* OCR: pasos numerados + interruptor de reflejo prominente (paso 1) */
+  .ocr-paso1{font-size:12.5px;font-weight:800;color:var(--ink-soft);margin:2px 0 7px;}
+  .ocr-filtro-sw{width:100%;display:flex;align-items:center;gap:12px;text-align:left;padding:13px 14px;border-radius:14px;border:1.5px solid var(--line);background:#fff;color:var(--ink);font-size:14px;box-shadow:var(--shadow-sm);}
+  .ocr-filtro-sw .bt-ic{flex:0 0 auto;width:34px;height:34px;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;background:var(--brand-tint);color:var(--brand);}
+  .ocr-filtro-sw .bt-ic svg{width:19px;height:19px;}
+  .ocr-filtro-sw .bt-tx{flex:1;}
+  .ocr-sw-hint{flex:0 0 auto;font-size:11px;font-weight:700;color:var(--ink-soft);opacity:.75;}
+  .ocr-filtro-sw.on{background:var(--brand);border-color:var(--brand);color:#fff;}
+  .ocr-filtro-sw.on .bt-ic{background:rgba(255,255,255,.2);color:#fff;}
+  .ocr-filtro-sw.on .ocr-sw-hint{color:#fff;}
+  .ocr-ajustes-sep{margin:16px 0 8px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;font-weight:700;color:var(--ink-soft);}
+  /* Tareas / plan de trabajo */
+  .tareas-badge{margin-left:auto;flex:0 0 auto;min-width:22px;height:22px;padding:0 6px;border-radius:999px;background:#C0392B;color:#fff;font-size:12px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;}
+  .tarea-item{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:8px;box-shadow:var(--shadow-sm);}
+  .tarea-item.hecha{background:#F2F8F5;}
+  .tarea-check{flex:0 0 auto;width:30px;height:30px;border-radius:9px;border:2px solid var(--line);background:#fff;color:#fff;font-weight:900;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .tarea-check.on{background:var(--brand);border-color:var(--brand);}
+  .tarea-info{flex:1;min-width:0;}
+  .tarea-tx{font-weight:700;color:var(--ink);font-size:14.5px;}
+  .tarea-item.hecha .tarea-tx{text-decoration:line-through;color:var(--ink-soft);}
+  .tarea-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .tarea-draft{background:#F6FAF9;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;}
+  .tarea-titulo{font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;margin-top:4px;}
   .ocr-nuevo{color:#9a5b00;font-weight:800;}
   .ocr-nuevo.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
   .ocr-bar{display:inline-block;margin-top:4px;color:var(--brand-dark);font-weight:700;font-size:12.5px;}
@@ -1099,6 +1122,9 @@
   <div class="sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-group">
+      <button type="button" class="sheet-item" id="tareasBtn" data-ic="listcheck"><span></span><div><b>Tareas / Plan de trabajo</b><small>Lo que hay que hacer hoy y esta semana</small></div><span id="tareasBadge" class="tareas-badge" style="display:none;"></span></button>
+    </div>
+    <div class="sheet-group">
       <button type="button" class="sheet-item" data-ir="recepcion" data-ic="box"><span></span><div><b>Recepción</b><small>Cuando llega mercancía de un proveedor</small></div></button>
       <button type="button" class="sheet-item" data-ir="etiquetas" data-ic="tag"><span></span><div><b>Etiquetas</b><small>Códigos para escanear en caja</small></div></button>
       <button type="button" class="sheet-item" id="masPreciosBtn" data-ic="dollar"><span></span><div><b>Precios del conteo</b><small>Precio de la etiqueta de lo que tiene diferencia</small></div></button>
@@ -1108,6 +1134,7 @@
     </div>
     <div class="sheet-group">
       <button type="button" class="sheet-item" id="equipoBtn" data-ic="users" style="display:none;"><span></span><div><b>Equipo</b><small>Quién entra a la tienda</small></div></button>
+      <button type="button" class="sheet-item" id="fotoLogBtn" data-ic="image" style="display:none;"><span></span><div><b>Histórico de fotos</b><small>Quién toma fotos · para retroalimentar</small></div></button>
       <button type="button" class="sheet-item" id="respaldoBtn" data-ic="save" style="display:none;"><span></span><div><b>Respaldo de la tienda</b><small id="respaldoSub">Descarga todo en un Excel</small></div></button>
       <button type="button" class="sheet-item" id="nipBtn" data-ic="lock" style="display:none;"><span></span><div><b>NIP de la tienda</b><small>Protege borrar conteos e historial</small></div></button>
       <button type="button" class="sheet-item" id="papeleraBtn" data-ic="trash"><span></span><div><b>Papelera</b><small>Lo borrado se guarda 30 días</small></div></button>
@@ -1122,7 +1149,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 15:55 · clave y tope de Vision compartidos</div>
+    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 17:40 · tareas / plan de trabajo (Fase 1)</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1559,6 +1586,14 @@ let pendientesFijos = [];  // [{id, codigo, descripcion, barcode, cantidad, moti
 // contra las 1000 gratis del mes (para que entre todos no se pasen).
 let visionCfg = { key:'', limiteMes:950 };   // clave y tope compartidos
 let visionUso = { mes:'', n:0 };              // contador compartido del mes
+// Histórico de fotos: quién tomó cada foto, cuándo y cuántos renglones leyó
+// (pocos renglones = foto mal tomada). Compartido, para retroalimentar al equipo.
+let visionLog = [];   // [{u:usuario, t:ms, n:renglones, m:'vision'|'gratis'}]
+// Tareas / plan de trabajo: el aliado asigna, el colaborador palomea. Compartido.
+let tareas = [];      // [{id, titulo, tipo:'persona'|'area'|'general', para, periodo:'dia'|'semana', fecha, hecha, hechaPor, hechaTs, creadaPor, creadaTs}]
+let equipoLista = []; // nombres del equipo (para asignar tareas)
+let tareaDraft = null;// borrador al crear una tarea nueva
+let tareasVista = 'dia'; // 'dia' | 'semana'
 let currentUser = '';
 let existenciasMap = {};
 let auditModeActive = false; // "Modo Auditoría": Conteo Físico, Existencias Sistema y Comparativo
@@ -1669,7 +1704,9 @@ const FS_KEYS_TO_VARS = {
   etiquetas_pendientes:    (v)=>{ etiquetas = v; persistEtiquetasLocal(); renderEtiList(); },
   pendientes_fijos:        (v)=>{ pendientesFijos = v; persistPendientesFijosLocal(); renderFijosUI(); },
   vision_cfg:              (v)=>{ const inc = Object.assign({key:'',limiteMes:950}, v||{}); if(!inc.key && visionCfg.key){ inc.key = visionCfg.key; setTimeout(()=>{ try{ persistVisionCfg(); }catch(e){} }, 0); } visionCfg = inc; persistVisionCfgLocal(); try{ if(visionCfg.key) localStorage.setItem('gvision_key', visionCfg.key); }catch(e){} pintarOCRSiAbierto(); },
-  vision_uso:              (v)=>{ visionUso = Object.assign({mes:'',n:0}, v||{}); persistVisionUsoLocal(); pintarOCRSiAbierto(); }
+  vision_uso:              (v)=>{ visionUso = Object.assign({mes:'',n:0}, v||{}); persistVisionUsoLocal(); pintarOCRSiAbierto(); },
+  vision_log:              (v)=>{ visionLog = Array.isArray(v) ? v : []; persistVisionLogLocal(); },
+  tareas:                  (v)=>{ tareas = Array.isArray(v) ? v : []; persistTareasLocal(); renderTareasBadge(); renderTareas(); avisarTareasNuevas(); }
 };
 
 const FS_LOCAL_GETTERS = {
@@ -1680,7 +1717,9 @@ const FS_LOCAL_GETTERS = {
   etiquetas_pendientes:    ()=> etiquetas,
   pendientes_fijos:        ()=> pendientesFijos,
   vision_cfg:              ()=> visionCfg,
-  vision_uso:              ()=> visionUso
+  vision_uso:              ()=> visionUso,
+  vision_log:              ()=> visionLog,
+  tareas:                  ()=> tareas
 };
 function fsHasData(val){
   if(Array.isArray(val)) return val.length > 0;
@@ -1831,6 +1870,7 @@ function iniciarDatos(){
   datosIniciados = true;
   fsReady = true;
   fsListenAll();
+  fsEscucharEquipoNombres();
   fsMigrateOldRegistrosDoc().then(fsListenRegistros);
   fsMigrateOldExistenciasDoc().then(fsListenExistencias);
   fsMigrateOldHistorialDoc().then(fsListenHistorial);
@@ -2050,6 +2090,7 @@ async function authRevisarAcceso(user, forzar){
   try{ lsSet('acceso_ok', sesionEmail); lsSet('acceso_nombre', nombre); }catch(e){}
   currentUser = nombre; persistUser(); renderUserBadge();
   byId('equipoBtn').style.display = esEncargado() ? '' : 'none';
+  byId('fotoLogBtn').style.display = esEncargado() ? '' : 'none';
   byId('tiendasBtn').style.display = esAdmin() ? '' : 'none';
   byId('nipBtn').style.display = esEncargado() ? '' : 'none';
   byId('respaldoBtn').style.display = esEncargado() ? '' : 'none';
@@ -3251,6 +3292,8 @@ function loadState(){
   try{ const pf = lsGet('pendientes_fijos'); if(pf) pendientesFijos = JSON.parse(pf); }catch(e){}
   try{ const vc = lsGet('vision_cfg'); if(vc) visionCfg = Object.assign({key:'',limiteMes:950}, JSON.parse(vc)); }catch(e){}
   try{ const vu = lsGet('vision_uso_sh'); if(vu) visionUso = Object.assign({mes:'',n:0}, JSON.parse(vu)); }catch(e){}
+  try{ const vl = lsGet('vision_log'); if(vl){ const a=JSON.parse(vl); if(Array.isArray(a)) visionLog = a; } }catch(e){}
+  try{ const tj = lsGet('tareas'); if(tj){ const a=JSON.parse(tj); if(Array.isArray(a)) tareas = a; } }catch(e){}
   // Migración: si este teléfono ya tenía clave/tope locales y aún no hay compartidos, súbelos.
   try{
     if(!visionCfg.key){ const k = localStorage.getItem('gvision_key'); if(k && k.trim()) visionCfg.key = k.trim(); }
@@ -3306,6 +3349,20 @@ const persistVisionCfgLocal   = ()=> lsSet('vision_cfg', JSON.stringify(visionCf
 const persistVisionCfg        = ()=>{ persistVisionCfgLocal(); fsSet('vision_cfg', visionCfg); };
 const persistVisionUsoLocal   = ()=> lsSet('vision_uso_sh', JSON.stringify(visionUso));
 const persistVisionUso        = ()=>{ persistVisionUsoLocal(); fsSet('vision_uso', visionUso); };
+const persistVisionLogLocal   = ()=> lsSet('vision_log', JSON.stringify(visionLog));
+const persistVisionLog        = ()=>{ persistVisionLogLocal(); fsSet('vision_log', visionLog); };
+const persistTareasLocal      = ()=> lsSet('tareas', JSON.stringify(tareas));
+const persistTareas           = ()=>{ persistTareasLocal(); fsSet('tareas', tareas); };
+// Registra una foto leída (quién, cuándo, cuántos renglones). Poda a 60 días / 500 máx.
+function visionLogAdd(motor, n){
+  try{
+    visionLog.push({ u: currentUser || 'Sin nombre', t: Date.now(), n: Number(n)||0, m: motor });
+    const corte = Date.now() - 60*24*60*60*1000;
+    visionLog = visionLog.filter(e=> e.t >= corte);
+    if(visionLog.length > 500) visionLog = visionLog.slice(-500);
+    persistVisionLog();
+  }catch(e){}
+}
 function pintarOCRSiAbierto(){ const o = byId('ocrOverlay'); if(o && o.style.display && o.style.display !== 'none') pintarOCR(); }
 const persistUser        = ()=> lsSet('usuario_actual', currentUser);
 
@@ -3598,6 +3655,147 @@ function fijoAgregar(){
       persistPendientesFijos(); renderFijos(); renderFijosUI();
     });
   });
+}
+
+// ===== Histórico de fotos (quién toma fotos, para retroalimentar) =====
+function abrirFotoLog(){ byId('fotoLogOverlay').style.display = 'flex'; renderFotoLog(); }
+function cerrarFotoLog(){ byId('fotoLogOverlay').style.display = 'none'; }
+function renderFotoLog(){
+  const body = byId('fotoLogBody');
+  const mes = new Date().toISOString().slice(0,7);
+  const delMes = (visionLog||[]).filter(e=> { try{ return new Date(e.t).toISOString().slice(0,7) === mes; }catch(_){ return false; } });
+  if(!delMes.length){ body.innerHTML = '<div class="empty">Aún no hay fotos registradas este mes. En cuanto el equipo empiece a leer pantallas, aquí verás quién toma fotos y cómo le salen.</div>'; return; }
+  const porU = {};
+  delMes.forEach(e=>{ const u = e.u || 'Sin nombre'; if(!porU[u]) porU[u] = {fotos:0, mal:0, reng:0}; porU[u].fotos++; porU[u].reng += (Number(e.n)||0); if((Number(e.n)||0) <= 2) porU[u].mal++; });
+  const filas = Object.keys(porU).sort((a,b)=> porU[b].fotos - porU[a].fotos).map(u=>{
+    const s = porU[u]; const prom = (s.reng / s.fotos).toFixed(1); const malPct = Math.round(100*s.mal/s.fotos);
+    return `<div class="log-item"><div class="info">
+        <div class="desc">${cvEsc(u)}</div>
+        <div class="meta">${s.fotos} foto(s) · ${s.reng} renglones leídos · ~${prom} por foto${s.mal?` · <span style="color:#B0281A;font-weight:800;">${s.mal} mal tomada(s) · ${malPct}%</span>`:` · <span style="color:#0f7a5c;font-weight:700;">todas bien</span>`}</div>
+      </div></div>`;
+  }).join('');
+  const recientes = delMes.slice(-25).reverse().map(e=>{
+    let hh=''; try{ hh = new Date(e.t).toLocaleString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }catch(_){}
+    const mal = (Number(e.n)||0) <= 2;
+    return `<div class="log-item"><div class="info">
+        <div class="desc">${cvEsc(e.u||'Sin nombre')} · ${Number(e.n)||0} renglón(es)${mal?' <span style="color:#B0281A;font-weight:800;">⚠ pocas</span>':''}</div>
+        <div class="meta">${hh}${e.m==='gratis'?' · OCR gratis':''}</div>
+      </div></div>`;
+  }).join('');
+  body.innerHTML = `<div class="catalog-note" style="margin:2px 0 12px;">"Mal tomada" = la foto leyó 2 renglones o menos (casi siempre por reflejo, movida o lejos). Úsalo como guía para dar retroalimentación.</div>`
+    + `<div class="section-title"><span>Este mes · por persona</span><span>${delMes.length} foto(s)</span></div>${filas}`
+    + `<div class="section-title" style="margin-top:16px;"><span>Últimas fotos</span><span>más recientes arriba</span></div>${recientes}`;
+}
+
+// ===== TAREAS / PLAN DE TRABAJO (Fase 1) =====
+function fsEscucharEquipoNombres(){
+  try{ fsUsuariosCol.where('tienda','==',TIENDA_ID).onSnapshot((snap)=>{
+    equipoLista = [...new Set(snap.docs.map(d=>d.data()).filter(u=>u&&u.nombre).map(u=>u.nombre))];
+  }); }catch(e){}
+}
+function semDeISO(iso){
+  const d = new Date(iso+'T00:00:00'); const day=(d.getDay()+6)%7; d.setDate(d.getDate()-day+3);
+  const y=d.getFullYear(); const ene1=new Date(y,0,1);
+  const w=Math.ceil((((d-ene1)/86400000)+1)/7); return y+'-W'+String(w).padStart(2,'0');
+}
+function semActualISO(){ return semDeISO(hoyISO()); }
+function tareaActivaEnVista(t){
+  if(tareasVista==='semana'){ return t.periodo==='semana' ? t.fecha===semActualISO() : semDeISO(t.fecha)===semActualISO(); }
+  return t.periodo==='dia' ? t.fecha===hoyISO() : t.fecha===semActualISO();
+}
+function esMiTarea(t){ return t.tipo==='persona' ? (t.para||'')===currentUser : true; }
+function tareasPendientesMias(){
+  return tareas.filter(t=> !t.hecha && esMiTarea(t) && ((t.periodo==='dia'&&t.fecha===hoyISO())||(t.periodo==='semana'&&t.fecha===semActualISO()))).length;
+}
+function renderTareasBadge(){ const el=byId('tareasBadge'); if(!el) return; const n=tareasPendientesMias(); el.textContent=n?String(n):''; el.style.display=n?'':'none'; }
+let tareasAvisadas = {};
+function avisarTareasNuevas(){
+  try{
+    if(!('Notification' in window) || Notification.permission!=='granted') return;
+    tareas.forEach(t=>{
+      if(t.hecha || tareasAvisadas[t.id] || !esMiTarea(t)) return;
+      const activa=(t.periodo==='dia'&&t.fecha===hoyISO())||(t.periodo==='semana'&&t.fecha===semActualISO());
+      tareasAvisadas[t.id]=1; if(!activa || t.creadaPor===currentUser) return;
+      try{ new Notification('Nueva tarea', {body:t.titulo}); }catch(_){}
+    });
+  }catch(e){}
+}
+function pedirPermisoNotif(){ try{ if(('Notification' in window)&&Notification.permission==='default') Notification.requestPermission().catch(()=>{}); }catch(e){} }
+function abrirTareas(){ byId('tareasOverlay').style.display='flex'; renderTareas(); pedirPermisoNotif(); }
+function cerrarTareas(){ byId('tareasOverlay').style.display='none'; tareaDraft=null; }
+function palomearTarea(id){
+  const t=tareas.find(x=>x.id===id); if(!t) return;
+  if(t.hecha){ t.hecha=false; t.hechaPor=''; t.hechaTs=0; } else { t.hecha=true; t.hechaPor=currentUser; t.hechaTs=Date.now(); }
+  persistTareas(); renderTareas(); renderTareasBadge();
+}
+function borrarTarea(id){ openConfirm('¿Quitar esta tarea del plan?', ()=>{ tareas=tareas.filter(x=>x.id!==id); persistTareas(); renderTareas(); renderTareasBadge(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); }
+function nuevaTarea(){ openTextKeypad('Escribe la tarea', '', (v)=>{ const t=String(v||'').trim(); if(!t) return; tareaDraft={titulo:t, tipo:'general', para:'Todos', periodo: tareasVista==='semana'?'semana':'dia'}; renderTareas(); }); }
+function guardarDraft(){
+  if(!tareaDraft||!tareaDraft.titulo) return;
+  const fecha = tareaDraft.periodo==='semana' ? semActualISO() : hoyISO();
+  tareas.push({ id:uid(), titulo:tareaDraft.titulo, tipo:tareaDraft.tipo, para:tareaDraft.para, periodo:tareaDraft.periodo, fecha, hecha:false, hechaPor:'', hechaTs:0, creadaPor:currentUser, creadaTs:Date.now() });
+  tareaDraft=null; persistTareas(); renderTareas(); renderTareasBadge();
+}
+function renderTareas(){
+  const body=byId('tareasBody'); if(!body) return;
+  const jefe=esEncargado();
+  const chip=(txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${cvEsc(txt)}</button>`;
+  let html=`<div class="comp-filtros" style="margin-bottom:12px;">${chip('Hoy',tareasVista==='dia','data-tv="dia"')}${chip('Esta semana',tareasVista==='semana','data-tv="semana"')}</div>`;
+  if(jefe){
+    if(tareaDraft){
+      html+=`<div class="tarea-draft">
+        <div class="field-label">Nueva tarea</div>
+        <div class="tarea-titulo" id="draftTitulo">${cvEsc(tareaDraft.titulo)} ✎</div>
+        <div class="field-label" style="margin-top:10px;">¿Para quién?</div>
+        <div class="comp-filtros" id="draftPara">
+          ${chip('Todos',tareaDraft.tipo==='general','data-para="general::Todos"')}
+          ${MODES.map(a=>chip(a,tareaDraft.tipo==='area'&&tareaDraft.para===a,'data-para="area::'+cvEsc(a)+'"')).join('')}
+          ${equipoLista.map(n=>chip(n,tareaDraft.tipo==='persona'&&tareaDraft.para===n,'data-para="persona::'+cvEsc(n)+'"')).join('')}
+        </div>
+        <div class="field-label" style="margin-top:10px;">¿Cuándo?</div>
+        <div class="comp-filtros" id="draftPeriodo">${chip('Hoy',tareaDraft.periodo==='dia','data-per="dia"')}${chip('Esta semana',tareaDraft.periodo==='semana','data-per="semana"')}</div>
+        <button type="button" class="sis-principal has-ic" id="draftGuardar" style="margin-top:12px;">${icBtn('check')}<span class="bt-tx">Guardar tarea</span></button>
+        <button type="button" class="add-missing-btn" id="draftCancelar" style="margin-top:6px;">Cancelar</button>
+      </div>`;
+    } else {
+      html+=`<button type="button" class="sis-principal has-ic" id="tareaNuevaBtn" style="margin-bottom:12px;">${icBtn('plus')}<span class="bt-tx">Nueva tarea</span></button>`;
+    }
+  }
+  const dela=tareas.filter(tareaActivaEnVista);
+  const lista=jefe?dela:dela.filter(esMiTarea);
+  const pend=lista.filter(t=>!t.hecha), hechas=lista.filter(t=>t.hecha);
+  const filaTarea=(t)=>{
+    const quien=t.tipo==='persona'?t.para:(t.tipo==='area'?('Área: '+t.para):'Todos');
+    const delBtn=jefe?`<button type="button" class="del" data-tdel="${t.id}">✕</button>`:'';
+    return `<div class="tarea-item ${t.hecha?'hecha':''}">
+        <button type="button" class="tarea-check ${t.hecha?'on':''}" data-tcheck="${t.id}">${t.hecha?'✓':''}</button>
+        <div class="tarea-info"><div class="tarea-tx">${cvEsc(t.titulo)}</div><div class="tarea-meta">${cvEsc(quien)}${t.hecha?(' · ✓ '+cvEsc(t.hechaPor||'')):''}</div></div>
+        ${delBtn}</div>`;
+  };
+  if(!lista.length){
+    html+=`<div class="empty">${jefe?('No hay tareas para '+(tareasVista==='dia'?'hoy':'esta semana')+'. Crea una con "Nueva tarea".'):('No tienes tareas '+(tareasVista==='dia'?'de hoy':'de esta semana')+'. 🎉')}</div>`;
+  } else {
+    html+=pend.map(filaTarea).join('');
+    if(hechas.length) html+=`<div class="section-title" style="margin-top:12px;"><span>Hechas (${hechas.length})</span><span></span></div>`+hechas.map(filaTarea).join('');
+  }
+  if(jefe){
+    const porU={}; dela.forEach(t=>{ if(t.tipo!=='persona') return; const u=t.para; if(!porU[u]) porU[u]={a:0,h:0}; porU[u].a++; if(t.hecha) porU[u].h++; });
+    const us=Object.keys(porU);
+    if(us.length){
+      html+=`<div class="section-title" style="margin-top:16px;"><span>Cumplimiento · ${tareasVista==='dia'?'hoy':'esta semana'}</span><span>tareas con nombre</span></div>`;
+      html+=us.sort((a,b)=>(porU[b].h/porU[b].a)-(porU[a].h/porU[a].a)).map(u=>{ const s=porU[u]; const pct=Math.round(100*s.h/s.a); const col=pct>=80?'#0f7a5c':pct>=50?'#9a6212':'#B0281A'; return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(u)}</div><div class="meta">${s.h}/${s.a} tareas · <span style="color:${col};font-weight:800;">${pct}%</span></div></div></div>`; }).join('');
+    }
+  }
+  body.innerHTML=html;
+  body.querySelectorAll('[data-tv]').forEach(b=> b.onclick=()=>{ tareasVista=b.dataset.tv; renderTareas(); });
+  body.querySelectorAll('[data-tcheck]').forEach(b=> b.onclick=()=> palomearTarea(b.dataset.tcheck));
+  body.querySelectorAll('[data-tdel]').forEach(b=> b.onclick=()=> borrarTarea(b.dataset.tdel));
+  const nb=byId('tareaNuevaBtn'); if(nb) nb.onclick=nuevaTarea;
+  const dt=byId('draftTitulo'); if(dt) dt.onclick=()=> openTextKeypad('Escribe la tarea', tareaDraft.titulo, (v)=>{ const t=String(v||'').trim(); if(t) tareaDraft.titulo=t; renderTareas(); });
+  body.querySelectorAll('#draftPara [data-para]').forEach(b=> b.onclick=()=>{ const p=b.dataset.para.split('::'); tareaDraft.tipo=p[0]; tareaDraft.para=p[1]; renderTareas(); });
+  body.querySelectorAll('#draftPeriodo [data-per]').forEach(b=> b.onclick=()=>{ tareaDraft.periodo=b.dataset.per; renderTareas(); });
+  const dg=byId('draftGuardar'); if(dg) dg.onclick=guardarDraft;
+  const dc=byId('draftCancelar'); if(dc) dc.onclick=()=>{ tareaDraft=null; renderTareas(); };
 }
 
 function renderSummary(){
@@ -6618,6 +6816,22 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="fotoLogOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Histórico de fotos<small>Quién toma fotos y cómo le salen. Para dar retroalimentación.</small></div>
+    <div class="cotejo-body" id="fotoLogBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="fotoLogCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="tareasOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Tareas / Plan de trabajo<small>Palomea lo que vayas terminando. Se comparte con el equipo.</small></div>
+    <div class="cotejo-body" id="tareasBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="tareasCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
@@ -6760,6 +6974,16 @@ byId('masCerrar').onclick = cerrarMas;
   const a=byId('fijosAdminBtn'); if(a) a.onclick = abrirFijos;
   const x=byId('fijosCerrar'); if(x) x.onclick = cerrarFijos;
   const ov=byId('fijosOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='fijosOverlay') cerrarFijos(); });
+})();
+// Histórico de fotos
+(function(){ const btn=byId('fotoLogBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirFotoLog(); };
+  const x=byId('fotoLogCerrar'); if(x) x.onclick = cerrarFotoLog;
+  const ov=byId('fotoLogOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='fotoLogOverlay') cerrarFotoLog(); });
+})();
+// Tareas / plan de trabajo
+(function(){ const btn=byId('tareasBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirTareas(); };
+  const x=byId('tareasCerrar'); if(x) x.onclick = cerrarTareas;
+  const ov=byId('tareasOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='tareasOverlay') cerrarTareas(); });
 })();
 byId('masSheet').addEventListener('click', (e)=>{ if(e.target.id === 'masSheet') cerrarMas(); });
 document.querySelectorAll('#masSheet [data-ir]').forEach(b=> b.onclick = ()=>{
@@ -8101,6 +8325,7 @@ async function ocrProcesar(file){
     ocrDebugTxt = txt || '';
     nuevas = ocrParse(txt);
   }
+  visionLogAdd(gk ? 'vision' : 'gratis', nuevas.length);   // histórico: quién, cuándo, cuántos renglones
   if(!nuevas.length){ ocrStatus('No encontré códigos. Casi siempre es por BRILLO encima de los renglones: muévete un poco para quitar el reflejo y toma de nuevo (6-8 renglones, de frente). Abajo ves lo que alcanzó a leer Vision.'); pintarOCR(); return; }
   let add = 0;
   nuevas.forEach(n=>{ const i = ocrFilas.findIndex(f=> f.codigo === n.codigo); if(i>=0){ ocrFilas[i] = n; } else { ocrFilas.push(n); add++; } });
@@ -8152,7 +8377,11 @@ function pintarOCR(){
   const motor = conVision
     ? `<div class="ocr-status" style="color:#0f7a5c;">${dot('#0f7a5c')}Motor: Google Vision (preciso · clave compartida) · Fotos del equipo este mes: ${uso.n}/${lim}</div>`
     : `<div class="ocr-status" style="color:#9a5b00;">${dot('#c99a00')}Motor: OCR gratis de prueba (falla con fotos de monitor). Pon tu clave de Google Vision abajo.</div>`;
-  const top = `<button type="button" class="sis-principal sis-alt has-ic" id="ocrFotoBtn" style="margin:4px 0 8px;">${icBtn('camera')}<span class="bt-tx">Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></span></button>
+  const filtroOnTop = ocrFiltroOn();
+  const top = `<div class="ocr-paso1">1 · ¿La pantalla tiene brillo o reflejo encima de los renglones?</div>
+    <button type="button" class="ocr-filtro-sw${filtroOnTop?' on':''}" id="ocrFiltro">${icBtn('image')}<span class="bt-tx"><b>Quitar reflejos:</b> ${filtroOnTop?'SÍ (activado)':'No'}</span><span class="ocr-sw-hint">${filtroOnTop?'toca para apagar':'toca para activar'}</span></button>
+    <div class="ocr-paso1" style="margin-top:12px;">2 · Toma la foto</div>
+    <button type="button" class="sis-principal sis-alt has-ic" id="ocrFotoBtn" style="margin:0 0 8px;">${icBtn('camera')}<span class="bt-tx">Tomar foto de la pantalla<small>Acércate: 6-8 renglones por foto, de frente y sin reflejos</small></span></button>
     <button type="button" class="add-missing-btn has-ic" id="ocrGaleriaBtn" style="margin:0 0 6px;">${icBtn('image')}<span class="bt-tx">Elegir de galería (varias a la vez)</span></button>
     ${motor}
     <div id="ocrStatus" class="ocr-status">${cvEsc(ocrStatusTxt||'')}</div>
@@ -8195,9 +8424,8 @@ function pintarOCR(){
         <div style="font-size:11px;line-height:1.5;white-space:pre-wrap;color:#3C4854;background:#f6f7f9;border:1px solid #dce2e7;border-radius:9px;padding:10px;max-height:40vh;overflow:auto;">${cvEsc(ocrDebugTxt.slice(0,1500))}</div>`;
     }
   }
-  const filtroOn = ocrFiltroOn();
-  const keyBtn = `<button type="button" class="add-missing-btn has-ic${filtroOn?' on':''}" id="ocrFiltro" style="margin-top:10px;">${icBtn('image')}<span class="bt-tx">Quitar reflejos de la pantalla: ${filtroOn?'SÍ':'No'}</span></button>`
-    + `<button type="button" class="add-missing-btn has-ic" id="ocrKey" style="margin-top:6px;">${icBtn('key')}<span class="bt-tx">${conVision?'Cambiar':'Poner'} mi clave de Google Vision</span></button>`
+  const keyBtn = `<div class="ocr-ajustes-sep">Ajustes del equipo (se comparten)</div>`
+    + `<button type="button" class="add-missing-btn has-ic" id="ocrKey" style="margin-top:0;">${icBtn('key')}<span class="bt-tx">${conVision?'Cambiar':'Poner'} mi clave de Google Vision</span></button>`
     + (conVision ? `<button type="button" class="add-missing-btn has-ic" id="ocrTope" style="margin-top:6px;">${icBtn('sliders')}<span class="bt-tx">Tope de fotos al mes · equipo (${lim})</span></button>` : '');
   body.innerHTML = top + cuerpo + keyBtn;
   byId('ocrFotoBtn').onclick = ()=> byId('ocrFile').click();
