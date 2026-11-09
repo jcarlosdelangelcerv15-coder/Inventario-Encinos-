@@ -402,6 +402,7 @@
   .tienda-item .meta{font-size:12px;opacity:.75;margin-top:3px;line-height:1.4;word-break:break-word;}
   .tienda-acciones{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
   .tienda-acciones button{padding:7px 12px;border-radius:999px;border:1.5px solid var(--line);background:#fff;font-weight:700;font-size:13px;font-family:inherit;color:var(--ink);}
+  .tienda-acciones button.td-borrar{color:#B0281A;border-color:#E6C3BE;}
   .migra-box{border:1px solid #bcdfd3;border-left:4px solid #0f7a5c;border-radius:12px;padding:12px;margin-bottom:12px;background:#f2faf6;}
   .migra-box p{font-size:13px;margin:6px 0 10px;line-height:1.4;}
   .migra-estado{font-size:13px;margin-top:8px;font-weight:600;}
@@ -940,6 +941,64 @@
   .tarea-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
   .tarea-draft{background:#F6FAF9;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;}
   .tarea-titulo{font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;margin-top:4px;}
+  .seg-estado{font-weight:800;font-size:15px;color:var(--ink);margin:4px 0 2px;}
+  .perfil-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
+  .perfil-nom{font-weight:800;font-size:15.5px;color:var(--ink);margin-bottom:10px;}
+  .perfil-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px;}
+  .perfil-kpi{background:#F6FAF9;border:1px solid var(--line);border-radius:11px;padding:8px 4px;text-align:center;}
+  .perfil-kpi b{display:block;font-size:19px;line-height:1.1;color:var(--ink);}
+  .perfil-kpi small{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
+  .perfil-meta{font-size:13px;color:var(--ink);margin-top:5px;line-height:1.45;}
+  .perfil-meta b{color:var(--ink-soft);font-weight:700;}
+  .en0-grupo{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;overflow:hidden;box-shadow:var(--shadow-sm);}
+  .en0-grupo>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 13px;font-weight:800;color:var(--ink);}
+  .en0-grupo>summary::-webkit-details-marker{display:none;}
+  .en0-cat{font-size:14.5px;}
+  .en0-num{font-size:12px;color:var(--ink-soft);font-weight:700;white-space:nowrap;}
+  .en0-fila{display:flex;gap:10px;padding:8px 13px;border-top:1px solid var(--line);align-items:baseline;}
+  .en0-cod{flex:0 0 auto;font-weight:700;color:var(--brand-dark);font-size:12px;min-width:80px;}
+  .en0-desc{flex:1;min-width:0;font-size:13px;color:var(--ink);}
+  .en0-vende{display:inline-block;background:#FBE9E7;color:#B0281A;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .en0-directo{display:inline-block;background:#E7F4EE;color:#0f7a5c;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .en0-cedis{display:inline-block;background:#FBF0DE;color:#9a6212;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .en0-sinprov{display:inline-block;background:#EEF1F3;color:#5A6B74;border-radius:6px;padding:1px 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .en0-contacto{display:inline-block;color:var(--ink-soft);font-size:11px;font-weight:700;margin-left:4px;}
+  .eval-periodo{font-size:12.5px;color:var(--ink-soft);}
+  .eval-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+  .eval-kpi{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 8px;text-align:center;box-shadow:var(--shadow-sm);}
+  .eval-kpi-t{font-size:11px;color:var(--ink-soft);font-weight:700;line-height:1.25;min-height:28px;}
+  .eval-kpi-n{font-size:22px;font-weight:800;margin:2px 0;}
+  .eval-kpi-s{font-size:10px;color:var(--ink-soft);}
+  .eval-alerta{background:#FBF0DE;border:1px solid #EAD9B6;border-radius:10px;padding:9px 11px;font-size:12.5px;color:#7a4e12;margin-top:10px;}
+  .eval-run{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:7px;box-shadow:var(--shadow-sm);}
+  .eval-run-i{flex:1;min-width:0;}
+  .eval-run-t{font-weight:700;font-size:13.5px;color:var(--ink);}
+  .eval-run-m{font-size:11.5px;color:var(--ink-soft);margin-top:1px;}
+  .eval-run-n{font-weight:800;font-size:17px;}
+  .eval-tipo{display:block;width:100%;text-align:left;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:8px;font-family:inherit;box-shadow:var(--shadow-sm);}
+  .eval-tipo b{display:block;color:var(--ink);font-size:14.5px;}
+  .eval-tipo small{display:block;color:var(--ink-soft);font-size:12px;margin-top:3px;line-height:1.35;}
+  .eval-draft-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;background:#F6FAF9;border:1px solid var(--line);border-radius:12px;padding:11px 12px;margin-bottom:6px;}
+  .eval-draft-top b{color:var(--ink);font-size:14px;}
+  .eval-prog{font-size:12px;color:var(--ink-soft);margin-top:2px;}
+  .eval-q{background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:7px;box-shadow:var(--shadow-sm);}
+  .eval-q-tx{font-size:13.5px;color:var(--ink);line-height:1.35;}
+  .eval-q-b{display:inline-block;font-size:10px;color:var(--ink-soft);font-weight:700;margin-left:4px;}
+  .eval-q-ops{display:flex;gap:7px;margin-top:9px;}
+  .eval-op{flex:1;border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px 0;font-weight:800;font-size:13px;font-family:inherit;color:var(--ink-soft);}
+  .eval-op.on-si{background:#E7F4EE;border-color:#0f7a5c;color:#0f7a5c;}
+  .eval-op.on-no{background:#FBE9E7;border-color:#B0281A;color:#B0281A;}
+  .eval-op.on-na{background:#EEF1F3;border-color:#9AA7AE;color:#5A6B74;}
+  .eval-save-bar{background:#F6FAF9;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:10px;font-size:13.5px;color:var(--ink);}
+  .eval-nota{background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--ink);min-height:20px;cursor:pointer;}
+  .eval-edit{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:7px;}
+  .eval-edit.off{opacity:.55;}
+  .eval-edit-tx{flex:1;min-width:0;font-size:13px;color:var(--ink);line-height:1.35;cursor:pointer;}
+  .eval-edit-ops{display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex:0 0 auto;}
+  .eval-resp,.eval-act{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:4px 9px;font-size:11px;font-weight:700;font-family:inherit;color:var(--ink-soft);white-space:nowrap;}
+  .eval-resp.on{border-color:var(--brand);color:var(--brand);}
+  .eval-act.on{border-color:#0f7a5c;color:#0f7a5c;}
+  .en0-grupo-badge{padding:6px 13px 2px;}
   .ocr-nuevo{color:#9a5b00;font-weight:800;}
   .ocr-nuevo.tocable{cursor:pointer;text-decoration:underline;text-decoration-style:dotted;text-underline-offset:3px;}
   .ocr-bar{display:inline-block;margin-top:4px;color:var(--brand-dark);font-weight:700;font-size:12.5px;}
@@ -1123,6 +1182,8 @@
     <div class="sheet-handle"></div>
     <div class="sheet-group">
       <button type="button" class="sheet-item" id="tareasBtn" data-ic="listcheck"><span></span><div><b>Tareas / Plan de trabajo</b><small>Lo que hay que hacer hoy y esta semana</small></div><span id="tareasBadge" class="tareas-badge" style="display:none;"></span></button>
+      <button type="button" class="sheet-item" id="perfilBtn" data-ic="users"><span></span><div><b>Perfil / desempeño</b><small>Conteos y tareas de cada colaborador</small></div></button>
+      <button type="button" class="sheet-item" id="evalBtn" data-ic="clipboard"><span></span><div><b>Evaluación operativa</b><small>Check de tienda · cadena 360 · calificación semanal</small></div></button>
     </div>
     <div class="sheet-group">
       <button type="button" class="sheet-item" data-ir="recepcion" data-ic="box"><span></span><div><b>Recepción</b><small>Cuando llega mercancía de un proveedor</small></div></button>
@@ -1136,7 +1197,7 @@
       <button type="button" class="sheet-item" id="equipoBtn" data-ic="users" style="display:none;"><span></span><div><b>Equipo</b><small>Quién entra a la tienda</small></div></button>
       <button type="button" class="sheet-item" id="fotoLogBtn" data-ic="image" style="display:none;"><span></span><div><b>Histórico de fotos</b><small>Quién toma fotos · para retroalimentar</small></div></button>
       <button type="button" class="sheet-item" id="respaldoBtn" data-ic="save" style="display:none;"><span></span><div><b>Respaldo de la tienda</b><small id="respaldoSub">Descarga todo en un Excel</small></div></button>
-      <button type="button" class="sheet-item" id="nipBtn" data-ic="lock" style="display:none;"><span></span><div><b>NIP de la tienda</b><small>Protege borrar conteos e historial</small></div></button>
+      <button type="button" class="sheet-item" id="nipBtn" data-ic="lock" style="display:none;"><span></span><div><b>Seguridad / NIP</b><small>Tu NIP y candados (consultar inventarios)</small></div></button>
       <button type="button" class="sheet-item" id="papeleraBtn" data-ic="trash"><span></span><div><b>Papelera</b><small>Lo borrado se guarda 30 días</small></div></button>
       <button type="button" class="sheet-item" id="unidadBtn" data-ic="building" style="display:none;"><span></span><div><b>Cambiar de unidad</b><small id="unidadSub">Almacén y sucursales</small></div></button>
       <button type="button" class="sheet-item" id="tableroBtn" data-ic="grid" style="display:none;"><span></span><div><b>Mis unidades</b><small>Resumen de almacén y sucursales</small></div></button>
@@ -1149,7 +1210,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 8 nov 2026 · 17:40 · tareas / plan de trabajo (Fase 1)</div>
+    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 13:30 · evaluación operativa 360 (Fase 1) + unificación de cobertura</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1230,6 +1291,8 @@
       <button class="add-missing-btn" id="sisSoloManualesBtn" data-ic="listcheck" style="margin-top:8px;">Ver solo lo que agregué a mano</button>
       <button class="add-missing-btn" id="sisImportBtn" data-ic="download" style="margin-top:8px;">Agregar productos al catálogo (Excel/CSV)</button>
       <input type="file" id="sisImportFile" accept=".xlsx,.xls,.csv" style="display:none;">
+      <button class="add-missing-btn" id="sisProvBtn" data-ic="truck" style="margin-top:8px;">Cargar proveedores (Excel/CSV)</button>
+      <input type="file" id="sisProvFile" accept=".xlsx,.xls,.csv" style="display:none;">
       <details class="ayuda">
         <summary>ℹ️ ¿Qué columnas necesita el Excel?</summary>
         <div class="catalog-note" id="sisCatalogNote" style="margin-top:8px;">
@@ -1350,6 +1413,7 @@
       <button class="btn btn-export blue" id="cobSurtidoBtn">📊 Excel para quien surte</button>
       <button class="btn btn-export" id="cobVendedorBtn">📤 WhatsApp</button>
     </div>
+    <button type="button" class="add-missing-btn" id="en0PanelBtn" data-ic="clipboard" style="margin-top:10px;">Productos en 0 — por categoría y por proveedor</button>
     <div class="cob-pie" id="cobVentasInfo"></div>
     <div class="cob-pie" id="cobDatos"></div>
     <div style="display:none;">
@@ -1594,6 +1658,11 @@ let tareas = [];      // [{id, titulo, tipo:'persona'|'area'|'general', para, pe
 let equipoLista = []; // nombres del equipo (para asignar tareas)
 let tareaDraft = null;// borrador al crear una tarea nueva
 let tareasVista = 'dia'; // 'dia' | 'semana'
+// ===== EVALUACIÓN OPERATIVA (check de tienda, cadena 360) =====
+let evalChecklist = [];  // [{id, seccion, bloque, pregunta, responsable:'comisionista'|'supervisor', activo}]
+let evalRuns = [];       // [{id, periodo, evaluado, evaluadorNombre, evaluadorRol, fecha, resp:{itemId:'si'|'no'|'na'}, nota}]
+let evalDraft = null;    // evaluación en curso
+let evalVista = 'resumen'; // 'resumen' | 'nueva' | 'puntos'
 let currentUser = '';
 let existenciasMap = {};
 let auditModeActive = false; // "Modo Auditoría": Conteo Físico, Existencias Sistema y Comparativo
@@ -1706,7 +1775,9 @@ const FS_KEYS_TO_VARS = {
   vision_cfg:              (v)=>{ const inc = Object.assign({key:'',limiteMes:950}, v||{}); if(!inc.key && visionCfg.key){ inc.key = visionCfg.key; setTimeout(()=>{ try{ persistVisionCfg(); }catch(e){} }, 0); } visionCfg = inc; persistVisionCfgLocal(); try{ if(visionCfg.key) localStorage.setItem('gvision_key', visionCfg.key); }catch(e){} pintarOCRSiAbierto(); },
   vision_uso:              (v)=>{ visionUso = Object.assign({mes:'',n:0}, v||{}); persistVisionUsoLocal(); pintarOCRSiAbierto(); },
   vision_log:              (v)=>{ visionLog = Array.isArray(v) ? v : []; persistVisionLogLocal(); },
-  tareas:                  (v)=>{ tareas = Array.isArray(v) ? v : []; persistTareasLocal(); renderTareasBadge(); renderTareas(); avisarTareasNuevas(); }
+  tareas:                  (v)=>{ tareas = Array.isArray(v) ? v : []; persistTareasLocal(); renderTareasBadge(); renderTareas(); avisarTareasNuevas(); },
+  eval_checklist:          (v)=>{ evalChecklist = Array.isArray(v) ? v : []; persistEvalChecklistLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); },
+  eval_runs:               (v)=>{ evalRuns = Array.isArray(v) ? v : []; persistEvalRunsLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); if(byId('perfilOverlay') && byId('perfilOverlay').style.display==='flex') renderPerfil(); }
 };
 
 const FS_LOCAL_GETTERS = {
@@ -1719,7 +1790,9 @@ const FS_LOCAL_GETTERS = {
   vision_cfg:              ()=> visionCfg,
   vision_uso:              ()=> visionUso,
   vision_log:              ()=> visionLog,
-  tareas:                  ()=> tareas
+  tareas:                  ()=> tareas,
+  eval_checklist:          ()=> evalChecklist,
+  eval_runs:               ()=> evalRuns
 };
 function fsHasData(val){
   if(Array.isArray(val)) return val.length > 0;
@@ -2210,6 +2283,7 @@ function renderTiendas(){
         <button type="button" data-mas30="${cvEsc(t.id)}">+30 días</button>
         <button type="button" data-susp="${cvEsc(t.id)}">${t.estado === 'suspendida' ? 'Reactivar' : 'Suspender'}</button>
         <button type="button" data-empresa="${cvEsc(t.id)}">🏢 Empresa</button>
+        ${actual ? '' : `<button type="button" class="td-borrar" data-borrar="${cvEsc(t.id)}">🗑 Borrar</button>`}
       </div></div>`;
   }).join('') : '<div class="empty">Todavía no hay tiendas.</div>';
   const L = byId('tiendasLista');
@@ -2232,6 +2306,40 @@ function renderTiendas(){
         .catch(err=> avisarErrorGuardado(err, {descripcion:'el estado de la tienda'}));
     }, {yesLabel: susp ? 'Suspender' : 'Reactivar'});
   });
+  L.querySelectorAll('[data-borrar]').forEach(b=> b.onclick = ()=>{
+    const t = tiendasLista.find(x=> x.id === b.dataset.borrar); if(!t) return;
+    if(t.id === TIENDA_ID){ openConfirm('No puedes borrar la tienda en la que estás trabajando ahora. Primero entra a otra tienda y desde ahí la borras.', ()=>{}, {yesLabel:'Entendido'}); return; }
+    openConfirm(`¿Borrar la tienda "${t.nombre||t.id}"?\n\nEsto es PERMANENTE: se elimina la tienda y TODOS sus datos (conteos, existencias, catálogo, cierres, historial, NIP). No se puede deshacer.\n\nSi solo quieres que su equipo deje de entrar, mejor usa "Suspender" — así los datos se conservan.`, ()=>{
+      openConfirm(`Última confirmación: "${t.nombre||t.id}" se borrará para siempre. ¿Continuar?`, ()=> borrarTiendaCompleta(t), {yesLabel:'Sí, borrar definitivamente', noLabel:'Cancelar'});
+    }, {yesLabel:'Continuar', noLabel:'Cancelar'});
+  });
+}
+// Borra una tienda COMPLETA: todas sus subcolecciones de datos y luego su ficha.
+// Solo el administrador (tú) puede hacerlo —las reglas de Firestore lo permiten
+// solo a tu correo verificado—. Nunca la tienda en la que estás trabajando.
+async function borrarTiendaCompleta(t){
+  if(!t || t.id === TIENDA_ID) return;
+  const subcols = ['inventario_actual','inventario_registros_items','inventario_existencias_items','inventario_cierres_items','inventario_historial_items','inventario_catalogo_extra_items','inventario_barras_overrides_items','inventario_auditoria_propio_items','inventario_cobertura_items','inventario_ajustes_items','config'];
+  fsSyncBadge('sync');
+  try{
+    const ref = fsTiendasCol.doc(t.id);
+    for(const nombre of subcols){
+      let snap; try{ snap = await ref.collection(nombre).get(); }catch(e){ continue; }
+      const docs = snap.docs;
+      for(let i=0;i<docs.length;i+=450){
+        const batch = fsDb.batch();
+        docs.slice(i,i+450).forEach(d=> batch.delete(d.ref));
+        await batch.commit();
+      }
+    }
+    await ref.delete();
+    fsSyncBadge('ok');
+    openConfirm(`Listo. La tienda "${t.nombre||t.id}" y todos sus datos se borraron.`, ()=>{}, {yesLabel:'Entendido'});
+  }catch(err){
+    try{ console.warn('[borrar tienda]', err && err.code, err && err.message); }catch(_){}
+    fsSyncBadge('error');
+    openConfirm(`No se pudo borrar "${t.nombre||t.id}" por completo. Revisa tu internet y vuelve a intentarlo. Lo que sí alcanzó a borrarse no se recupera.`, ()=>{}, {yesLabel:'Entendido'});
+  }
 }
 byId('tiendasBtn').onclick = abrirTiendas;
 let empresasLista = [], empresasUnsub = null;
@@ -2403,13 +2511,16 @@ byId('migrarBtn').onclick = ()=> openConfirm('Se copiarán todos los datos actua
 let ultimoAvisoGuardado = 0;
 function avisarErrorGuardado(err, rec){
   const code = (err && err.code) || '';
+  // El detalle técnico queda solo en consola (para diagnóstico), nunca a la vista del usuario.
+  try{ console.warn('[guardado]', code, err && err.message); }catch(_){}
   if(Date.now() - ultimoAvisoGuardado < 8000) return;
   ultimoAvisoGuardado = Date.now();
   const prod = rec && rec.descripcion ? `"${rec.descripcion}"` : 'el escaneo';
   if(code === 'permission-denied'){
-    openConfirm(`⚠️ Firebase NO dejó guardar ${prod}.\n\nMotivo: permiso denegado. Lo más probable es que vencieron las reglas de seguridad de Firestore (el "modo de prueba" dura 30 días).\n\nHay que renovarlas en la consola de Firebase → Firestore Database → Reglas.`, ()=>{}, {yesLabel:'Entendido'});
+    // Caso típico: a este usuario le retiraron el acceso a la tienda.
+    openConfirm(`No se pudo guardar ${prod} en la nube.\n\nTu acceso a esta tienda pudo haber cambiado. Lo que cuentes se guarda en este teléfono mientras tanto. Si el problema sigue, cierra sesión y vuelve a entrar.`, ()=>{}, {yesLabel:'Entendido'});
   } else {
-    openConfirm(`⚠️ No se pudo guardar ${prod} en la nube.\n\nMotivo técnico: ${code || (err && err.message) || 'desconocido'}`, ()=>{}, {yesLabel:'Entendido'});
+    openConfirm(`No se pudo guardar ${prod} en la nube en este momento. Se guardó en este teléfono y se intentará subir solo al reconectar.`, ()=>{}, {yesLabel:'Entendido'});
   }
 }
 const fsRegistrosCol = tCol('inventario_registros_items');
@@ -2538,10 +2649,19 @@ function fsListenExistencias(){
   fsExistenciasCol.onSnapshot((snap)=>{
     fsSyncBadge('ok');
     if(snap.empty){
-      if(!fsExistenciasMigrated && fsHasData(existenciasMap)){
-        fsExistenciasMigrated = true;
-        Object.values(existenciasMap).forEach(fsSaveExistencia);
-        fsExistenciasKnownCodigos = new Set(Object.keys(existenciasMap));
+      // La nube quedó vacía porque ALGUIEN vació las existencias (o terminó
+      // inventario). Hay que RESPETARLO en todos los teléfonos: se limpia la
+      // lista local y se vuelve a dibujar, para que a los demás también se les
+      // vacíe en tiempo real. (Antes aquí se "revivían" los datos: el teléfono
+      // que todavía tenía su copia local la volvía a subir y se las regresaba a
+      // todo el equipo. Esa resubida era de una migración de sep-2025 que ya
+      // terminó; se quitó porque hoy solo causaba ese rebote.)
+      fsExistenciasMigrated = true;
+      if(fsHasData(existenciasMap)){
+        existenciasMap = {};
+        fsExistenciasKnownCodigos = new Set();
+        persistSistemaLocal();
+        renderSeqList(); renderComparativo(); renderDashboard();
       }
       return;
     }
@@ -3294,6 +3414,9 @@ function loadState(){
   try{ const vu = lsGet('vision_uso_sh'); if(vu) visionUso = Object.assign({mes:'',n:0}, JSON.parse(vu)); }catch(e){}
   try{ const vl = lsGet('vision_log'); if(vl){ const a=JSON.parse(vl); if(Array.isArray(a)) visionLog = a; } }catch(e){}
   try{ const tj = lsGet('tareas'); if(tj){ const a=JSON.parse(tj); if(Array.isArray(a)) tareas = a; } }catch(e){}
+  try{ const ec = lsGet('eval_checklist'); if(ec){ const a=JSON.parse(ec); if(Array.isArray(a)) evalChecklist = a; } }catch(e){}
+  try{ const er = lsGet('eval_runs'); if(er){ const a=JSON.parse(er); if(Array.isArray(a)) evalRuns = a; } }catch(e){}
+  if(!evalChecklist.length) evalChecklist = evalChecklistSeed();
   // Migración: si este teléfono ya tenía clave/tope locales y aún no hay compartidos, súbelos.
   try{
     if(!visionCfg.key){ const k = localStorage.getItem('gvision_key'); if(k && k.trim()) visionCfg.key = k.trim(); }
@@ -3353,6 +3476,10 @@ const persistVisionLogLocal   = ()=> lsSet('vision_log', JSON.stringify(visionLo
 const persistVisionLog        = ()=>{ persistVisionLogLocal(); fsSet('vision_log', visionLog); };
 const persistTareasLocal      = ()=> lsSet('tareas', JSON.stringify(tareas));
 const persistTareas           = ()=>{ persistTareasLocal(); fsSet('tareas', tareas); };
+const persistEvalChecklistLocal = ()=> lsSet('eval_checklist', JSON.stringify(evalChecklist));
+const persistEvalChecklist      = ()=>{ persistEvalChecklistLocal(); fsSet('eval_checklist', evalChecklist); };
+const persistEvalRunsLocal      = ()=> lsSet('eval_runs', JSON.stringify(evalRuns));
+const persistEvalRuns           = ()=>{ persistEvalRunsLocal(); fsSet('eval_runs', evalRuns); };
 // Registra una foto leída (quién, cuándo, cuántos renglones). Poda a 60 días / 500 máx.
 function visionLogAdd(motor, n){
   try{
@@ -3749,7 +3876,6 @@ function renderTareas(){
         <div class="field-label" style="margin-top:10px;">¿Para quién?</div>
         <div class="comp-filtros" id="draftPara">
           ${chip('Todos',tareaDraft.tipo==='general','data-para="general::Todos"')}
-          ${MODES.map(a=>chip(a,tareaDraft.tipo==='area'&&tareaDraft.para===a,'data-para="area::'+cvEsc(a)+'"')).join('')}
           ${equipoLista.map(n=>chip(n,tareaDraft.tipo==='persona'&&tareaDraft.para===n,'data-para="persona::'+cvEsc(n)+'"')).join('')}
         </div>
         <div class="field-label" style="margin-top:10px;">¿Cuándo?</div>
@@ -3796,6 +3922,269 @@ function renderTareas(){
   body.querySelectorAll('#draftPeriodo [data-per]').forEach(b=> b.onclick=()=>{ tareaDraft.periodo=b.dataset.per; renderTareas(); });
   const dg=byId('draftGuardar'); if(dg) dg.onclick=guardarDraft;
   const dc=byId('draftCancelar'); if(dc) dc.onclick=()=>{ tareaDraft=null; renderTareas(); };
+}
+
+// ===== PERFIL / DESEMPEÑO DEL COLABORADOR (Fase 2 de Tareas) =====
+// Arma el desempeño de cada persona SOLO con datos reales que la app ya guarda:
+//  · Conteos: cada escaneo trae "capturista"; cada cierre guarda sus registros,
+//    así que sabemos quién contó qué, de qué categoría y en qué área.
+//  · Tareas: quién palomeó (hechaPor) y qué tiene pendiente a su nombre.
+function perfilDatos(){
+  const P = {};
+  const get = (n)=>{ const k=(n&&String(n).trim())||'Sin nombre';
+    if(!P[k]) P[k]={nombre:k, cierres:new Set(), completos:new Set(), incompletos:new Set(), reng:0, piezas:0, cats:{}, areas:{}, tareasHechas:0, tareasPend:0};
+    return P[k]; };
+  (cierresConteo||[]).forEach(c=>{
+    const est = c.estado==='completo' ? 'c' : (c.estado==='incompleto' ? 'i' : '');
+    (c.registros||[]).forEach(r=>{
+      const p = get(r.capturista);
+      p.cierres.add(c.id);
+      if(est==='c') p.completos.add(c.id); else if(est==='i') p.incompletos.add(c.id);
+      p.reng++; p.piezas += Number(r.cantidad)||0;
+      const cat = c.categoriaNombre || 'Sin categoría'; p.cats[cat]=(p.cats[cat]||0)+1;
+      const ar = r.area || '—'; p.areas[ar]=(p.areas[ar]||0)+1;
+    });
+  });
+  (tareas||[]).forEach(t=>{
+    if(t.hecha && t.hechaPor) get(t.hechaPor).tareasHechas++;
+    if(!t.hecha && t.tipo==='persona' && t.para) get(t.para).tareasPend++;
+  });
+  return P;
+}
+function perfilCard(p){
+  const nConteos=p.cierres.size, comp=p.completos.size, inc=p.incompletos.size;
+  const topCats=Object.keys(p.cats).sort((a,b)=>p.cats[b]-p.cats[a]).slice(0,3);
+  const areas=Object.keys(p.areas).sort((a,b)=>p.areas[b]-p.areas[a]);
+  const tareasTot=p.tareasHechas+p.tareasPend;
+  const pct=tareasTot?Math.round(100*p.tareasHechas/tareasTot):null;
+  const col=pct===null?'#5A6B74':pct>=80?'#0f7a5c':pct>=50?'#9a6212':'#B0281A';
+  return `<div class="perfil-card">
+    <div class="perfil-nom">${cvEsc(p.nombre)}</div>
+    <div class="perfil-grid">
+      <div class="perfil-kpi"><b>${nConteos}</b><small>conteos</small></div>
+      <div class="perfil-kpi"><b style="color:#0f7a5c;">${comp}</b><small>completos</small></div>
+      <div class="perfil-kpi"><b style="color:#9a6212;">${inc}</b><small>incompletos</small></div>
+      <div class="perfil-kpi"><b>${p.reng}</b><small>renglones</small></div>
+    </div>
+    <div class="perfil-meta"><b>Áreas:</b> ${areas.length?cvEsc(areas.join(' · ')):'—'}</div>
+    <div class="perfil-meta"><b>Lo que más cuenta:</b> ${topCats.length?cvEsc(topCats.join(' · ')):'—'}</div>
+    ${tareasTot?`<div class="perfil-meta"><b>Tareas:</b> ${p.tareasHechas}/${tareasTot} hechas · <span style="color:${col};font-weight:800;">${pct}%</span></div>`:''}
+  </div>`;
+}
+function renderPerfil(){
+  const body=byId('perfilBody'); if(!body) return;
+  const P=perfilDatos();
+  const jefe=esEncargado();
+  let nombres=Object.keys(P);
+  if(!jefe){
+    nombres=nombres.filter(n=> n===currentUser);
+    if(!nombres.length){ body.innerHTML=`<div class="empty">Aún no hay conteos ni tareas registrados a tu nombre${currentUser?(', '+cvEsc(currentUser)):''}. En cuanto cuentes o palomees tareas, aquí verás tu desempeño.</div>`; return; }
+  }
+  if(!nombres.length){ body.innerHTML='<div class="empty">Aún no hay conteos ni tareas para mostrar. En cuanto el equipo empiece a contar, aquí verás el desempeño de cada quien.</div>'; return; }
+  nombres.sort((a,b)=> P[b].cierres.size - P[a].cierres.size || P[b].reng - P[a].reng);
+  const intro=jefe?`<div class="catalog-note" style="margin:2px 0 12px;">Desempeño de cada colaborador con los datos reales de la app: conteos que ha cerrado (completos / incompletos), áreas donde trabaja y tareas que cumple. Para reconocer y dar seguimiento — no es para castigar.</div>`:'';
+  body.innerHTML=intro
+    + `<div class="section-title"><span>${jefe?'Equipo · ordenado por conteos':'Mi desempeño'}</span><span>${jefe?nombres.length+' persona(s)':''}</span></div>`
+    + nombres.map(n=>perfilCard(P[n])).join('');
+}
+function abrirPerfil(){ byId('perfilOverlay').style.display='flex'; renderPerfil(); }
+function cerrarPerfil(){ byId('perfilOverlay').style.display='none'; }
+
+// ===== EVALUACIÓN OPERATIVA (check de tienda · cadena 360) =====
+// Sembrado con el check real "Nueva Evaluación Operativa" (GOT IT / CCK).
+// Los puntos son EDITABLES. responsable: 'comisionista' (lo del aliado) o
+// 'supervisor'. Es una semilla de arranque; el aliado la ajusta.
+const EVAL_SECCIONES = ['Exterior','Interior','Comida Rápida','Mercancías y Cerveza','Caja','Contraloría'];
+const EVAL_TIPOS = {
+  piso_a_aliado:        {label:'El piso evalúa al Aliado', corto:'Piso → Aliado', ayuda:'Los encargados y auxiliares evalúan la gestión operativa del aliado.'},
+  aliado_a_supervisor:  {label:'El Aliado evalúa al Supervisor', corto:'Aliado → Supervisor', ayuda:'Cómo ves tú la gestión y el apoyo del supervisor.'},
+  supervisor_a_aliado:  {label:'Registrar la calificación del Supervisor', corto:'Supervisor → Aliado (registro)', ayuda:'Captura la calificación oficial que el supervisor te puso, para compararla con los datos reales.'}
+};
+function evalChecklistSeed(){
+  const S = (seccion,bloque,responsable,pregunta)=>({seccion,bloque,responsable,pregunta});
+  const base = [
+    S('Exterior','01 Ejecución Operativa','comisionista','¿Los muros y vidrios de la tienda están limpios?'),
+    S('Exterior','01 Ejecución Operativa','supervisor','¿Los muros y vidrios de la tienda están sin estrelladuras?'),
+    S('Exterior','01 Ejecución Operativa','comisionista','¿El estacionamiento se encuentra sin basura o cualquier objeto que impida el acceso vehicular o peatonal?'),
+    S('Exterior','01 Ejecución Operativa','supervisor','¿La marquesina/caja de luz enciende por las noches?'),
+    S('Exterior','01 Ejecución Operativa','supervisor','¿La marca Circle K, Extra o Fiesta del poste enciende por las noches?'),
+    S('Exterior','01 Ejecución Operativa','supervisor','¿El exterior de la tienda está iluminado correctamente?'),
+    S('Exterior','02 Mercancías en General','comisionista','¿El friso está colocado y vigente?'),
+    S('Exterior','02 Mercancías en General','comisionista','¿Existe una lona exterior promocional anclada, en buen estado y anunciando las promociones vigentes trimestrales?'),
+    S('Exterior','03 Cervezas','comisionista','¿Existe una lona exterior promocional ancla de cerveza anunciando las promociones vigentes?'),
+    S('Exterior','04 Mercancía General y Cervezas','comisionista','¿Los posters en las ventanas están en buen estado, con la vigencia correcta y colocados de acuerdo a mapa esquemático enviado por MKT?'),
+    S('Interior','01 Ejecución Operativa','comisionista','¿El piso de la tienda luce limpio y con buen mantenimiento?'),
+    S('Interior','01 Ejecución Operativa','supervisor','¿Todas las lámparas de piso de venta funcionan?'),
+    S('Interior','01 Ejecución Operativa','supervisor','¿La cámara fría está iluminada correctamente?'),
+    S('Interior','01 Ejecución Operativa','supervisor','¿Los productos de cámara fría están a la temperatura correcta para su venta?'),
+    S('Interior','01 Ejecución Operativa','comisionista','¿El área de cajas luce limpia, sin objetos personales, comida, bolsas o cajas?'),
+    S('Interior','01 Ejecución Operativa','comisionista','¿La bodega se encuentra limpia, con los productos acomodados, bien iluminada, sin activo fijo sin utilizar?'),
+    S('Interior','01 Ejecución Operativa','comisionista','¿El baño se encuentra limpio y funcionando correctamente?'),
+    S('Comida Rápida','05 Hotdogs','comisionista','¿Funciona la roladora de salchichas?'),
+    S('Comida Rápida','05 Hotdogs','comisionista','¿Hay al menos 2 salchichas y mismos panes en la roladora?'),
+    S('Comida Rápida','05 Hotdogs','comisionista','¿El área de condimentos para hot dog está limpia?'),
+    S('Comida Rápida','06 Horno','comisionista','¿El horno de microondas está limpio?'),
+    S('Comida Rápida','06 Horno','supervisor','¿El horno de microondas funciona?'),
+    S('Comida Rápida','07 Café','comisionista','¿Área de café está limpia, y cuenta con material de publicidad de café y precios del café?'),
+    S('Comida Rápida','07 Café','comisionista','¿El área de café cuenta con vasos, tapas e insumos?'),
+    S('Comida Rápida','07 Café','comisionista','¿La máquina de café Imix o de Nescafé cuenta con insumo (todos los sabores)?'),
+    S('Comida Rápida','07 Café','supervisor','¿La máquina de café Imix o de Nescafé funciona?'),
+    S('Comida Rápida','08 Aguas Frías','comisionista','¿La máquina de aguas frescas cuenta con al menos 2 sabores?'),
+    S('Comida Rápida','08 Aguas Frías','supervisor','¿La máquina de aguas frescas funciona?'),
+    S('Comida Rápida','09 Froster','comisionista','¿La máquina de Froster o ICEE cuenta con al menos 2 sabores?'),
+    S('Comida Rápida','09 Froster','supervisor','¿La máquina de Froster o ICEE funciona?'),
+    S('Comida Rápida','10 Open Case','supervisor','¿El Open Case está funcionando?'),
+    S('Comida Rápida','10 Open Case','comisionista','¿El Open Case tiene ejecutado su planograma?'),
+    S('Mercancías y Cerveza','02 Mercancías en General','comisionista','¿Existe material de servicios microperforado/vinil en primera posición (o aéreo de servicios en checkout)?'),
+    S('Mercancías y Cerveza','02 Mercancías en General','comisionista','¿El mueble de tarjetas multimedia está cerca del check out en primera posición o en la entrada en sentido del tráfico?'),
+    S('Mercancías y Cerveza','02 Mercancías en General','comisionista','¿Existe una cabecera fija en tienda con toda la línea de marca propia?'),
+    S('Mercancías y Cerveza','02 Mercancías en General','comisionista','¿Hay exhibición de adoptado en check out y lo ofrecen en cada compra?'),
+    S('Mercancías y Cerveza','03 Cervezas','supervisor','¿La cerveza está a temperatura menor de 5°C?'),
+    S('Mercancías y Cerveza','03 Cervezas','comisionista','¿Los electros de cerveza de cámara fría están colocados y vigentes?'),
+    S('Mercancías y Cerveza','03 Cervezas','comisionista','¿Existe exhibición de cerveza en piso o como arete (al menos 2 de mayor rotación), con precio publicado de 30x30 cm?'),
+    S('Mercancías y Cerveza','03 Cervezas','comisionista','¿La hielera está ejecutada correctamente con hielo y producto suficiente (máximo 2 skus de impulso)?'),
+    S('Mercancías y Cerveza','03 Cervezas','supervisor','¿Se cuenta con al menos 40 skus del Portafolio de cerveza?'),
+    S('Mercancías y Cerveza','03 Cervezas','comisionista','¿Se tiene ejecutada la exhibición de cerveza en cámara fría al 35% de sus puertas?'),
+    S('Mercancías y Cerveza','03 Cervezas','comisionista','¿Cuenta con fábrica de hielo y funciona?'),
+    S('Mercancías y Cerveza','04 Mercancía General y Cervezas','comisionista','¿Las mercancías ubicadas en góndolas, cámaras frías, open case y check out muestran el precio vigente/promocional?'),
+    S('Mercancías y Cerveza','04 Mercancía General y Cervezas','comisionista','¿La tienda está conectada a las plataformas delivery en este momento?'),
+    S('Mercancías y Cerveza','04 Mercancía General y Cervezas','comisionista','¿Se tiene ejecutado con base a OPEM (esquemáticos) los planogramas y guías de acomodo de mercancías generales y cerveza?'),
+    S('Caja','01 Ejecución Operativa','comisionista','¿El punto de venta con doble pantalla tiene encendida la vista para el cliente?'),
+    S('Caja','01 Ejecución Operativa','comisionista','¿La persona que lo atendió lucía el uniforme de Circle K?'),
+    S('Caja','01 Ejecución Operativa','comisionista','¿La tienda cuenta con Fondo Fijo?'),
+    S('Caja','11 Servicios','comisionista','El comisionista y su plantilla conocen cómo utilizar el Fast Scan (tarjetas y pines).'),
+    S('Caja','11 Servicios','comisionista','¿Acepta pagos vencidos de CFE, IZZI, TELMEX o TOTAL PLAY?'),
+    S('Contraloría','12 Control','comisionista','¿Cuenta con cíclicos elaborados correctamente y con firma de comisionista y supervisor?'),
+    S('Contraloría','12 Control','comisionista','¿Digitem digital actualizado?')
+  ];
+  return base.map((it,i)=> Object.assign({id:'e'+(i+1), activo:true}, it));
+}
+function evalItemsActivos(){ return evalChecklist.filter(i=> i.activo!==false); }
+function evalScore(run){
+  const items = evalItemsActivos();
+  let si=0, apl=0, siC=0, aplC=0, siS=0, aplS=0;
+  items.forEach(it=>{
+    const r = run.resp ? run.resp[it.id] : null;
+    if(r !== 'si' && r !== 'no') return; // NA o sin responder no cuentan
+    apl++; if(r==='si') si++;
+    if(it.responsable==='supervisor'){ aplS++; if(r==='si') siS++; } else { aplC++; if(r==='si') siC++; }
+  });
+  return {si, apl, pct: apl?Math.round(100*si/apl):null,
+    comis:{si:siC, apl:aplC, pct:aplC?Math.round(100*siC/aplC):null},
+    sup:{si:siS, apl:aplS, pct:aplS?Math.round(100*siS/aplS):null}};
+}
+function evalColor(pct){ return pct===null?'#5A6B74':pct>=90?'#0f7a5c':pct>=75?'#9a6212':'#B0281A'; }
+function evalRunsPeriodo(per){ return evalRuns.filter(r=> r.periodo===per); }
+function abrirEval(){ byId('evalOverlay').style.display='flex'; evalVista='resumen'; renderEval(); }
+function cerrarEval(){ byId('evalOverlay').style.display='none'; evalDraft=null; }
+function renderEval(){
+  const body = byId('evalBody'); if(!body) return;
+  const jefe = esEncargado();
+  const chip=(txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${txt}</button>`;
+  let html = `<div class="eval-periodo">Periodo (semana): <b>${semActualISO()}</b> · corte semanal</div>`;
+  html += `<div class="comp-filtros" style="margin:10px 0 12px;">${chip('Resumen',evalVista==='resumen','data-ev="resumen"')}${chip('Nueva evaluación',evalVista==='nueva','data-ev="nueva"')}${jefe?chip('Editar puntos',evalVista==='puntos','data-ev="puntos"'):''}</div>`;
+  if(evalVista==='nueva') html += evalVistaNueva();
+  else if(evalVista==='puntos' && jefe) html += evalVistaPuntos();
+  else html += evalVistaResumen();
+  body.innerHTML = html;
+  body.querySelectorAll('[data-ev]').forEach(b=> b.onclick=()=>{ evalVista=b.dataset.ev; if(evalVista==='nueva' && !evalDraft) evalDraft=null; renderEval(); });
+  evalBindVista();
+}
+function evalVistaResumen(){
+  const per = semActualISO();
+  const runs = evalRunsPeriodo(per);
+  const prom = (tipo)=>{ const rs=runs.filter(r=>r.tipo===tipo); if(!rs.length) return null; const ps=rs.map(r=>evalScore(r).pct).filter(x=>x!==null); return ps.length?Math.round(ps.reduce((a,b)=>a+b,0)/ps.length):null; };
+  const aPiso = prom('piso_a_aliado'), aSup = prom('supervisor_a_aliado'), supAliado = prom('aliado_a_supervisor');
+  const tarjeta=(titulo,pct,sub)=>{ const c=evalColor(pct); return `<div class="eval-kpi"><div class="eval-kpi-t">${titulo}</div><div class="eval-kpi-n" style="color:${c}">${pct===null?'—':pct+'%'}</div><div class="eval-kpi-s">${sub}</div></div>`; };
+  let html = `<div class="catalog-note" style="margin-bottom:12px;">La evaluación va en cadena: el piso evalúa al aliado, el aliado al supervisor, y se registra la del supervisor — todo con datos reales como respaldo. Se reinicia cada semana.</div>`;
+  html += `<div class="eval-kpis">${tarjeta('Aliado · según el piso', aPiso, 'tu equipo')}${tarjeta('Aliado · según el supervisor', aSup, 'lo que él puso')}${tarjeta('Supervisor · según el aliado', supAliado, 'tu evaluación')}</div>`;
+  if(aPiso!==null && aSup!==null && aSup-aPiso>=10) html += `<div class="eval-alerta">⚠️ El supervisor te calificó <b>${aSup}%</b>, pero tu equipo (datos de piso) ve <b>${aPiso}%</b>. Usa las evidencias como respaldo.</div>`;
+  html += `<div class="section-title" style="margin-top:14px;"><span>Evaluaciones de esta semana</span><span>${runs.length}</span></div>`;
+  if(!runs.length){ html += `<div class="empty">Aún no hay evaluaciones esta semana. Toca "Nueva evaluación".</div>`; }
+  else html += runs.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(r=>{ const sc=evalScore(r); const c=evalColor(sc.pct); const t=EVAL_TIPOS[r.tipo]||{corto:r.tipo}; const borr=esEncargado()?`<button type="button" class="del" data-evdel="${r.id}">✕</button>`:'';
+    return `<div class="eval-run"><div class="eval-run-i"><div class="eval-run-t">${cvEsc(t.corto)}</div><div class="eval-run-m">${cvEsc(r.evaluadorNombre||'')} · ${sc.si}/${sc.apl} pts${r.nota?' · 📝':''}</div></div><div class="eval-run-n" style="color:${c}">${sc.pct===null?'—':sc.pct+'%'}</div>${borr}</div>`; }).join('');
+  return html;
+}
+function evalVistaNueva(){
+  if(!evalDraft){
+    let h = `<div class="catalog-note" style="margin-bottom:10px;">¿Qué evaluación vas a hacer?</div>`;
+    h += Object.entries(EVAL_TIPOS).map(([k,v])=> `<button type="button" class="eval-tipo" data-evtipo="${k}"><b>${v.label}</b><small>${v.ayuda}</small></button>`).join('');
+    return h;
+  }
+  const items = evalItemsActivos();
+  const resp = evalDraft.resp;
+  const contestadas = items.filter(it=> resp[it.id]).length;
+  const t = EVAL_TIPOS[evalDraft.tipo]||{label:evalDraft.tipo};
+  let h = `<div class="eval-draft-top"><div><b>${cvEsc(t.label)}</b><div class="eval-prog">${contestadas}/${items.length} contestadas</div></div><button type="button" class="add-missing-btn" id="evalCancelar" style="width:auto;margin:0;">Cancelar</button></div>`;
+  EVAL_SECCIONES.forEach(sec=>{
+    const its = items.filter(it=> it.seccion===sec); if(!its.length) return;
+    h += `<div class="section-title" style="margin-top:14px;"><span>${cvEsc(sec)}</span><span>${its.filter(it=>resp[it.id]).length}/${its.length}</span></div>`;
+    h += its.map(it=>{
+      const r = resp[it.id]||'';
+      const b=(val,txt)=>`<button type="button" class="eval-op ${r===val?('on-'+val):''}" data-evresp="${it.id}" data-evval="${val}">${txt}</button>`;
+      return `<div class="eval-q"><div class="eval-q-tx">${cvEsc(it.pregunta)} <span class="eval-q-b">${cvEsc(it.bloque)} · ${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</span></div><div class="eval-q-ops">${b('si','Sí')}${b('no','No')}${b('na','NA')}</div></div>`;
+    }).join('');
+  });
+  const sc = evalScore(evalDraft);
+  h += `<div class="eval-save-bar"><div>Parcial: <b style="color:${evalColor(sc.pct)}">${sc.pct===null?'—':sc.pct+'%'}</b> (${sc.si}/${sc.apl})</div></div>`;
+  h += `<div class="field-label" style="margin-top:10px;">Nota / evidencia (opcional)</div><div class="eval-nota" id="evalNota">${cvEsc(evalDraft.nota||'')||'<span style="color:var(--ink-soft)">Toca para escribir qué revisaste o qué evidencia subiste…</span>'}</div>`;
+  h += `<button type="button" class="sis-principal has-ic" id="evalGuardar" style="margin-top:12px;">${icBtn('save')}<span class="bt-tx">Guardar evaluación</span></button>`;
+  return h;
+}
+function evalVistaPuntos(){
+  let h = `<div class="catalog-note" style="margin-bottom:10px;">Edita los puntos del check: actívalos/desactívalos, cambia de quién es (Comisionista/Supervisor) o agrega nuevos. Es la base que usarán todas las evaluaciones.</div>`;
+  h += `<button type="button" class="sis-principal has-ic" id="evalAddPunto" style="margin-bottom:12px;">${icBtn('plus')}<span class="bt-tx">Agregar punto</span></button>`;
+  EVAL_SECCIONES.forEach(sec=>{
+    const its = evalChecklist.filter(it=> it.seccion===sec); if(!its.length) return;
+    h += `<div class="section-title" style="margin-top:12px;"><span>${cvEsc(sec)}</span><span>${its.filter(i=>i.activo!==false).length}/${its.length}</span></div>`;
+    h += its.map(it=>{
+      const act = it.activo!==false;
+      return `<div class="eval-edit ${act?'':'off'}"><div class="eval-edit-tx" data-evedit="${it.id}">${cvEsc(it.pregunta)}<span class="eval-q-b">${cvEsc(it.bloque)}</span></div>
+        <div class="eval-edit-ops">
+          <button type="button" class="eval-resp ${it.responsable!=='supervisor'?'on':''}" data-evresp="${it.id}">${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</button>
+          <button type="button" class="eval-act ${act?'on':''}" data-evact="${it.id}">${act?'Activo':'Inactivo'}</button>
+          <button type="button" class="del" data-evrm="${it.id}">🗑</button>
+        </div></div>`;
+    }).join('');
+  });
+  return h;
+}
+function evalBindVista(){
+  const body = byId('evalBody'); if(!body) return;
+  body.querySelectorAll('[data-evtipo]').forEach(b=> b.onclick=()=>{ evalDraft={tipo:b.dataset.evtipo, resp:{}, nota:''}; renderEval(); });
+  const cc=byId('evalCancelar'); if(cc) cc.onclick=()=>{ evalDraft=null; renderEval(); };
+  body.querySelectorAll('[data-evresp]').forEach(b=> b.onclick=()=>{ if(!evalDraft) return; evalDraft.resp[b.dataset.evresp]=b.dataset.evval; renderEval(); });
+  const nt=byId('evalNota'); if(nt) nt.onclick=()=> openTextKeypad('Nota / evidencia', evalDraft.nota||'', (v)=>{ evalDraft.nota=String(v||'').trim(); renderEval(); });
+  const gg=byId('evalGuardar'); if(gg) gg.onclick=evalGuardar;
+  body.querySelectorAll('[data-evdel]').forEach(b=> b.onclick=()=> evalBorrarRun(b.dataset.evdel));
+  // editor
+  body.querySelectorAll('[data-evresp]'); // (ya arriba para draft) — en editor usamos data-evresp distinto
+  body.querySelectorAll('[data-evact]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evact); if(it){ it.activo = it.activo===false; persistEvalChecklist(); renderEval(); } });
+  body.querySelectorAll('.eval-resp[data-evresp]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evresp); if(it){ it.responsable = it.responsable==='supervisor'?'comisionista':'supervisor'; persistEvalChecklist(); renderEval(); } });
+  body.querySelectorAll('[data-evedit]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evedit); if(!it) return; openTextKeypad('Editar el punto', it.pregunta, (v)=>{ const t=String(v||'').trim(); if(t){ it.pregunta=t; persistEvalChecklist(); renderEval(); } }); });
+  body.querySelectorAll('[data-evrm]').forEach(b=> b.onclick=()=>{ openConfirm('¿Quitar este punto del check?', ()=>{ evalChecklist=evalChecklist.filter(x=>x.id!==b.dataset.evrm); persistEvalChecklist(); renderEval(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
+  const ap=byId('evalAddPunto'); if(ap) ap.onclick=evalAddPunto;
+}
+function evalGuardar(){
+  if(!evalDraft) return;
+  const items = evalItemsActivos();
+  const contestadas = items.filter(it=> evalDraft.resp[it.id]).length;
+  const hacer = ()=>{
+    evalRuns.push({ id:uid(), periodo:semActualISO(), tipo:evalDraft.tipo, evaluadorNombre: currentUser||'Sin nombre', fecha:new Date().toISOString(), resp:Object.assign({}, evalDraft.resp), nota:evalDraft.nota||'' });
+    persistEvalRuns(); evalDraft=null; evalVista='resumen'; renderEval();
+    if(byId('perfilOverlay') && byId('perfilOverlay').style.display==='flex') renderPerfil();
+  };
+  if(contestadas < items.length) openConfirm(`Faltan ${items.length-contestadas} punto(s) por contestar. ¿Guardar así de todos modos?`, hacer, {yesLabel:'Guardar', noLabel:'Seguir contestando'});
+  else hacer();
+}
+function evalBorrarRun(id){ openConfirm('¿Borrar esta evaluación?', ()=>{ evalRuns=evalRuns.filter(r=>r.id!==id); persistEvalRuns(); renderEval(); }, {yesLabel:'Borrar', noLabel:'Cancelar'}); }
+function evalAddPunto(){
+  openTextKeypad('Escribe el nuevo punto a evaluar', '', (v)=>{
+    const t=String(v||'').trim(); if(!t) return;
+    const n = evalChecklist.reduce((m,it)=>{ const k=parseInt(String(it.id).replace(/\D/g,''),10)||0; return Math.max(m,k); },0);
+    evalChecklist.push({id:'e'+(n+1), seccion:'Contraloría', bloque:'Personalizado', responsable:'comisionista', pregunta:t, activo:true});
+    persistEvalChecklist(); renderEval();
+  });
 }
 
 function renderSummary(){
@@ -4438,7 +4827,12 @@ function renderCierresList(){
 let cierreViendoId = null;
 let cierreTab = 'dif';
 let cierreBusqueda = '';
+let cierresDesbloqueado = false;  // una vez puesto el NIP en la sesión, no lo vuelve a pedir
 function abrirCierreViewer(id){
+  if(nipConfig.lockCierres && !cierresDesbloqueado){
+    pedirNip('consultar los inventarios realizados', ()=>{ cierresDesbloqueado = true; abrirCierreViewer(id); });
+    return;
+  }
   cierreViendoId = id;
   cierreTab = 'dif';
   cierreBusqueda = '';
@@ -5246,6 +5640,105 @@ function exportarEn0(){
   const hoy = new Date().toISOString().slice(0,10);
   downloadCsv([header.join(','), ...rows].join('\n'), 'productos_en_0'+cat+'_'+hoy);
 }
+
+// ===== COMPILACIÓN DE PRODUCTOS EN 0 (por categoría o por proveedor) =====
+// Junta TODO el catálogo (todas las categorías, sin importar el filtro activo)
+// cuya existencia cargada = 0. A cada uno le engancha su proveedor y si es de
+// Cedis (escalar) o Directo (contactar al proveedor), tomado de coberturaMap
+// —que se llena solo cuando cargas un reporte con columnas Proveedor y
+// Distribucion (ej. el ReporteExistenciasPos)—. Se recalcula al abrir.
+let en0Vista = 'cat'; // 'cat' = por categoría · 'prov' = por proveedor / a quién tocarle
+function en0Items(){
+  const map = activeExistenciasMap();
+  const {all} = buildIndexes();
+  const vistos = new Set();
+  return all.filter(it=>{ const e = map[it.codigo]; return e && Number(e.cantidad) === 0; })
+    .filter(it=>{ if(vistos.has(it.codigo)) return false; vistos.add(it.codigo); return true; }) // un código una sola vez
+    .map(it=>{
+      const cob = coberturaMap[it.codigo];
+      const prov = provEfectivo(cob);                 // 'Cedis', nombre del proveedor directo, o ''
+      const esCedis = prov === 'Cedis' || (cob && cob.distribucion === 'CEDIS');
+      const directo = !!prov && !esCedis;             // proveedor directo con nombre
+      const contacto = (cob && cob.contacto) || '';
+      return {codigo:it.codigo, descripcion:it.descripcion, barcode:it.barcode, prov, esCedis, directo, contacto, quiebre:esQuiebreCod(it.codigo)};
+    })
+    .sort((a,b)=> a.codigo.localeCompare(b.codigo,'es',{numeric:true,sensitivity:'base'})); // orden alfanumérico dentro de cada grupo
+}
+function en0PorCategoria(items){
+  const g = {};
+  items.forEach(it=>{ const pre = getPrefix(it.codigo); if(!g[pre]) g[pre]={clave:pre, nombre:nombreCategoria(pre), items:[]}; g[pre].items.push(it); });
+  return Object.values(g).sort((a,b)=> b.items.length - a.items.length || a.nombre.localeCompare(b.nombre));
+}
+function en0PorProveedor(items){
+  const g = {};
+  items.forEach(it=>{ const key = it.prov || 'Sin proveedor asignado'; if(!g[key]) g[key]={clave:key, nombre:key, esCedis:it.esCedis, directo:it.directo, contacto:'', items:[]}; if(!g[key].contacto && it.contacto) g[key].contacto = it.contacto; g[key].items.push(it); });
+  const rank = x=> x.nombre==='Cedis' ? 2 : (x.nombre==='Sin proveedor asignado' ? 3 : 1); // directos arriba
+  return Object.values(g).sort((a,b)=> rank(a)-rank(b) || b.items.length - a.items.length || a.nombre.localeCompare(b.nombre));
+}
+function en0ProvTag(it){
+  if(it.esCedis) return '<span class="en0-cedis">Cedis · escalar</span>';
+  if(it.directo) return `<span class="en0-directo">${cvEsc(it.prov)}</span>`;
+  return '';
+}
+function en0Fila(it, ocultarTag){
+  const q = it.quiebre ? ' <span class="en0-vende">se vende</span>' : '';
+  const tag = ocultarTag ? '' : (' '+en0ProvTag(it));
+  return `<div class="en0-fila"><div class="en0-cod">${cvEsc(it.codigo)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}${q}${tag}</div></div>`;
+}
+function renderEn0Panel(){
+  const body = byId('en0Body'); if(!body) return;
+  const items = en0Items();
+  const total = items.length;
+  if(!total){ body.innerHTML = '<div class="empty">Ningún producto en 0 ahora mismo. En cuanto cargues existencias del sistema, aquí aparecerá la compilación.</div>'; return; }
+  const quiebres = items.filter(it=> it.quiebre).length;
+  const nCedis = items.filter(it=> it.esCedis).length;
+  const nDirecto = items.filter(it=> it.directo).length;
+  const haveProv = (nCedis + nDirecto) > 0;
+  const chip = (txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${txt}</button>`;
+  let html = `<div class="catalog-note" style="margin:2px 0 10px;">Productos que la última carga de existencias dejó en <b>0</b>. Se actualiza cada vez que cargas existencias. ${quiebres?`<b style="color:#B0281A;">${quiebres} se vende(n) → quiebre.</b> `:''}${haveProv?`<br><b style="color:#0f7a5c;">${nDirecto} directo(s)</b> (contacta al proveedor) · <b style="color:#9a6212;">${nCedis} de Cedis</b> (escalar a distribución).`:'<br>Carga el <b>ReporteExistenciasPos</b> (trae Proveedor y Distribucion) para ver a quién tocarle cada uno.'}</div>`;
+  html += `<div class="comp-filtros" style="margin-bottom:12px;">${chip('Por categoría', en0Vista==='cat', 'data-env="cat"')}${chip('Por proveedor · a quién tocarle', en0Vista==='prov', 'data-env="prov"')}</div>`;
+  html += `<button type="button" class="sis-principal has-ic" id="en0PanelExport" style="margin-bottom:14px;">${icBtn('download')}<span class="bt-tx">Exportar a Excel</span></button>`;
+  if(en0Vista === 'prov'){
+    const grupos = en0PorProveedor(items);
+    html += `<div class="section-title"><span>Total en 0</span><span>${total} producto(s) · ${grupos.length} proveedor(es)</span></div>`;
+    html += grupos.map((g,i)=>{
+      const cont = g.contacto ? ` <span class="en0-contacto">${cvEsc(g.contacto)}</span>` : '';
+      const badge = g.nombre==='Cedis' ? '<span class="en0-cedis">escalar a distribución</span>'
+        : g.nombre==='Sin proveedor asignado' ? '<span class="en0-sinprov">sin dato</span>'
+        : ('<span class="en0-directo">directo · contáctalo</span>'+cont);
+      const filas = g.items.map(it=> en0Fila(it, true)).join(''); // el proveedor ya va en el encabezado
+      return `<details class="en0-grupo" ${i===0?'open':''}><summary><span class="en0-cat">${cvEsc(g.nombre)}</span><span class="en0-num">${g.items.length} en 0</span></summary><div class="en0-grupo-badge">${badge}</div>${filas}</details>`;
+    }).join('');
+  } else {
+    const grupos = en0PorCategoria(items);
+    html += `<div class="section-title"><span>Total en 0</span><span>${total} producto(s) · ${grupos.length} categoría(s)</span></div>`;
+    html += grupos.map((g,i)=>{
+      const q = g.items.filter(it=> it.quiebre).length;
+      const filas = g.items.map(it=> en0Fila(it, false)).join('');
+      return `<details class="en0-grupo" ${i===0?'open':''}><summary><span class="en0-cat">${cvEsc(g.nombre)}</span><span class="en0-num">${g.items.length} en 0${q?` · <b style="color:#B0281A;">${q} quiebre</b>`:''}</span></summary>${filas}</details>`;
+    }).join('');
+  }
+  body.innerHTML = html;
+  const eb = byId('en0PanelExport'); if(eb) eb.onclick = exportarEn0PorCategoria;
+  body.querySelectorAll('[data-env]').forEach(b=> b.onclick = ()=>{ en0Vista = b.dataset.env; renderEn0Panel(); });
+}
+// Exporta a Excel/CSV los productos en 0 con Categoría, Proveedor y Distribución
+// (Directo/Cedis), para filtrar o separar en Excel tal cual.
+function exportarEn0PorCategoria(){
+  const items = en0Items();
+  if(!items.length){ openConfirm('No hay productos en 0 para exportar. Carga las existencias primero.', ()=>{}); return; }
+  const grupos = en0PorCategoria(items);
+  const lineas = [['Categoria','Codigo','Descripcion','Codigo de Barras','Existencia','Proveedor','Distribucion','Accion','Quiebre'].join(',')];
+  grupos.forEach(g=> g.items.forEach(it=>{
+    const dist = it.esCedis ? 'Cedis' : (it.directo ? 'Directo' : '');
+    const accion = it.esCedis ? 'Escalar a distribucion' : (it.directo ? 'Contactar proveedor' : '');
+    lineas.push([csvSafe(g.nombre), it.codigo, csvSafe(it.descripcion||''), it.barcode||'', 0, csvSafe(it.directo?it.prov:''), dist, accion, it.quiebre?'Se vende':''].join(','));
+  }));
+  const hoy = new Date().toISOString().slice(0,10);
+  downloadCsv(lineas.join('\n'), 'productos_en_0_'+hoy);
+}
+function abrirEn0Panel(){ byId('en0Overlay').style.display='flex'; renderEn0Panel(); }
+function cerrarEn0Panel(){ byId('en0Overlay').style.display='none'; }
 function renderSeqList(){
   const filterVal = sisFilter.value.trim().toLowerCase();
   let list = sortedCatalog();
@@ -5611,6 +6104,61 @@ $('sisImportFile').addEventListener('change', (e)=>{
       openConfirm('No se pudo leer el archivo. Revisa que sea un Excel (.xlsx) o CSV válido con columnas Codigo y Descripcion.', ()=>{});
     }
     e.target.value = '';
+  };
+  reader.readAsArrayBuffer(file);
+});
+
+// ===== MAESTRO DE PROVEEDORES (se alimenta por Excel, independiente de existencias) =====
+// Actualiza quién surte cada producto y si es Cedis (escalar) o Directo
+// (contactar), SIN tocar existencias y conservándose aunque después cargues
+// existencias. Pensado para mantener este maestro por Excel cuando se adopte la
+// app para gestión. Columnas: Codigo (o Alfanumerico) + Proveedor, y de
+// preferencia Distribucion (Cedis/Directo); opcional Contacto/Encargado.
+$('sisProvBtn').onclick = ()=> $('sisProvFile').click();
+$('sisProvFile').addEventListener('change', (e)=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  if(typeof XLSX === 'undefined'){ openConfirm('No se pudo cargar el motor de Excel. Verifica tu conexión a internet e intenta de nuevo.', ()=>{}); e.target.value=''; return; }
+  const reader = new FileReader();
+  reader.onload = (ev)=>{
+    try{
+      const wb = XLSX.read(ev.target.result, {type:'array'});
+      const sheet = wb.Sheets[wb.SheetNames[0]];
+      const rows = hojaARenglones(sheet);
+      const norm = s => String(s||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+      const findCol = (row, cands)=>{ const ks=Object.keys(row); for(const c of cands){ const k=ks.find(k2=>norm(k2)===c); if(k) return k; } return null; };
+      const cambios = {}; let conProv=0, directos=0, cedis=0, invalidos=0, sinDist=0;
+      rows.forEach(row=>{
+        const codCol  = findCol(row, ['codigo','codigo interno','clave','sku','alfanumerico']);
+        const provCol = findCol(row, ['proveedor']);
+        const distCol = findCol(row, ['distribucion','canal','tipo']);
+        const contCol = findCol(row, ['contacto','encargado','telefono','vendedor']);
+        const codigo = codCol ? String(row[codCol]).trim().toUpperCase() : '';
+        if(!codigo || !isValidCodigo(codigo)){ invalidos++; return; }
+        const proveedor = provCol ? String(row[provCol]).trim() : '';
+        const distribucion = distCol ? normDist(row[distCol]) : '';
+        const contacto = contCol ? String(row[contCol]).trim() : '';
+        if(!proveedor && !distribucion && !contacto) return; // nada que guardar en esta fila
+        const p = {};
+        if(proveedor) p.proveedor = proveedor;
+        if(distribucion){ p.distribucion = distribucion; if(distribucion==='DIRECTO') directos++; else if(distribucion==='CEDIS') cedis++; }
+        else sinDist++;
+        if(contacto) p.contacto = contacto;
+        cambios[codigo] = p; conProv++;
+      });
+      if(!conProv){ openConfirm('No encontré proveedores en el archivo. Necesita columnas Codigo (o Alfanumerico) y Proveedor, y de preferencia Distribucion (Cedis/Directo).', ()=>{}); e.target.value=''; return; }
+      cobGuardar(cambios);
+      renderSeqList();
+      let msg = `Maestro de proveedores actualizado: ${conProv} producto(s).`;
+      if(directos||cedis) msg += `\n🟢 ${directos} directo(s) · 🟠 ${cedis} de Cedis.`;
+      if(sinDist) msg += `\n${sinDist} sin "Distribucion" (se guardó solo el proveedor).`;
+      if(invalidos) msg += `\n${invalidos} fila(s) con código inválido (ignoradas).`;
+      msg += `\n\nEsto NO toca tus existencias y se conserva aunque cargues existencias después.`;
+      openConfirm(msg, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){
+      openConfirm('No se pudo leer el archivo. Revisa que sea un Excel (.xlsx) o CSV válido con columnas Codigo y Proveedor.', ()=>{});
+    }
+    e.target.value='';
   };
   reader.readAsArrayBuffer(file);
 });
@@ -6832,6 +7380,38 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="en0Overlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Productos en 0 por categoría<small>Compilación de lo que la última carga de existencias dejó en cero.</small></div>
+    <div class="cotejo-body" id="en0Body"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="en0Cerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="evalOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Evaluación operativa<small>Check de tienda en cadena 360, con calificación semanal y datos reales.</small></div>
+    <div class="cotejo-body" id="evalBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="evalCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="perfilOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Perfil / desempeño<small>Conteos cerrados, áreas y cumplimiento de tareas por persona.</small></div>
+    <div class="cotejo-body" id="perfilBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="perfilCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="segOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Seguridad / NIP<small>Tu NIP y los candados de la tienda.</small></div>
+    <div class="cotejo-body" id="segBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="segCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="notaOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">Compara con la nota o el POS<small>Producto por producto. No tienes que sumar nada.</small></div>
@@ -6985,6 +7565,25 @@ byId('masCerrar').onclick = cerrarMas;
   const x=byId('tareasCerrar'); if(x) x.onclick = cerrarTareas;
   const ov=byId('tareasOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='tareasOverlay') cerrarTareas(); });
 })();
+// Perfil / desempeño
+(function(){ const btn=byId('perfilBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirPerfil(); };
+  const x=byId('perfilCerrar'); if(x) x.onclick = cerrarPerfil;
+  const ov=byId('perfilOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='perfilOverlay') cerrarPerfil(); });
+})();
+// Evaluación operativa
+(function(){ const btn=byId('evalBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirEval(); };
+  const x=byId('evalCerrar'); if(x) x.onclick = cerrarEval;
+  const ov=byId('evalOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='evalOverlay') cerrarEval(); });
+})();
+// Productos en 0 por categoría
+(function(){ const btn=byId('en0PanelBtn'); if(btn) btn.onclick = abrirEn0Panel;
+  const x=byId('en0Cerrar'); if(x) x.onclick = cerrarEn0Panel;
+  const ov=byId('en0Overlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='en0Overlay') cerrarEn0Panel(); });
+})();
+// Seguridad / NIP
+(function(){ const x=byId('segCerrar'); if(x) x.onclick = cerrarSeguridad;
+  const ov=byId('segOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='segOverlay') cerrarSeguridad(); });
+})();
 byId('masSheet').addEventListener('click', (e)=>{ if(e.target.id === 'masSheet') cerrarMas(); });
 document.querySelectorAll('#masSheet [data-ir]').forEach(b=> b.onclick = ()=>{
   cerrarMas();
@@ -6992,7 +7591,7 @@ document.querySelectorAll('#masSheet [data-ir]').forEach(b=> b.onclick = ()=>{
 });
 ['equipoBtn','tiendasBtn'].forEach(id=> byId(id).addEventListener('click', cerrarMas));
 byId('sesionBtn').onclick = ()=>{ cerrarMas(); abrirMenuSesion(); };
-byId('nipBtn').onclick = ()=>{ cerrarMas(); configurarNip(); };
+byId('nipBtn').onclick = ()=>{ cerrarMas(); abrirSeguridad(); };
 byId('papeleraBtn').onclick = ()=>{ cerrarMas(); abrirPapelera(); };
 // "Más" se resalta cuando estás en una pantalla secundaria
 document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click', ()=>{
@@ -7059,6 +7658,39 @@ function pedirNip(motivo, onOk){
     if(await hashNip(v) === nipConfig.nipHash){ cerrarNipPad(); onOk(); }
     else nipError('NIP incorrecto. No se hizo nada.');
   });
+}
+// Apartado de Seguridad: gestionar NIP + candados
+function abrirSeguridad(){
+  if(!esEncargado()){ openConfirm('Solo el aliado puede gestionar la seguridad y el NIP.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  byId('segOverlay').style.display = 'flex'; renderSeguridad();
+}
+function cerrarSeguridad(){ byId('segOverlay').style.display = 'none'; }
+function setLockCierres(v){
+  if(v && !nipConfig.nipHash){
+    openConfirm('Primero crea tu NIP para poder activar este candado.', ()=> configurarNip(()=> setLockCierres(true)), {yesLabel:'Crear NIP', noLabel:'Ahora no'});
+    return;
+  }
+  nipConfig = Object.assign({}, nipConfig, {lockCierres: !!v});
+  fsConfigCol.doc('seguridad').set({lockCierres: !!v, actualizado: new Date().toISOString(), por: sesionEmail}, {merge:true})
+    .catch(err=> avisarErrorGuardado(err, {descripcion:'el candado'}));
+  if(!v) cierresDesbloqueado = false;
+  renderSeguridad();
+}
+function renderSeguridad(){
+  const body = byId('segBody'); if(!body) return;
+  const hayNip = !!nipConfig.nipHash;
+  const lock = !!nipConfig.lockCierres;
+  body.innerHTML = `
+    <div class="field-label">Tu NIP de la tienda</div>
+    <div class="seg-estado">${hayNip ? '🔒 NIP creado' : '⚠️ Todavía no tienes NIP'}</div>
+    <button type="button" class="sis-principal has-ic" id="segNipBtn" style="margin:8px 0 4px;">${icBtn('lock')}<span class="bt-tx">${hayNip ? 'Cambiar mi NIP' : 'Crear mi NIP'}<small>4 números · solo tú y quien tú decidas</small></span></button>
+
+    <div class="ocr-ajustes-sep">Candados</div>
+    <button type="button" class="ocr-filtro-sw${lock?' on':''}" id="segLockCierres">${icBtn('lock')}<span class="bt-tx"><b>Pedir NIP para consultar inventarios realizados</b></span><span class="ocr-sw-hint">${lock?'activado':'apagado'}</span></button>
+    <div class="catalog-note" style="margin-top:10px;">Con el candado activado, para abrir cualquier inventario ya hecho (Conteos anteriores) habrá que escribir el NIP. Se pide una vez por sesión.</div>
+    <div class="catalog-note" style="margin-top:8px;">Borrar conteos e historial <b>siempre</b> pide NIP, con o sin candado.</div>`;
+  byId('segNipBtn').onclick = ()=> configurarNip(()=> renderSeguridad());
+  byId('segLockCierres').onclick = ()=> setLockCierres(!nipConfig.lockCierres);
 }
 function configurarNip(despues){
   if(!esEncargado()){ openConfirm('Solo el aliado puede crear o cambiar el NIP de la tienda.', ()=>{}, {yesLabel:'Entendido'}); return; }
