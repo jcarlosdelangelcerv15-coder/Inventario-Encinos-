@@ -1287,9 +1287,9 @@
     <div id="motivoBlock" style="display:none;">
       <div class="field-label">Motivo del movimiento pendiente</div>
       <div class="modes" id="motivos"></div>
-      <div id="fijosBar" style="display:flex;gap:8px;margin-top:10px;">
-        <button type="button" class="add-missing-btn has-ic" id="fijosCargarBtn" data-ic="download" style="flex:1;margin:0;">Cargar pendientes fijos</button>
-        <button type="button" class="add-missing-btn has-ic" id="fijosAdminBtn" data-ic="sliders" style="flex:0 0 auto;margin:0;width:54px;justify-content:center;"></button>
+      <div id="fijosBar" style="display:flex;flex-direction:column;gap:8px;margin-top:10px;">
+        <button type="button" class="add-missing-btn has-ic" id="fijosCargarBtn" data-ic="download" style="margin:0;">Cargar pendientes fijos al conteo</button>
+        <button type="button" class="add-missing-btn has-ic" id="fijosAdminBtn" data-ic="sliders" style="margin:0;">Ver lista y cargar Excel</button>
       </div>
     </div>
 
@@ -3850,7 +3850,7 @@ function renderMotivos(){
 // ===== Movimientos pendientes FIJOS (se cargan a mano, se quedan guardados) =====
 function renderFijosUI(){
   const btn = byId('fijosCargarBtn');
-  if(btn) btnTexto(btn, pendientesFijos.length ? ('Cargar pendientes fijos ('+pendientesFijos.length+')') : 'Cargar pendientes fijos');
+  if(btn) btnTexto(btn, pendientesFijos.length ? ('Cargar pendientes fijos al conteo ('+pendientesFijos.length+')') : 'Cargar pendientes fijos al conteo');
 }
 function cargarPendientesFijos(){
   if(!pendientesFijos.length){ openConfirm('Aún no tienes pendientes fijos guardados. Toca el botón de ajustes de al lado (⚙) para agregarlos.', ()=>{}, {yesLabel:'Entendido'}); return; }
