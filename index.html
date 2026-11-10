@@ -941,6 +941,34 @@
   .tarea-meta{font-size:12px;color:var(--ink-soft);margin-top:2px;}
   .tarea-draft{background:#F6FAF9;border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:12px;}
   .tarea-titulo{font-weight:800;font-size:15px;color:var(--ink);cursor:pointer;margin-top:4px;}
+  .tcat-top{display:flex;justify-content:space-between;align-items:center;}
+  .tcat-top b{font-size:15px;color:var(--ink);}
+  .tcat-edit{background:none;border:none;color:var(--brand);font-weight:800;font-family:inherit;font-size:13px;}
+  .tcat-item{display:flex;align-items:flex-start;gap:8px;margin-bottom:7px;}
+  .tcat-pick{flex:1;min-width:0;text-align:left;background:#fff;border:1px solid var(--line);border-radius:11px;padding:10px 12px;font-family:inherit;box-shadow:var(--shadow-sm);}
+  .tcat-nom{font-weight:700;font-size:14px;color:var(--ink);line-height:1.3;}
+  .tcat-desc{font-size:12px;color:var(--ink-soft);margin-top:3px;line-height:1.35;}
+  .tcat-crit{display:inline-block;background:#FBE9E7;color:#B0281A;border-radius:6px;padding:0 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .obj-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;box-shadow:var(--shadow-sm);}
+  .obj-tienda{font-weight:800;font-size:14px;color:var(--ink);margin-bottom:8px;}
+  .obj-big{font-weight:800;font-size:34px;line-height:1;}
+  .obj-big small{display:block;font-size:11px;color:var(--ink-soft);font-weight:700;margin-top:3px;}
+  .obj-bar{height:8px;border-radius:5px;background:#EEF1F3;overflow:hidden;margin:10px 0 12px;}
+  .obj-bar span{display:block;height:100%;border-radius:5px;}
+  .obj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px;}
+  .obj-grid>div{background:#F6FAF9;border:1px solid var(--line);border-radius:10px;padding:8px 10px;}
+  .obj-grid b{display:block;font-size:16px;color:var(--ink);}
+  .obj-grid small{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:1px;}
+  .obj-linea{font-size:13px;color:var(--ink);margin-top:6px;line-height:1.4;}
+  .obj-tap{cursor:pointer;}
+  .obj-grid .obj-tap{transition:background .1s;} .obj-grid .obj-tap:active{background:#E7F4EE;}
+  .estr-card{background:#fff;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:12px;padding:11px 13px;margin-bottom:8px;box-shadow:var(--shadow-sm);}
+  .estr-card.off{opacity:.6;border-left-color:#9AA7AE;}
+  .estr-tx{font-weight:700;font-size:14px;color:var(--ink);line-height:1.3;}
+  .estr-cat{display:inline-block;background:#E7F4EE;color:#0f7a5c;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:800;vertical-align:middle;}
+  .estr-pausa{display:inline-block;background:#EEF1F3;color:#5A6B74;border-radius:5px;padding:1px 6px;font-size:10px;font-weight:800;}
+  .estr-desc{font-size:12.5px;color:var(--ink-soft);margin-top:4px;line-height:1.4;}
+  .estr-ops{display:flex;gap:6px;margin-top:9px;}
   .seg-estado{font-weight:800;font-size:15px;color:var(--ink);margin:4px 0 2px;}
   .perfil-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:13px 14px;margin-bottom:10px;box-shadow:var(--shadow-sm);}
   .perfil-nom{font-weight:800;font-size:15.5px;color:var(--ink);margin-bottom:10px;}
@@ -950,6 +978,32 @@
   .perfil-kpi small{display:block;font-size:10.5px;color:var(--ink-soft);margin-top:2px;}
   .perfil-meta{font-size:13px;color:var(--ink);margin-top:5px;line-height:1.45;}
   .perfil-meta b{color:var(--ink-soft);font-weight:700;}
+  .perfil-card.merging{border-color:var(--brand);box-shadow:0 0 0 2px rgba(12,107,112,.15);}
+  .perfil-merge-btn{margin-top:10px;width:100%;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:8px;font-weight:700;font-size:12.5px;font-family:inherit;color:var(--ink-soft);}
+  .perfil-merge-into{margin-top:10px;width:100%;background:#E7F4EE;border:1.5px solid #0f7a5c;border-radius:10px;padding:9px;font-weight:800;font-size:13px;font-family:inherit;color:#0f7a5c;}
+  .perfil-merge-src{margin-top:10px;font-size:12.5px;color:var(--brand);font-weight:700;line-height:1.4;}
+  .perfil-merge-cancel{background:none;border:none;color:#B0281A;font-weight:800;font-family:inherit;font-size:12.5px;padding:0;text-decoration:underline;}
+  .rank-banner{display:flex;align-items:center;gap:9px;background:#F6FAF9;border:1px solid var(--line);border-left:3px solid var(--brand);border-radius:11px;padding:11px 13px;font-size:13px;color:var(--ink);margin-bottom:12px;line-height:1.35;}
+  .rank-banner.oro{background:#FBF8EE;border-left-color:#C9A227;}
+  .rank-banner .rb-ic{font-size:16px;color:var(--brand);flex:0 0 auto;font-weight:800;}
+  .rank-banner.oro .rb-ic{color:#C9A227;}
+  .perfil-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+  .perfil-head .perfil-nom{flex:1;min-width:0;margin:0;}
+  .perfil-rank{flex:0 0 auto;width:24px;height:24px;border-radius:50%;background:#EEF1F3;color:var(--ink-soft);font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center;}
+  .perfil-rank.oro{background:#F3E9C6;color:#8a6d16;}
+  .perfil-lider{flex:0 0 auto;font-size:10px;font-weight:800;color:#8a6d16;background:#F3E9C6;border-radius:5px;padding:2px 6px;letter-spacing:.3px;}
+  .perfil-pts{flex:0 0 auto;font-size:12px;font-weight:800;color:var(--ink-soft);}
+  .perfil-card.lider{border-color:#E4D08A;}
+  .eti-interno{text-align:center;font-size:10.5px;color:#9a6212;font-weight:700;margin-top:-6px;}
+  .eti-tog{border:1.5px solid var(--line);background:#fff;border-radius:999px;padding:7px 12px;font-weight:700;font-size:13px;font-family:inherit;color:var(--ink-soft);}
+  .eti-tog.on{background:#E7F4EE;border-color:#0f7a5c;color:#0f7a5c;}
+  .eti-preview{display:flex;justify-content:center;background:#F6FAF9;border:1px solid var(--line);border-radius:12px;padding:14px;}
+  .eti-prev-cell{background:#fff;border:1px dashed #9AA7AE;border-radius:8px;padding:10px 12px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .eti-prev-cell.eti-chica{width:140px;} .eti-prev-cell.eti-mediana{width:180px;} .eti-prev-cell.eti-grande{width:230px;}
+  .eti-prev-cell .eti-d{font-size:12px;font-weight:800;color:var(--ink);line-height:1.2;}
+  .eti-prev-cell .eti-c{font-size:12px;font-weight:700;color:var(--ink);letter-spacing:.3px;}
+  .eti-prev-cell .eti-p{font-size:16px;font-weight:800;color:var(--ink);}
+  .eti-prev-cell .eti-prev-bc{width:100%;height:auto;}
   .en0-grupo{border:1px solid var(--line);border-radius:12px;margin-bottom:8px;background:#fff;overflow:hidden;box-shadow:var(--shadow-sm);}
   .en0-grupo>summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 13px;font-weight:800;color:var(--ink);}
   .en0-grupo>summary::-webkit-details-marker{display:none;}
@@ -1184,6 +1238,7 @@
       <button type="button" class="sheet-item" id="tareasBtn" data-ic="listcheck"><span></span><div><b>Tareas / Plan de trabajo</b><small>Lo que hay que hacer hoy y esta semana</small></div><span id="tareasBadge" class="tareas-badge" style="display:none;"></span></button>
       <button type="button" class="sheet-item" id="perfilBtn" data-ic="users"><span></span><div><b>Perfil / desempeño</b><small>Conteos y tareas de cada colaborador</small></div></button>
       <button type="button" class="sheet-item" id="evalBtn" data-ic="clipboard"><span></span><div><b>Evaluación operativa</b><small>Check de tienda · cadena 360 · calificación semanal</small></div></button>
+      <button type="button" class="sheet-item" id="objBtn" data-ic="trend"><span></span><div><b>Objetivos y plan de reacción</b><small>Ventas vs presupuesto · estrategias del equipo</small></div></button>
     </div>
     <div class="sheet-group">
       <button type="button" class="sheet-item" data-ir="recepcion" data-ic="box"><span></span><div><b>Recepción</b><small>Cuando llega mercancía de un proveedor</small></div></button>
@@ -1210,7 +1265,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 13:30 · evaluación operativa 360 (Fase 1) + unificación de cobertura</div>
+    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 19:45 · movimientos pendientes que se suman al recargar</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1382,7 +1437,11 @@
 
     <div class="summary" id="etiSummary"></div>
 
-    <button type="button" class="btn btn-export blue" id="etiCajaBtn" style="width:100%;margin:4px 0 12px;">📲 Escanear en caja (uno por uno)</button>
+    <button type="button" class="btn btn-export blue" id="etiCajaBtn" style="width:100%;margin:4px 0 10px;">📲 Escanear en caja (uno por uno)</button>
+    <details class="mas-opciones" id="etiCfgDet"><summary>⚙️ Diseño de la etiqueta</summary>
+      <div id="etiCfgBox"></div>
+    </details>
+    <button type="button" class="sis-principal has-ic" id="etiPrintBtn" style="margin:10px 0 12px;">🖨️ <span class="bt-tx" style="margin-left:6px;">Imprimir hoja de etiquetas</span></button>
     <div class="section-title"><span>Etiquetas pendientes de imprimir</span><span id="etiCountLabel"></span></div>
     <div id="etiList"></div>
 
@@ -1658,8 +1717,15 @@ let tareas = [];      // [{id, titulo, tipo:'persona'|'area'|'general', para, pe
 let equipoLista = []; // nombres del equipo (para asignar tareas)
 let tareaDraft = null;// borrador al crear una tarea nueva
 let tareasVista = 'dia'; // 'dia' | 'semana'
+let tareasCatalogo = []; // catálogo de tareas operativas (plantillas) [{id, nombre, categoria, critica, periodicidad, descripcion}]
+let tareaCatAbierto = false; // mostrando el catálogo para elegir una tarea
+let tareaCatEdit = false;    // modo editar catálogo
+// ===== OBJETIVOS Y PLAN DE REACCIÓN (ventas · estrategias compartidas) =====
+let objetivoVentas = {}; // {ventaDia, pptoDia, pctDia, tendencia, pptoMes, pctMes, ventaAA, difAA, fecha, tienda}
+let estrategias = [];    // [{id, titulo, categoria, descripcion, activa}]
 // ===== EVALUACIÓN OPERATIVA (check de tienda, cadena 360) =====
-let evalChecklist = [];  // [{id, seccion, bloque, pregunta, responsable:'comisionista'|'supervisor', activo}]
+let evalBancos = { operacional:[], liderazgo:[] };  // dos bancos de preguntas; cada ítem {id, seccion, bloque, pregunta, responsable, activo}
+let evalBancoActivo = 'operacional'; // cuál banco se está editando en "Editar puntos"
 let evalRuns = [];       // [{id, periodo, evaluado, evaluadorNombre, evaluadorRol, fecha, resp:{itemId:'si'|'no'|'na'}, nota}]
 let evalDraft = null;    // evaluación en curso
 let evalVista = 'resumen'; // 'resumen' | 'nueva' | 'puntos'
@@ -1676,6 +1742,7 @@ let extraCatalog = [];
 // reciente (bug: "se agregan productos y al siguiente conteo los vuelve a pedir").
 let extraCatPend = {};
 let barcodeOverrides = {};
+let etiCfg = { tam:'mediana', cols:3, mostrar:{descripcion:true, codigo:true, barcode:true, precio:false} };
 let deletedCodigos = [];
 let caducidades = [];
 let prefixCriticidad = {};
@@ -1776,7 +1843,10 @@ const FS_KEYS_TO_VARS = {
   vision_uso:              (v)=>{ visionUso = Object.assign({mes:'',n:0}, v||{}); persistVisionUsoLocal(); pintarOCRSiAbierto(); },
   vision_log:              (v)=>{ visionLog = Array.isArray(v) ? v : []; persistVisionLogLocal(); },
   tareas:                  (v)=>{ tareas = Array.isArray(v) ? v : []; persistTareasLocal(); renderTareasBadge(); renderTareas(); avisarTareasNuevas(); },
-  eval_checklist:          (v)=>{ evalChecklist = Array.isArray(v) ? v : []; persistEvalChecklistLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); },
+  tareas_catalogo:         (v)=>{ tareasCatalogo = Array.isArray(v) ? v : []; persistTareasCatalogoLocal(); if(byId('tareasOverlay') && byId('tareasOverlay').style.display==='flex') renderTareas(); },
+  objetivo_ventas:         (v)=>{ objetivoVentas = (v && typeof v==='object') ? v : {}; persistObjetivoVentasLocal(); if(byId('objOverlay') && byId('objOverlay').style.display==='flex') renderObjetivos(); },
+  estrategias:             (v)=>{ estrategias = Array.isArray(v) ? v : []; persistEstrategiasLocal(); if(byId('objOverlay') && byId('objOverlay').style.display==='flex') renderObjetivos(); },
+  eval_bancos:             (v)=>{ if(v && typeof v==='object'){ if(Array.isArray(v.operacional)) evalBancos.operacional=v.operacional; if(Array.isArray(v.liderazgo)) evalBancos.liderazgo=v.liderazgo; if(!evalBancos.liderazgo.length) evalBancos.liderazgo=evalLiderazgoSeed(); persistEvalBancosLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); } },
   eval_runs:               (v)=>{ evalRuns = Array.isArray(v) ? v : []; persistEvalRunsLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); if(byId('perfilOverlay') && byId('perfilOverlay').style.display==='flex') renderPerfil(); }
 };
 
@@ -1791,7 +1861,10 @@ const FS_LOCAL_GETTERS = {
   vision_uso:              ()=> visionUso,
   vision_log:              ()=> visionLog,
   tareas:                  ()=> tareas,
-  eval_checklist:          ()=> evalChecklist,
+  tareas_catalogo:         ()=> tareasCatalogo,
+  objetivo_ventas:         ()=> objetivoVentas,
+  estrategias:             ()=> estrategias,
+  eval_bancos:             ()=> evalBancos,
   eval_runs:               ()=> evalRuns
 };
 function fsHasData(val){
@@ -3403,6 +3476,7 @@ function loadState(){
   try{ const mb = lsGet('marbete_activo'); if(mb) marbeteActivo = mb; }catch(e){}
   try{ const c = lsGet('catalogo_extra'); if(c) extraCatalog = JSON.parse(c); }catch(e){}
   try{ const o = lsGet('codigo_barras_overrides'); if(o) barcodeOverrides = JSON.parse(o); }catch(e){}
+  try{ const e = lsGet('eti_cfg'); if(e){ const c=JSON.parse(e); if(c&&typeof c==='object'){ etiCfg=Object.assign({tam:'mediana',cols:3,mostrar:{descripcion:true,codigo:true,barcode:true,precio:false}}, c); etiCfg.mostrar=Object.assign({descripcion:true,codigo:true,barcode:true,precio:false}, c.mostrar||{}); } } }catch(e){}
   try{ const d = lsGet('codigos_eliminados'); if(d) deletedCodigos = JSON.parse(d); }catch(e){}
   try{ const cd = lsGet('caducidades_lotes'); if(cd) caducidades = JSON.parse(cd); }catch(e){}
   try{ const pc = lsGet('prefijo_criticidad'); if(pc) prefixCriticidad = JSON.parse(pc); }catch(e){}
@@ -3414,9 +3488,16 @@ function loadState(){
   try{ const vu = lsGet('vision_uso_sh'); if(vu) visionUso = Object.assign({mes:'',n:0}, JSON.parse(vu)); }catch(e){}
   try{ const vl = lsGet('vision_log'); if(vl){ const a=JSON.parse(vl); if(Array.isArray(a)) visionLog = a; } }catch(e){}
   try{ const tj = lsGet('tareas'); if(tj){ const a=JSON.parse(tj); if(Array.isArray(a)) tareas = a; } }catch(e){}
-  try{ const ec = lsGet('eval_checklist'); if(ec){ const a=JSON.parse(ec); if(Array.isArray(a)) evalChecklist = a; } }catch(e){}
+  try{ const eb = lsGet('eval_bancos'); if(eb){ const o=JSON.parse(eb); if(o && typeof o==='object'){ if(Array.isArray(o.operacional)) evalBancos.operacional=o.operacional; if(Array.isArray(o.liderazgo)) evalBancos.liderazgo=o.liderazgo; } } }catch(e){}
+  try{ if(!evalBancos.operacional.length){ const ec = lsGet('eval_checklist'); if(ec){ const a=JSON.parse(ec); if(Array.isArray(a) && a.length) evalBancos.operacional=a; } } }catch(e){} // migración del modelo viejo
   try{ const er = lsGet('eval_runs'); if(er){ const a=JSON.parse(er); if(Array.isArray(a)) evalRuns = a; } }catch(e){}
-  if(!evalChecklist.length) evalChecklist = evalChecklistSeed();
+  if(!evalBancos.operacional.length) evalBancos.operacional = evalChecklistSeed();
+  if(!evalBancos.liderazgo.length) evalBancos.liderazgo = evalLiderazgoSeed();
+  try{ const tc = lsGet('tareas_catalogo'); if(tc){ const a=JSON.parse(tc); if(Array.isArray(a)) tareasCatalogo = a; } }catch(e){}
+  if(!tareasCatalogo.length) tareasCatalogo = tareasCatalogoSeed();
+  try{ const ov = lsGet('objetivo_ventas'); if(ov){ const o=JSON.parse(ov); if(o && typeof o==='object') objetivoVentas = o; } }catch(e){}
+  try{ const es = lsGet('estrategias'); if(es){ const a=JSON.parse(es); if(Array.isArray(a)) estrategias = a; } }catch(e){}
+  if(!estrategias.length) estrategias = estrategiasSeed();
   // Migración: si este teléfono ya tenía clave/tope locales y aún no hay compartidos, súbelos.
   try{
     if(!visionCfg.key){ const k = localStorage.getItem('gvision_key'); if(k && k.trim()) visionCfg.key = k.trim(); }
@@ -3476,8 +3557,14 @@ const persistVisionLogLocal   = ()=> lsSet('vision_log', JSON.stringify(visionLo
 const persistVisionLog        = ()=>{ persistVisionLogLocal(); fsSet('vision_log', visionLog); };
 const persistTareasLocal      = ()=> lsSet('tareas', JSON.stringify(tareas));
 const persistTareas           = ()=>{ persistTareasLocal(); fsSet('tareas', tareas); };
-const persistEvalChecklistLocal = ()=> lsSet('eval_checklist', JSON.stringify(evalChecklist));
-const persistEvalChecklist      = ()=>{ persistEvalChecklistLocal(); fsSet('eval_checklist', evalChecklist); };
+const persistTareasCatalogoLocal = ()=> lsSet('tareas_catalogo', JSON.stringify(tareasCatalogo));
+const persistTareasCatalogo      = ()=>{ persistTareasCatalogoLocal(); fsSet('tareas_catalogo', tareasCatalogo); };
+const persistObjetivoVentasLocal = ()=> lsSet('objetivo_ventas', JSON.stringify(objetivoVentas));
+const persistObjetivoVentas      = ()=>{ persistObjetivoVentasLocal(); fsSet('objetivo_ventas', objetivoVentas); };
+const persistEstrategiasLocal    = ()=> lsSet('estrategias', JSON.stringify(estrategias));
+const persistEstrategias         = ()=>{ persistEstrategiasLocal(); fsSet('estrategias', estrategias); };
+const persistEvalBancosLocal = ()=> lsSet('eval_bancos', JSON.stringify(evalBancos));
+const persistEvalBancos      = ()=>{ persistEvalBancosLocal(); fsSet('eval_bancos', evalBancos); };
 const persistEvalRunsLocal      = ()=> lsSet('eval_runs', JSON.stringify(evalRuns));
 const persistEvalRuns           = ()=>{ persistEvalRunsLocal(); fsSet('eval_runs', evalRuns); };
 // Registra una foto leída (quién, cuándo, cuántos renglones). Poda a 60 días / 500 máx.
@@ -3548,6 +3635,34 @@ function persistExtraCatItemRemove(codigo){
 }
 // Guarda las barras ligadas documento por documento (no el paquete completo),
 // así ligar/cambiar/borrar una barra nunca pisa las de otro equipo.
+// ===== CÓDIGO DE BARRAS INTERNO (para productos sin código) =====
+// Genera un EAN-13 válido en el rango "20" (que GS1 reserva para uso interno
+// de la tienda: NO choca con los códigos reales de los productos). Sirve para
+// imprimir una etiqueta y poder ESCANEAR el producto en el inventario. OJO: es
+// un código para TU sistema, no para el punto de venta de la tienda.
+function ean13Check(d12){ let s=0; for(let i=0;i<12;i++){ const n=+d12[i]||0; s += (i%2===0)? n : n*3; } return String((10-(s%10))%10); }
+function hashNum(str){ let h=0; const s=String(str||''); for(let i=0;i<s.length;i++){ h=(h*31 + s.charCodeAt(i))>>>0; } return h; }
+function todosLosBarcodes(){ const set=new Set(); try{ buildIndexes().all.forEach(it=>{ if(it.barcode) set.add(String(it.barcode)); }); }catch(_){}; try{ Object.values(barcodeOverrides).forEach(b=>{ if(b) set.add(String(b)); }); }catch(_){}; return set; }
+function esCodigoInterno(bc){ const d=String(bc||'').replace(/\D/g,''); return d.length===13 && d.slice(0,2)==='20'; }
+function generarEAN13Interno(seed){
+  const usados = todosLosBarcodes();
+  const base = hashNum(String(seed||'') + '|' + (typeof TIENDA_ID!=='undefined'?TIENDA_ID:''));
+  for(let i=0;i<60;i++){
+    const num = (base + i*2654435761) >>> 0;           // dispersión para evitar choques
+    const diez = String(num).padStart(10,'0').slice(-10);
+    const d12 = '20' + diez;                            // 20 = rango interno de tienda
+    const code = d12 + ean13Check(d12);
+    if(!usados.has(code)) return code;
+  }
+  const d12 = '20' + String(Date.now()).slice(-10);
+  return d12 + ean13Check(d12);
+}
+function asignarCodigoInterno(codigo){
+  const bc = generarEAN13Interno(codigo);
+  barcodeOverrides[codigo] = bc;
+  persistOverrides();
+  return bc;
+}
 const persistOverrides  = ()=>{
   persistOverridesLocal();
   const setActual = new Set(Object.keys(barcodeOverrides));
@@ -3756,21 +3871,145 @@ function cargarPendientesFijos(){
 }
 function abrirFijos(){ byId('fijosOverlay').style.display = 'flex'; renderFijos(); }
 function cerrarFijos(){ byId('fijosOverlay').style.display = 'none'; }
+function fijoFila(f, idx){
+  return `<div class="log-item"><div class="info">
+      <div class="desc">${cvEsc(f.codigo)}</div>
+      <div class="meta">${cvEsc(f.descripcion||'(sin nombre — tócalo al cargar para nombrarlo)')}<br><span class="fijo-motivo" data-fmot="${idx}">${cvEsc(f.motivo||MOTIVOS_PENDIENTES[0])} ✎</span></div>
+    </div>
+    <button type="button" class="ocr-ex" data-fcant="${idx}">${Number(f.cantidad)||0}</button>
+    <button type="button" class="del" data-fdel="${idx}">✕</button></div>`;
+}
 function renderFijos(){
   const body = byId('fijosBody');
-  const filas = pendientesFijos.map((f,idx)=>
-    `<div class="log-item"><div class="info">
-        <div class="desc">${cvEsc(f.codigo)}</div>
-        <div class="meta">${cvEsc(f.descripcion||'(sin nombre — tócalo al cargar para nombrarlo)')}<br><span class="fijo-motivo" data-fmot="${idx}">${cvEsc(f.motivo||MOTIVOS_PENDIENTES[0])} ✎</span></div>
-      </div>
-      <button type="button" class="ocr-ex" data-fcant="${idx}">${Number(f.cantidad)||0}</button>
-      <button type="button" class="del" data-fdel="${idx}">✕</button></div>`).join('');
-  body.innerHTML = `<button type="button" class="sis-principal has-ic" id="fijoAddBtn" style="margin:4px 0 10px;">${icBtn('plus')}<span class="bt-tx">Agregar un pendiente fijo</span></button>`
-    + (pendientesFijos.length ? filas : '<div class="empty">Aún no hay pendientes fijos. Agrega los que se repiten en cada inventario (como la cerveza de la mala recepción). Toca la cantidad o el motivo para corregirlos.</div>');
+  let html = `<button type="button" class="sis-principal has-ic" id="fijoAddBtn" style="margin:4px 0 8px;">${icBtn('plus')}<span class="bt-tx">Agregar un pendiente fijo</span></button>`
+    + `<button type="button" class="add-missing-btn" id="fijoImportBtn" data-ic="upload" style="margin-bottom:${pendientesFijos.length?'8px':'10px'};">Cargar lista por Excel/CSV</button>`
+    + `<input type="file" id="fijoFile" accept=".xlsx,.xls,.csv" style="display:none;">`;
+  if(pendientesFijos.length){
+    html += `<button type="button" class="add-missing-btn" id="fijoPrintBtn" data-ic="print" style="margin-bottom:10px;">Imprimir códigos para escanear en caja</button>`;
+  }
+  if(!pendientesFijos.length){
+    html += '<div class="empty">Aún no hay movimientos pendientes. Agrégalos a mano o carga tu Excel (una columna con el Código; opcional Cantidad y Motivo). Cada uno cae en su categoría por su código. Si un producto viene repetido —en el mismo archivo o en una carga posterior— las piezas se suman.</div>';
+  } else {
+    // Agrupados por categoría para que confirmes dónde cayó cada uno.
+    const grupos={}; pendientesFijos.forEach((f,idx)=>{ const nom=nombreCategoria(getPrefix(f.codigo)); (grupos[nom]=grupos[nom]||[]).push({f,idx}); });
+    html += `<div class="catalog-note" style="margin-bottom:6px;">Agrupados por categoría — así confirmas que cada movimiento pendiente cayó donde va. Toca la cantidad o el motivo para corregir.</div>`;
+    Object.keys(grupos).sort((a,b)=> grupos[b].length-grupos[a].length || a.localeCompare(b)).forEach(nom=>{
+      html += `<div class="section-title" style="margin-top:10px;"><span>${cvEsc(nom)}</span><span>${grupos[nom].length}</span></div>`;
+      html += grupos[nom].map(({f,idx})=> fijoFila(f, idx)).join('');
+    });
+  }
+  body.innerHTML = html;
   byId('fijoAddBtn').onclick = fijoAgregar;
-  body.querySelectorAll('[data-fdel]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fdel; openConfirm('¿Quitar este pendiente fijo? Dejará de cargarse en los inventarios (úsalo cuando ya se dio de baja la corrección).', ()=>{ pendientesFijos.splice(i,1); persistPendientesFijos(); renderFijos(); renderFijosUI(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
+  const imp=byId('fijoImportBtn'); if(imp) imp.onclick = ()=> byId('fijoFile').click();
+  const ff=byId('fijoFile'); if(ff) ff.onchange = fijoArchivo;
+  const pb=byId('fijoPrintBtn'); if(pb) pb.onclick = imprimirFijosBarcodes;
+  body.querySelectorAll('[data-fdel]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fdel; openConfirm('¿Quitar este pendiente? Dejará de cargarse en los inventarios (úsalo cuando ya se dio de baja la corrección).', ()=>{ pendientesFijos.splice(i,1); persistPendientesFijos(); renderFijos(); renderFijosUI(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
   body.querySelectorAll('[data-fcant]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fcant; openKeypad('Cantidad pendiente de ' + pendientesFijos[i].codigo, String(pendientesFijos[i].cantidad||0), (v)=>{ const n=parseInt(v,10); pendientesFijos[i].cantidad = isNaN(n)?0:n; persistPendientesFijos(); renderFijos(); }); });
   body.querySelectorAll('[data-fmot]').forEach(b=> b.onclick = ()=>{ const i=+b.dataset.fmot; const cur=MOTIVOS_PENDIENTES.indexOf(pendientesFijos[i].motivo); const next=MOTIVOS_PENDIENTES[(cur+1)%MOTIVOS_PENDIENTES.length]; pendientesFijos[i].motivo=next; persistPendientesFijos(); renderFijos(); });
+}
+// Lee un Excel/CSV de movimientos pendientes y los agrega a su categoría (por el
+// prefijo del código). Columna obligatoria: Código (alfanumérico). Opcionales:
+// Cantidad, Descripción, Motivo. También acepta una sola columna de códigos sin
+// encabezado. REGLA DE CANTIDAD: si hay columna Cantidad, se usa; si no, cada
+// renglón cuenta como 1 pieza. Si un código viene repetido (en el mismo archivo
+// o ya estaba en la lista), las piezas SE SUMAN — nunca se pierde una baja.
+function procesarPendientesAOA(aoa){
+  const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+  let hi=-1, cols=[];
+  for(let i=0;i<Math.min(aoa.length,10);i++){ const f=(aoa[i]||[]).map(norm); if(f.some(x=> x==='codigo'||x==='alfanumerico'||x==='clave'||x==='sku'||x.includes('codigo')||x.includes('alfanum'))){ hi=i; cols=f; break; } }
+  let cCod=0, cCant=-1, cDesc=-1, cMot=-1, start=0;
+  if(hi>=0){ const find=(...c)=>{ for(const x of c){ let k=cols.indexOf(x); if(k<0) k=cols.findIndex(y=>y.includes(x)); if(k>=0) return k; } return -1; };
+    cCod=find('codigo','alfanumerico','clave','sku'); if(cCod<0) cCod=0;
+    cCant=find('cantidad','pzs','piezas','pendiente'); cDesc=find('descripcion','nombre','producto'); cMot=find('motivo','razon','causa'); start=hi+1;
+  }
+  const { byCodigo } = buildIndexes();
+  // 1) Agrega dentro del archivo: código -> piezas sumadas (+ primera desc/motivo).
+  const agg={}; const orden=[]; let inval=0, filas=0;
+  for(let i=start;i<aoa.length;i++){ const r=aoa[i]||[]; const cod=String(r[cCod]==null?'':r[cCod]).trim().toUpperCase(); if(!cod) continue;
+    if(!isValidCodigo(cod)){ inval++; continue; }
+    let cant; if(cCant>=0){ const n=parseInt(String(r[cCant]).replace(/\D/g,''),10); cant=isNaN(n)?1:n; } else { cant=1; }
+    const desc=cDesc>=0?String(r[cDesc]||'').trim():'';
+    const mot=cMot>=0?String(r[cMot]||'').trim():'';
+    if(!agg[cod]){ agg[cod]={cant:0, desc:'', mot:''}; orden.push(cod); }
+    agg[cod].cant += cant;
+    if(desc && !agg[cod].desc) agg[cod].desc=desc;
+    if(mot && !agg[cod].mot) agg[cod].mot=mot;
+    filas++;
+  }
+  // 2) Mezcla con lo que ya había, SUMANDO piezas cuando el código ya existe.
+  const porCod={}; pendientesFijos.forEach(f=> porCod[String(f.codigo).toUpperCase()]=f);
+  let nuevos=0, sumados=0; const detalle=[];
+  orden.forEach(cod=>{
+    const a=agg[cod]; const cat=byCodigo[cod]; const ex=porCod[cod];
+    if(ex){
+      ex.cantidad=(Number(ex.cantidad)||0)+a.cant;
+      if(!ex.descripcion && (a.desc||(cat&&cat.descripcion))) ex.descripcion=a.desc||(cat&&cat.descripcion)||'';
+      sumados++; detalle.push({codigo:cod, agregado:a.cant, total:ex.cantidad, nuevo:false});
+    } else {
+      const nf={ id:uid(), codigo:cod, descripcion: a.desc||(cat&&cat.descripcion)||'', barcode:(cat&&cat.barcode)||'', cantidad:a.cant, motivo: a.mot||MOTIVOS_PENDIENTES[0] };
+      pendientesFijos.push(nf); porCod[cod]=nf;
+      nuevos++; detalle.push({codigo:cod, agregado:a.cant, total:a.cant, nuevo:true});
+    }
+  });
+  return { nuevos, sumados, inval, filas, detalle };
+}
+function fijoArchivo(e){
+  const file=e.target.files[0]; if(!file) return;
+  if(typeof XLSX==='undefined'){ openConfirm('No se pudo cargar el motor de Excel. Verifica tu internet e inténtalo de nuevo.', ()=>{}); e.target.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      let res=null;
+      for(const name of wb.SheetNames){ const aoa=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:'',blankrows:false}); const r=procesarPendientesAOA(aoa); if(r && (r.nuevos||r.sumados)){ res=r; break; } if(r && !res) res=r; }
+      if(!res || !(res.nuevos||res.sumados)){ openConfirm('No encontré códigos válidos en el archivo. Necesita una columna con el Código (alfanumérico). Opcionales: Cantidad y Motivo.', ()=>{}); e.target.value=''; return; }
+      persistPendientesFijos(); renderFijos(); renderFijosUI();
+      let msg=`Cargué ${res.nuevos+res.sumados} producto(s):\n\n• Nuevos en la lista: ${res.nuevos}\n• Ya estaban (se sumaron las piezas): ${res.sumados}`;
+      const sum=res.detalle.filter(d=>!d.nuevo).slice(0,6);
+      if(sum.length){ msg+='\n\nSumados:\n'+sum.map(d=>`• ${d.codigo}: +${d.agregado} → ${d.total} pendientes`).join('\n'); if(res.sumados>sum.length) msg+=`\n• …y ${res.sumados-sum.length} más`; }
+      if(res.inval) msg+=`\n\n${res.inval} fila(s) con código inválido (ignoradas).`;
+      msg+=`\n\nAbajo quedan "por categoría" para que confirmes que cayeron bien.`;
+      openConfirm(msg, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){ openConfirm('No se pudo leer el archivo. Revisa que sea un Excel (.xlsx) o CSV con una columna de Código.', ()=>{}); }
+    e.target.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
+// Arma una hoja imprimible con el código de barras de cada movimiento pendiente
+// para escanearlos en caja y cotejar contra lo que el sistema dio de baja.
+// Usa el código de barras real del producto; a los que no tienen les ofrece
+// generar uno interno (para escanear dentro de la app, no en el POS).
+function imprimirFijosBarcodes(){
+  if(!pendientesFijos.length){ openConfirm('No hay movimientos pendientes para imprimir.', ()=>{}); return; }
+  const sinBc = pendientesFijos.filter(f=> !f.barcode);
+  const hacer = ()=>{
+    const cols = 3;
+    let html = `<div class="eti-sheet" style="grid-template-columns:repeat(${cols},1fr);">`;
+    pendientesFijos.forEach((f,i)=>{
+      let c = `<div class="eti-d">${cotejoEsc(f.descripcion||f.codigo)}</div>`;
+      c += `<div class="fijo-baja">Dado de baja: ${Number(f.cantidad)||0}</div>`;
+      if(f.barcode) c += `<svg class="eti-bc" data-i="${i}"></svg>`;
+      else c += `<div class="eti-nobc">sin código de barras · busca por código en caja</div>`;
+      c += `<div class="eti-c">${cotejoEsc(f.codigo||'')}</div>`;
+      html += `<div class="eti-cell eti-mediana">${c}</div>`;
+    });
+    html += `</div>`;
+    const area=byId('printArea'); area.className='print-etiquetas';
+    area.innerHTML = `<style>${etiPrintCss()}.fijo-baja{font-size:8pt;font-weight:800;color:#B0281A;}</style>` + html;
+    let st=byId('printPageStyle'); if(!st){ st=document.createElement('style'); st.id='printPageStyle'; document.head.appendChild(st); }
+    st.textContent='@page{size:letter;margin:8mm;}';
+    pendientesFijos.forEach((f,i)=>{ if(!f.barcode) return; const svg=area.querySelector(`svg[data-i="${i}"]`); if(svg) try{ dibujarBarcode(svg, f.barcode, {height:48, fontSize:10, margin:4, width:1.3}); }catch(_){}; });
+    document.body.classList.add('imprimiendo');
+    const fin=()=>{ document.body.classList.remove('imprimiendo'); window.removeEventListener('afterprint', fin); };
+    window.addEventListener('afterprint', fin);
+    setTimeout(()=>{ try{ window.print(); }catch(e){} setTimeout(fin,1500); }, 180);
+  };
+  if(sinBc.length){
+    openConfirm(sinBc.length + ' producto(s) no tienen código de barras. ¿Generarles un código interno para imprimirlo?\n\nOjo: el código interno sirve para escanear DENTRO de la app, no en el punto de venta. En caja esos los buscas por su código.', ()=>{
+      sinBc.forEach(f=>{ f.barcode = asignarCodigoInterno(f.codigo); });
+      persistPendientesFijos(); renderFijos(); hacer();
+    }, {yesLabel:'Generar e imprimir', noLabel:'Imprimir sin ellos', onNo: hacer});
+  } else hacer();
 }
 function fijoAgregar(){
   openTextKeypad('Código del producto', '', (c)=>{
@@ -3856,11 +4095,50 @@ function palomearTarea(id){
   persistTareas(); renderTareas(); renderTareasBadge();
 }
 function borrarTarea(id){ openConfirm('¿Quitar esta tarea del plan?', ()=>{ tareas=tareas.filter(x=>x.id!==id); persistTareas(); renderTareas(); renderTareasBadge(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); }
-function nuevaTarea(){ openTextKeypad('Escribe la tarea', '', (v)=>{ const t=String(v||'').trim(); if(!t) return; tareaDraft={titulo:t, tipo:'general', para:'Todos', periodo: tareasVista==='semana'?'semana':'dia'}; renderTareas(); }); }
+// ===== CATÁLOGO DE TAREAS OPERATIVAS (plantillas para delegar) =====
+const TAREAS_CATEGORIAS = ['Caja y efectivo','Seguridad y mantenimiento','Temperaturas y caducidades','Precios y etiquetado','Abasto y alimentos','Inventario y exhibición','Limpieza e higiene'];
+function tareasCatalogoSeed(){
+  const T=(nombre,categoria,critica,descripcion)=>({nombre,categoria,critica:!!critica,periodicidad:'Diaria',descripcion:descripcion||''});
+  const base=[
+    T('Conteo de caja intermedio','Caja y efectivo',true,'Caja, turno, efectivo esperado, contado y diferencia. Vincular el reporte del sistema cuando esté disponible.'),
+    T('Arqueo de caja al cierre de turno','Caja y efectivo',true,'Tienda, caja, turno, importes esperados y contados, diferencias y responsable del cierre.'),
+    T('Verificar fondos de cambio','Caja y efectivo',false,''),
+    T('Verificación de iluminación','Seguridad y mantenimiento',false,''),
+    T('Verificar salidas de emergencia','Seguridad y mantenimiento',true,'Recorrido y salida completos; verificar que están despejados y señalizados.'),
+    T('Verificación de extintores','Seguridad y mantenimiento',true,'Extintor accesible; manómetro, sello y etiqueta de revisión legibles.'),
+    T('Revisión de cámaras de seguridad','Seguridad y mantenimiento',false,''),
+    T('Verificar temperaturas de congeladores','Temperaturas y caducidades',true,'Temperatura en °C, congelador identificado y lectura legible del termómetro.'),
+    T('Verificar temperatura de refrigeradores','Temperaturas y caducidades',true,'Temperatura en °C, equipo identificado y lectura legible del termómetro.'),
+    T('Verificación de precios','Precios y etiquetado',true,''),
+    T('Reposición de área de comida caliente','Abasto y alimentos',false,''),
+    T('Reabastecer insumos de bebidas','Abasto y alimentos',false,''),
+    T('Reabastecimiento de productos críticos','Abasto y alimentos',false,''),
+    T('Inventario cíclico','Inventario y exhibición',false,''),
+    T('Verificar stock de productos críticos','Inventario y exhibición',false,''),
+    T('Fronteado de producto','Inventario y exhibición',false,''),
+    T('Acomodo de góndolas','Inventario y exhibición',false,''),
+    T('Limpieza de dispensadores de bebidas','Limpieza e higiene',false,'Boquillas, bandejas de goteo y superficies exteriores después de la limpieza.'),
+    T('Limpieza de cristales y puertas de entrada','Limpieza e higiene',false,''),
+    T('Desinfección de áreas de alto contacto','Limpieza e higiene',false,''),
+    T('Limpieza profunda de máquinas de café','Limpieza e higiene',false,'Equipo, procedimiento y responsable; fotos del resultado. Documenta descalcificación y sanitización.'),
+    T('Limpieza de área de comida','Limpieza e higiene',false,'Mesas, superficies, microondas y área de dispensadores después de la limpieza.'),
+    T('Limpieza de cafetera','Limpieza e higiene',false,'Equipo y bandeja limpios. Si incluye preparar café fresco, registrar la hora de preparación.'),
+    T('Limpieza de roladora','Limpieza e higiene',false,'Rodillos y bandeja después de la limpieza, identificando el equipo.'),
+    T('Limpieza de baños','Limpieza e higiene',true,'Sanitarios y lavabos limpios; papel, jabón y demás insumos repuestos.'),
+    T('Limpieza de pisos','Limpieza e higiene',false,''),
+    T('Vaciado de basura','Limpieza e higiene',false,'')
+  ];
+  return base.map((t,i)=> Object.assign({id:'tc'+(i+1)}, t));
+}
+function nuevaTarea(){ tareaCatAbierto=true; tareaCatEdit=false; renderTareas(); }
+function nuevaTareaManual(){ openTextKeypad('Escribe la tarea', '', (v)=>{ const t=String(v||'').trim(); if(!t) return; tareaCatAbierto=false; tareaDraft={titulo:t, tipo:'general', para:'Todos', periodo: tareasVista==='semana'?'semana':'dia', categoria:'', critica:false, descripcion:''}; renderTareas(); }); }
+function elegirDelCatalogo(id){ const c=tareasCatalogo.find(x=>x.id===id); if(!c) return; tareaCatAbierto=false; tareaDraft={titulo:c.nombre, tipo:'general', para:'Todos', periodo: tareasVista==='semana'?'semana':'dia', categoria:c.categoria||'', critica:!!c.critica, descripcion:c.descripcion||''}; renderTareas(); }
+function catalogoAgregar(){ openTextKeypad('Nombre de la nueva tarea del catálogo', '', (v)=>{ const n=String(v||'').trim(); if(!n) return; const k=tareasCatalogo.reduce((m,c)=>{const z=parseInt(String(c.id).replace(/\D/g,''),10)||0; return Math.max(m,z);},0); tareasCatalogo.push({id:'tc'+(k+1), nombre:n, categoria:'Otras', critica:false, periodicidad:'Diaria', descripcion:''}); persistTareasCatalogo(); renderTareas(); }); }
+function catalogoQuitar(id){ openConfirm('¿Quitar esta tarea del catálogo? (No afecta las tareas ya asignadas.)', ()=>{ tareasCatalogo=tareasCatalogo.filter(c=>c.id!==id); persistTareasCatalogo(); renderTareas(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); }
 function guardarDraft(){
   if(!tareaDraft||!tareaDraft.titulo) return;
   const fecha = tareaDraft.periodo==='semana' ? semActualISO() : hoyISO();
-  tareas.push({ id:uid(), titulo:tareaDraft.titulo, tipo:tareaDraft.tipo, para:tareaDraft.para, periodo:tareaDraft.periodo, fecha, hecha:false, hechaPor:'', hechaTs:0, creadaPor:currentUser, creadaTs:Date.now() });
+  tareas.push({ id:uid(), titulo:tareaDraft.titulo, tipo:tareaDraft.tipo, para:tareaDraft.para, periodo:tareaDraft.periodo, fecha, hecha:false, hechaPor:'', hechaTs:0, creadaPor:currentUser, creadaTs:Date.now(), categoria:tareaDraft.categoria||'', critica:!!tareaDraft.critica, descripcion:tareaDraft.descripcion||'' });
   tareaDraft=null; persistTareas(); renderTareas(); renderTareasBadge();
 }
 function renderTareas(){
@@ -3869,10 +4147,22 @@ function renderTareas(){
   const chip=(txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${cvEsc(txt)}</button>`;
   let html=`<div class="comp-filtros" style="margin-bottom:12px;">${chip('Hoy',tareasVista==='dia','data-tv="dia"')}${chip('Esta semana',tareasVista==='semana','data-tv="semana"')}</div>`;
   if(jefe){
-    if(tareaDraft){
+    if(tareaCatAbierto){
+      html+=`<div class="tarea-draft">
+        <div class="tcat-top"><b>Catálogo de tareas</b><button type="button" class="tcat-edit" id="catEditBtn">${tareaCatEdit?'Listo':'✎ Editar'}</button></div>
+        <button type="button" class="add-missing-btn" id="catManual" style="margin:8px 0;">✍️ Escribir una tarea a mano</button>
+        ${tareaCatEdit?`<button type="button" class="add-missing-btn" id="catAdd" style="margin-bottom:8px;">➕ Agregar al catálogo</button>`:''}`;
+      TAREAS_CATEGORIAS.concat([...new Set(tareasCatalogo.map(c=>c.categoria))].filter(c=> TAREAS_CATEGORIAS.indexOf(c)<0)).forEach(cat=>{
+        const its=tareasCatalogo.filter(c=>c.categoria===cat); if(!its.length) return;
+        html+=`<div class="section-title" style="margin-top:12px;"><span>${cvEsc(cat)}</span><span>${its.length}</span></div>`;
+        html+=its.map(c=>`<div class="tcat-item"><button type="button" class="tcat-pick" data-catpick="${c.id}"><div class="tcat-nom">${cvEsc(c.nombre)}${c.critica?' <span class="tcat-crit">Crítica</span>':''}</div>${c.descripcion?`<div class="tcat-desc">${cvEsc(c.descripcion)}</div>`:''}</button>${tareaCatEdit?`<button type="button" class="del" data-catrm="${c.id}">🗑</button>`:''}</div>`).join('');
+      });
+      html+=`<button type="button" class="add-missing-btn" id="catCerrar" style="margin-top:12px;">Cancelar</button></div>`;
+    } else if(tareaDraft){
       html+=`<div class="tarea-draft">
         <div class="field-label">Nueva tarea</div>
         <div class="tarea-titulo" id="draftTitulo">${cvEsc(tareaDraft.titulo)} ✎</div>
+        ${tareaDraft.categoria||tareaDraft.critica?`<div class="tarea-meta" style="margin-top:4px;">${tareaDraft.categoria?cvEsc(tareaDraft.categoria):''}${tareaDraft.critica?' · <span class="tcat-crit">Crítica</span>':''}</div>`:''}
         <div class="field-label" style="margin-top:10px;">¿Para quién?</div>
         <div class="comp-filtros" id="draftPara">
           ${chip('Todos',tareaDraft.tipo==='general','data-para="general::Todos"')}
@@ -3893,9 +4183,10 @@ function renderTareas(){
   const filaTarea=(t)=>{
     const quien=t.tipo==='persona'?t.para:(t.tipo==='area'?('Área: '+t.para):'Todos');
     const delBtn=jefe?`<button type="button" class="del" data-tdel="${t.id}">✕</button>`:'';
+    const extra=[t.categoria?cvEsc(t.categoria):'', t.critica?'<span class="tcat-crit">Crítica</span>':''].filter(Boolean).join(' · ');
     return `<div class="tarea-item ${t.hecha?'hecha':''}">
         <button type="button" class="tarea-check ${t.hecha?'on':''}" data-tcheck="${t.id}">${t.hecha?'✓':''}</button>
-        <div class="tarea-info"><div class="tarea-tx">${cvEsc(t.titulo)}</div><div class="tarea-meta">${cvEsc(quien)}${t.hecha?(' · ✓ '+cvEsc(t.hechaPor||'')):''}</div></div>
+        <div class="tarea-info"><div class="tarea-tx">${cvEsc(t.titulo)}</div><div class="tarea-meta">${cvEsc(quien)}${extra?' · '+extra:''}${t.hecha?(' · ✓ '+cvEsc(t.hechaPor||'')):''}</div></div>
         ${delBtn}</div>`;
   };
   if(!lista.length){
@@ -3917,6 +4208,12 @@ function renderTareas(){
   body.querySelectorAll('[data-tcheck]').forEach(b=> b.onclick=()=> palomearTarea(b.dataset.tcheck));
   body.querySelectorAll('[data-tdel]').forEach(b=> b.onclick=()=> borrarTarea(b.dataset.tdel));
   const nb=byId('tareaNuevaBtn'); if(nb) nb.onclick=nuevaTarea;
+  const cm=byId('catManual'); if(cm) cm.onclick=nuevaTareaManual;
+  const ce=byId('catEditBtn'); if(ce) ce.onclick=()=>{ tareaCatEdit=!tareaCatEdit; renderTareas(); };
+  const ca=byId('catAdd'); if(ca) ca.onclick=catalogoAgregar;
+  const cx=byId('catCerrar'); if(cx) cx.onclick=()=>{ tareaCatAbierto=false; tareaCatEdit=false; renderTareas(); };
+  body.querySelectorAll('[data-catpick]').forEach(b=> b.onclick=()=> elegirDelCatalogo(b.dataset.catpick));
+  body.querySelectorAll('[data-catrm]').forEach(b=> b.onclick=()=> catalogoQuitar(b.dataset.catrm));
   const dt=byId('draftTitulo'); if(dt) dt.onclick=()=> openTextKeypad('Escribe la tarea', tareaDraft.titulo, (v)=>{ const t=String(v||'').trim(); if(t) tareaDraft.titulo=t; renderTareas(); });
   body.querySelectorAll('#draftPara [data-para]').forEach(b=> b.onclick=()=>{ const p=b.dataset.para.split('::'); tareaDraft.tipo=p[0]; tareaDraft.para=p[1]; renderTareas(); });
   body.querySelectorAll('#draftPeriodo [data-per]').forEach(b=> b.onclick=()=>{ tareaDraft.periodo=b.dataset.per; renderTareas(); });
@@ -3951,15 +4248,39 @@ function perfilDatos(){
   });
   return P;
 }
-function perfilCard(p){
+let perfilMerge = null; // nombre "origen" mientras combinas personas
+// Puntos del ranking operativo: conteos cerrados + TAREAS cumplidas (datos reales).
+function perfilPuntos(p){ return p.completos.size*10 + p.incompletos.size*4 + p.tareasHechas*5 + Math.round(p.reng/20); }
+function perfilBanner(todos, posDe, lider){
+  if(!currentUser || !posDe[currentUser] || !todos.length) return '';
+  const pos=posDe[currentUser], tot=todos.length, me=todos.find(x=>x.n===currentUser); if(!me) return '';
+  const nom=cvEsc((String(currentUser).split(' ')[0])||currentUser);
+  if(pos===1) return `<div class="rank-banner oro"><span class="rb-ic">★</span><span><b>Vas liderando, ${nom}.</b> #1 en ejecución operativa — ${me.p.cierres.size} conteos y ${me.p.tareasHechas} tareas cumplidas.</span></div>`;
+  const faltan=Math.max(1, lider.pts-me.pts);
+  if(pos<=3) return `<div class="rank-banner"><span class="rb-ic">↑</span><span><b>Buen trabajo, ${nom}.</b> Vas en el lugar #${pos} de ${tot} · ${faltan} pts para el 1.º.</span></div>`;
+  return `<div class="rank-banner"><span class="rb-ic">↑</span><span><b>Vamos, ${nom}.</b> Vas #${pos} de ${tot} · cada conteo y cada tarea suma.</span></div>`;
+}
+function perfilCard(p, jefe, pos, pts){
   const nConteos=p.cierres.size, comp=p.completos.size, inc=p.incompletos.size;
   const topCats=Object.keys(p.cats).sort((a,b)=>p.cats[b]-p.cats[a]).slice(0,3);
   const areas=Object.keys(p.areas).sort((a,b)=>p.areas[b]-p.areas[a]);
   const tareasTot=p.tareasHechas+p.tareasPend;
   const pct=tareasTot?Math.round(100*p.tareasHechas/tareasTot):null;
   const col=pct===null?'#5A6B74':pct>=80?'#0f7a5c':pct>=50?'#9a6212':'#B0281A';
-  return `<div class="perfil-card">
-    <div class="perfil-nom">${cvEsc(p.nombre)}</div>
+  let accion='';
+  if(jefe){
+    if(!perfilMerge) accion=`<button type="button" class="perfil-merge-btn" data-pmerge="${cvEsc(p.nombre)}">Combinar / corregir nombre</button>`;
+    else if(perfilMerge===p.nombre) accion=`<div class="perfil-merge-src">Esta persona se unirá a la que elijas abajo. <button type="button" class="perfil-merge-cancel" data-pmergecancel="1">Cancelar</button></div>`;
+    else accion=`<button type="button" class="perfil-merge-into" data-pmergeinto="${cvEsc(p.nombre)}">Unir «${cvEsc(perfilMerge)}» en esta persona</button>`;
+  }
+  const lider = pos===1;
+  return `<div class="perfil-card ${perfilMerge===p.nombre?'merging':''} ${lider?'lider':''}">
+    <div class="perfil-head">
+      <span class="perfil-rank ${lider?'oro':''}">${pos||'·'}</span>
+      <span class="perfil-nom">${cvEsc(p.nombre)}</span>
+      ${lider?'<span class="perfil-lider">Líder</span>':''}
+      <span class="perfil-pts">${pts} pts</span>
+    </div>
     <div class="perfil-grid">
       <div class="perfil-kpi"><b>${nConteos}</b><small>conteos</small></div>
       <div class="perfil-kpi"><b style="color:#0f7a5c;">${comp}</b><small>completos</small></div>
@@ -3969,26 +4290,197 @@ function perfilCard(p){
     <div class="perfil-meta"><b>Áreas:</b> ${areas.length?cvEsc(areas.join(' · ')):'—'}</div>
     <div class="perfil-meta"><b>Lo que más cuenta:</b> ${topCats.length?cvEsc(topCats.join(' · ')):'—'}</div>
     ${tareasTot?`<div class="perfil-meta"><b>Tareas:</b> ${p.tareasHechas}/${tareasTot} hechas · <span style="color:${col};font-weight:800;">${pct}%</span></div>`:''}
+    ${accion}
   </div>`;
+}
+// Une TODOS los registros de "origen" en "destino": conteos (capturista),
+// tareas (hechaPor/para), evaluaciones y fotos. Arregla el duplicado que sale
+// cuando alguien cambió su nombre de usuario — sin perder ningún dato.
+function perfilCombinar(origen, destino){
+  if(!origen || !destino || origen===destino) return;
+  let nc=0;
+  (cierresConteo||[]).forEach(c=>{ let hit=false; (c.registros||[]).forEach(r=>{ if(r.capturista===origen){ r.capturista=destino; hit=true; } }); if(hit){ nc++; try{ fsSaveCierre(c); }catch(_){}} });
+  if(nc) persistCierresLocal();
+  let tch=false;
+  (tareas||[]).forEach(t=>{ if(t.hechaPor===origen){ t.hechaPor=destino; tch=true; } if(t.tipo==='persona' && t.para===origen){ t.para=destino; tch=true; } });
+  if(tch) persistTareas();
+  let ech=false;
+  (evalRuns||[]).forEach(r=>{ if(r.evaluadorNombre===origen){ r.evaluadorNombre=destino; ech=true; } });
+  if(ech) persistEvalRuns();
+  let vch=false;
+  (visionLog||[]).forEach(e=>{ if(e.u===origen){ e.u=destino; vch=true; } });
+  if(vch){ try{ persistVisionLogLocal(); fsSet('vision_log', visionLog); }catch(_){}}
+  perfilMerge=null;
+  renderPerfil();
+  openConfirm(`Listo: "${origen}" se unió a "${destino}". Sus conteos y tareas ahora cuentan como una sola persona.`, ()=>{}, {yesLabel:'Entendido'});
 }
 function renderPerfil(){
   const body=byId('perfilBody'); if(!body) return;
   const P=perfilDatos();
   const jefe=esEncargado();
-  let nombres=Object.keys(P);
+  const todos=Object.keys(P).map(n=>({n, p:P[n], pts:perfilPuntos(P[n])}))
+    .sort((a,b)=> b.pts-a.pts || b.p.cierres.size-a.p.cierres.size || b.p.reng-a.p.reng);
+  const posDe={}; todos.forEach((x,i)=> posDe[x.n]=i+1);
+  const lider=todos[0];
+  if(!todos.length){ body.innerHTML='<div class="empty">Aún no hay conteos ni tareas para mostrar. En cuanto el equipo empiece a contar, aquí verás el ranking de cada quien.</div>'; return; }
+  let visibles=todos;
   if(!jefe){
-    nombres=nombres.filter(n=> n===currentUser);
-    if(!nombres.length){ body.innerHTML=`<div class="empty">Aún no hay conteos ni tareas registrados a tu nombre${currentUser?(', '+cvEsc(currentUser)):''}. En cuanto cuentes o palomees tareas, aquí verás tu desempeño.</div>`; return; }
+    visibles=todos.filter(x=> x.n===currentUser);
+    if(!visibles.length){ body.innerHTML=`<div class="empty">Aún no hay conteos ni tareas registrados a tu nombre${currentUser?(', '+cvEsc(currentUser)):''}. En cuanto cuentes o palomees tareas, aquí verás tu desempeño.</div>`; return; }
   }
-  if(!nombres.length){ body.innerHTML='<div class="empty">Aún no hay conteos ni tareas para mostrar. En cuanto el equipo empiece a contar, aquí verás el desempeño de cada quien.</div>'; return; }
-  nombres.sort((a,b)=> P[b].cierres.size - P[a].cierres.size || P[b].reng - P[a].reng);
-  const intro=jefe?`<div class="catalog-note" style="margin:2px 0 12px;">Desempeño de cada colaborador con los datos reales de la app: conteos que ha cerrado (completos / incompletos), áreas donde trabaja y tareas que cumple. Para reconocer y dar seguimiento — no es para castigar.</div>`:'';
-  body.innerHTML=intro
-    + `<div class="section-title"><span>${jefe?'Equipo · ordenado por conteos':'Mi desempeño'}</span><span>${jefe?nombres.length+' persona(s)':''}</span></div>`
-    + nombres.map(n=>perfilCard(P[n])).join('');
+  const banner=perfilBanner(todos, posDe, lider);
+  const intro=jefe?`<div class="catalog-note" style="margin:2px 0 12px;">Ranking operativo con datos reales: conteos cerrados (completos / incompletos) y tareas cumplidas. Para motivar y reconocer — no para castigar.</div>`:'';
+  const bannerMerge = (jefe && perfilMerge) ? `<div class="eval-alerta">Estás combinando a <b>${cvEsc(perfilMerge)}</b>. Elige abajo la persona correcta (donde debe sumarse). Si fue un cambio de nombre, aquí lo arreglas.</div>` : '';
+  body.innerHTML=banner + intro + bannerMerge
+    + `<div class="section-title"><span>${jefe?'Ranking operativo':'Mi desempeño'}</span><span>${jefe?todos.length+' persona(s)':('lugar #'+posDe[currentUser])}</span></div>`
+    + visibles.map(x=>perfilCard(x.p, jefe, posDe[x.n], x.pts)).join('');
+  body.querySelectorAll('[data-pmerge]').forEach(b=> b.onclick=()=>{ perfilMerge=b.dataset.pmerge; renderPerfil(); });
+  body.querySelectorAll('[data-pmergecancel]').forEach(b=> b.onclick=()=>{ perfilMerge=null; renderPerfil(); });
+  body.querySelectorAll('[data-pmergeinto]').forEach(b=> b.onclick=()=>{ const destino=b.dataset.pmergeinto, origen=perfilMerge; if(!origen||origen===destino) return; openConfirm(`¿Unir «${origen}» dentro de «${destino}»? Todos los conteos y tareas de «${origen}» pasarán a «${destino}». Útil cuando es la misma persona con nombre distinto. No se puede deshacer.`, ()=> perfilCombinar(origen, destino), {yesLabel:'Sí, unir', noLabel:'Cancelar'}); });
 }
 function abrirPerfil(){ byId('perfilOverlay').style.display='flex'; renderPerfil(); }
 function cerrarPerfil(){ byId('perfilOverlay').style.display='none'; }
+
+// ===== OBJETIVOS Y PLAN DE REACCIÓN (ventas + estrategias compartidas) =====
+function estrategiasSeed(){
+  const E=(titulo,categoria,descripcion)=>({titulo,categoria,descripcion,activa:true});
+  const base=[
+    E('Ofrecer el producto adoptado en cada venta','Venta sugerida','Sugiere el adoptado del mes en caja a cada cliente. Es venta directa a la meta.'),
+    E('Colocar activaciones y exhibiciones','Exhibición / activación','Monta las activaciones indicadas y mantén las exhibiciones llenas, con precio y vigentes.'),
+    E('Cuidar los productos Top de venta','Abasto','Que NUNCA falten en piso los productos de mayor rotación — un quiebre ahí es venta perdida.'),
+    E('Impulsar comida rápida y café','Comida preparada','Ofrece café/hotdog, mantén el equipo listo, limpio y surtido. Es margen alto.')
+  ];
+  return base.map((e,i)=> Object.assign({id:'es'+(i+1)}, e));
+}
+function objNum(v){ const s=String(v==null?'':v).replace(/[$,%\s]/g,'').replace(/[−–]/g,'-'); const n=parseFloat(s); return isNaN(n)?null:n; }
+function miNumTienda(){ const m=String(typeof TIENDA_ID!=='undefined'?TIENDA_ID:'').match(/\d+/); return m?m[0]:''; }
+// Lee el reporte de ventas/presupuesto del distrito y SACA solo la fila de esta
+// tienda (por número de tienda). Así el equipo ve su objetivo, no el del distrito.
+function procesarReporteVentasAOA(aoa){
+  const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/\s+/g,' ').trim();
+  let hi=-1, cols=[];
+  for(let i=0;i<Math.min(aoa.length,25);i++){ const f=(aoa[i]||[]).map(norm); if(f.some(x=>x.includes('tienda')) && f.some(x=>x.includes('venta'))){ hi=i; cols=f; break; } }
+  if(hi<0) return null;
+  const col=(...cands)=>{ for(const c of cands){ let k=cols.indexOf(c); if(k<0) k=cols.findIndex(x=> x.includes(c)); if(k>=0) return k; } return -1; };
+  const cNum=col('no. tienda','no tienda','num tienda','numero de tienda'), cTienda=col('tienda');
+  const cVD=col('venta b2c al dia','venta al dia'), cPD=col('ppto al dia b2c','ppto al dia');
+  const cPctD=col('% alc al dia b2c','% alc al dia','alc al dia'), cTend=col('tendencia b2c','tendencia');
+  const cPM=col('ppto mensual b2c','ppto mensual','presupuesto mensual'), cPctM=col('% alc mes b2c','% alc mes','alc mes');
+  const cAA=col('venta aa b2c','venta aa'), cDAA=col('dif vs aa b2c','dif vs aa');
+  const miNum=miNumTienda();
+  let fila=null;
+  for(let i=hi+1;i<aoa.length;i++){ const r=aoa[i]||[]; const numCell=cNum>=0?String(r[cNum]==null?'':r[cNum]).replace(/\D/g,''):''; const tCell=norm(cTienda>=0?r[cTienda]:'');
+    if((miNum && numCell===miNum) || (tCell && TIENDA_NOMBRE && tCell.includes(norm(String(TIENDA_NOMBRE).replace(/\d+/g,'').trim())) && tCell.length>2)){ fila=r; break; } }
+  if(!fila) return null;
+  return { tienda: cTienda>=0?String(fila[cTienda]||'').trim():(TIENDA_NOMBRE||''),
+    ventaDia:objNum(cVD>=0?fila[cVD]:null), pptoDia:objNum(cPD>=0?fila[cPD]:null), pctDia:objNum(cPctD>=0?fila[cPctD]:null),
+    tendencia:objNum(cTend>=0?fila[cTend]:null), pptoMes:objNum(cPM>=0?fila[cPM]:null), pctMes:objNum(cPctM>=0?fila[cPctM]:null),
+    ventaAA:objNum(cAA>=0?fila[cAA]:null), difAA:objNum(cDAA>=0?fila[cDAA]:null), fecha:hoyISO() };
+}
+function cargarReporteVentas(){ byId('objVentasFile').click(); }
+function objColor(pct){ return pct==null?'#5A6B74':pct>=100?'#0f7a5c':pct>=80?'#9a6212':'#B0281A'; }
+function objDinero(n){ return n==null?'—':'$'+Math.round(n).toLocaleString('es-MX'); }
+function abrirObjetivos(){ byId('objOverlay').style.display='flex'; renderObjetivos(); }
+function cerrarObjetivos(){ byId('objOverlay').style.display='none'; }
+function renderObjetivos(){
+  const body=byId('objBody'); if(!body) return;
+  const jefe=esEncargado();
+  const o=objetivoVentas||{};
+  let html='';
+  // ---- Objetivo de ventas ----
+  const tieneDatos = (o.pptoMes!=null || o.ventaDia!=null);
+  if(tieneDatos){
+    const pctDia=o.pctDia, pctMes=o.pctMes;
+    const cob = (o.ventaDia!=null && o.pptoMes) ? Math.round(1000*o.ventaDia/o.pptoMes)/10 : null;
+    const faltaMes = (o.pptoMes!=null && o.tendencia!=null) ? (o.pptoMes-o.tendencia) : null;
+    const ed=(campo)=> jefe?` data-objedit="${campo}"`:''; const tap=jefe?' obj-tap':'';
+    html+=`<div class="obj-card">
+      <div class="obj-tienda">${cvEsc(o.tienda||TIENDA_NOMBRE||'')}${o.fecha?` · <span class="${jefe?'obj-tap':''}" style="color:var(--ink-soft);font-weight:600;"${ed('fecha')}>al ${cvEsc(o.fecha)} ${jefe?'✎':''}</span>`:''}</div>
+      <div class="obj-big" style="color:${objColor(pctDia)}">${pctDia==null?'—':pctDia+'%'}<small>del presupuesto del día</small></div>
+      <div class="obj-bar"><span style="width:${Math.max(3,Math.min(100,pctDia||0))}%;background:${objColor(pctDia)};"></span></div>
+      <div class="obj-grid">
+        <div class="${tap}"${ed('ventaDia')}><b>${objDinero(o.ventaDia)}</b><small>venta a la fecha ${jefe?'✎':''}</small></div>
+        <div class="${tap}"${ed('pptoDia')}><b>${objDinero(o.pptoDia)}</b><small>ppto al día ${jefe?'✎':''}</small></div>
+        <div class="${tap}"${ed('pptoMes')}><b>${objDinero(o.pptoMes)}</b><small>meta del mes ${jefe?'✎':''}</small></div>
+        <div class="${tap}"${ed('tendencia')}><b>${objDinero(o.tendencia)}</b><small>tendencia del mes ${jefe?'✎':''}</small></div>
+      </div>
+      ${pctMes!=null?`<div class="obj-linea">📈 Tendencia vs meta: <b style="color:${objColor(pctMes)}">${pctMes}%</b>${faltaMes!=null?` · faltan <b style="color:#B0281A;">${objDinero(faltaMes)}</b> para la meta`:''}</div>`:''}
+      <div class="obj-linea ${jefe?'obj-tap':''}" style="color:var(--ink-soft);"${ed('ventaAA')}>Año anterior: ${o.ventaAA==null?'—':objDinero(o.ventaAA)}${o.ventaAA===0?' (tienda nueva)':''} ${jefe?'✎':''}</div>
+      ${cob!=null?`<div class="obj-linea" style="color:var(--ink-soft);">Cobertura del presupuesto mensual: ${cob}%</div>`:''}
+    </div>`;
+  } else {
+    html+=`<div class="catalog-note" style="margin-bottom:10px;">Aún no hay objetivo cargado. ${jefe?'Cuando te compartan el reporte, captúralo <b>a mano</b> con el botón de abajo (o sube el Excel).':'En cuanto el aliado cargue la meta, aquí la verás con el avance.'}</div>`;
+  }
+  if(jefe) html+=`<button type="button" class="sis-principal has-ic" id="objManualBtn" style="margin:10px 0 6px;">✍️ <span class="bt-tx" style="margin-left:6px;">${tieneDatos?'Editar objetivo a mano':'Capturar objetivo a mano'}</span></button>
+    <details class="mas-opciones" style="margin-bottom:4px;"><summary>…o cargar el Excel del reporte</summary>
+    <button type="button" class="add-missing-btn" id="objCargarBtn" style="margin-top:8px;">${icBtn('upload')} Cargar reporte de ventas (Excel)</button>
+    <input type="file" id="objVentasFile" accept=".xlsx,.xls,.csv" style="display:none;"></details>`;
+  // ---- Plan de reacción (estrategias) ----
+  html+=`<div class="section-title" style="margin-top:16px;"><span>Plan de reacción · estrategias</span><span>${jefe?'<button type="button" class="tcat-edit" id="estrAdd">➕ Agregar</button>':''}</span></div>`;
+  html+=`<div class="catalog-note" style="margin-bottom:10px;">Lo que TODO el equipo debe ejecutar para despegar la tienda. Apéguémonos a esto.</div>`;
+  const lista = jefe ? estrategias : estrategias.filter(e=> e.activa!==false);
+  if(!lista.length){ html+=`<div class="empty">Aún no hay estrategias. ${jefe?'Agrega las acciones con las que vamos a levantar la venta.':''}</div>`; }
+  else html+=lista.map(e=>{
+    const act=e.activa!==false;
+    return `<div class="estr-card ${act?'':'off'}">
+      <div class="estr-tx" ${jefe?`data-estredit="${e.id}"`:''}>${cvEsc(e.titulo)}${e.categoria?` <span class="estr-cat">${cvEsc(e.categoria)}</span>`:''}${!act?' <span class="estr-pausa">Pausada</span>':''}</div>
+      ${e.descripcion?`<div class="estr-desc" ${jefe?`data-estrdesc="${e.id}"`:''}>${cvEsc(e.descripcion)}</div>`:(jefe?`<div class="estr-desc" data-estrdesc="${e.id}" style="color:var(--ink-soft);font-style:italic;">+ agregar detalle</div>`:'')}
+      ${jefe?`<div class="estr-ops"><button type="button" class="eval-act ${act?'on':''}" data-estract="${e.id}">${act?'Activa':'Pausada'}</button><button type="button" class="del" data-estrrm="${e.id}">🗑</button></div>`:''}
+    </div>`;
+  }).join('');
+  body.innerHTML=html;
+  const cb=byId('objCargarBtn'); if(cb) cb.onclick=cargarReporteVentas;
+  const mb=byId('objManualBtn'); if(mb) mb.onclick=objCapturarManual;
+  body.querySelectorAll('[data-objedit]').forEach(b=> b.onclick=()=> objEditarCampo(b.dataset.objedit));
+  const vf=byId('objVentasFile'); if(vf) vf.onchange=(e)=> objArchivoElegido(e);
+  const ea=byId('estrAdd'); if(ea) ea.onclick=estrategiaAgregar;
+  body.querySelectorAll('[data-estract]').forEach(b=> b.onclick=()=>{ const s=estrategias.find(x=>x.id===b.dataset.estract); if(s){ s.activa=s.activa===false; persistEstrategias(); renderObjetivos(); } });
+  body.querySelectorAll('[data-estrrm]').forEach(b=> b.onclick=()=> estrategiaQuitar(b.dataset.estrrm));
+  body.querySelectorAll('[data-estredit]').forEach(b=> b.onclick=()=>{ const s=estrategias.find(x=>x.id===b.dataset.estredit); if(!s) return; openTextKeypad('Editar la estrategia', s.titulo, (v)=>{ const t=String(v||'').trim(); if(t){ s.titulo=t; persistEstrategias(); renderObjetivos(); } }); });
+  body.querySelectorAll('[data-estrdesc]').forEach(b=> b.onclick=()=>{ const s=estrategias.find(x=>x.id===b.dataset.estrdesc); if(!s) return; openTextKeypad('Detalle de la estrategia', s.descripcion||'', (v)=>{ s.descripcion=String(v||'').trim(); persistEstrategias(); renderObjetivos(); }); });
+}
+function objArchivoElegido(e){
+  const file=e.target.files[0]; if(!file) return;
+  if(typeof XLSX==='undefined'){ openConfirm('No se pudo cargar el motor de Excel. Verifica tu internet e inténtalo de nuevo.', ()=>{}); e.target.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      let res=null;
+      for(const name of wb.SheetNames){ const aoa=XLSX.utils.sheet_to_json(wb.Sheets[name],{header:1,defval:'',blankrows:false}); const r=procesarReporteVentasAOA(aoa); if(r){ res=r; break; } }
+      if(!res){ openConfirm('No encontré la fila de tu tienda ('+ (miNumTienda()||TIENDA_NOMBRE) +') en el reporte. Revisa que el Excel traiga las columnas No. Tienda, Venta y Presupuesto.', ()=>{}); e.target.value=''; return; }
+      objetivoVentas=res; persistObjetivoVentas(); renderObjetivos();
+      openConfirm(`Listo: cargué el objetivo de ${res.tienda||'tu tienda'}. Meta del mes ${objDinero(res.pptoMes)}, vas al ${res.pctDia==null?'—':res.pctDia+'%'} del día. Todo el equipo ya lo ve.`, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){ openConfirm('No se pudo leer el archivo. Revisa que sea el Excel del reporte de ventas del distrito.', ()=>{}); }
+    e.target.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
+function estrategiaAgregar(){ openTextKeypad('Nueva estrategia (acción para subir la venta)', '', (v)=>{ const t=String(v||'').trim(); if(!t) return; const k=estrategias.reduce((m,s)=>{const z=parseInt(String(s.id).replace(/\D/g,''),10)||0;return Math.max(m,z);},0); estrategias.push({id:'es'+(k+1), titulo:t, categoria:'', descripcion:'', activa:true}); persistEstrategias(); renderObjetivos(); }); }
+function estrategiaQuitar(id){ openConfirm('¿Quitar esta estrategia del plan?', ()=>{ estrategias=estrategias.filter(s=>s.id!==id); persistEstrategias(); renderObjetivos(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); }
+function objRecalcular(){ const o=objetivoVentas; if(!o) return;
+  if(o.ventaDia!=null && o.pptoDia) o.pctDia=Math.round(1000*o.ventaDia/o.pptoDia)/10;
+  if(o.tendencia!=null && o.pptoMes) o.pctMes=Math.round(1000*o.tendencia/o.pptoMes)/10;
+}
+// Captura guiada del objetivo cuando el aliado recibe el reporte (sin Excel).
+function objCapturarManual(){
+  const o = Object.assign({}, objetivoVentas||{});
+  o.tienda = o.tienda || TIENDA_NOMBRE || ''; o.fecha = hoyISO();
+  const pedir=(label, campo, next)=> openKeypad(label, o[campo]!=null?String(o[campo]):'', (v)=>{ const n=objNum(v); o[campo]= (n!=null? n : o[campo]); next&&next(); }, {asString:true});
+  pedir('Venta a la fecha ($)', 'ventaDia', ()=>
+    pedir('Presupuesto al día ($)', 'pptoDia', ()=>
+      pedir('Meta del mes · presupuesto mensual ($)', 'pptoMes', ()=>
+        pedir('Tendencia del mes ($)', 'tendencia', ()=>{
+          objetivoVentas=o; objRecalcular(); persistObjetivoVentas(); renderObjetivos();
+          openConfirm('Objetivo capturado. Todo el equipo ya lo ve. Puedes tocar cualquier número para corregirlo cuando te compartan el reporte otra vez.', ()=>{}, {yesLabel:'Entendido'});
+        }))));
+}
+function objEditarCampo(campo){
+  const o = Object.assign({}, objetivoVentas||{});
+  if(campo==='fecha'){ openTextKeypad('Fecha del reporte', o.fecha||hoyISO(), (v)=>{ o.fecha=String(v||'').trim()||hoyISO(); objetivoVentas=o; persistObjetivoVentas(); renderObjetivos(); }); return; }
+  const labels={ventaDia:'Venta a la fecha ($)', pptoDia:'Presupuesto al día ($)', pptoMes:'Meta del mes ($)', tendencia:'Tendencia del mes ($)', ventaAA:'Venta del año anterior ($)'};
+  openKeypad(labels[campo]||'Valor', o[campo]!=null?String(o[campo]):'', (v)=>{ const n=objNum(v); o[campo]=(n!=null?n:o[campo]); objetivoVentas=o; objRecalcular(); persistObjetivoVentas(); renderObjetivos(); }, {asString:true});
+}
 
 // ===== EVALUACIÓN OPERATIVA (check de tienda · cadena 360) =====
 // Sembrado con el check real "Nueva Evaluación Operativa" (GOT IT / CCK).
@@ -3996,10 +4488,34 @@ function cerrarPerfil(){ byId('perfilOverlay').style.display='none'; }
 // 'supervisor'. Es una semilla de arranque; el aliado la ajusta.
 const EVAL_SECCIONES = ['Exterior','Interior','Comida Rápida','Mercancías y Cerveza','Caja','Contraloría'];
 const EVAL_TIPOS = {
-  piso_a_aliado:        {label:'El piso evalúa al Aliado', corto:'Piso → Aliado', ayuda:'Los encargados y auxiliares evalúan la gestión operativa del aliado.'},
-  aliado_a_supervisor:  {label:'El Aliado evalúa al Supervisor', corto:'Aliado → Supervisor', ayuda:'Cómo ves tú la gestión y el apoyo del supervisor.'},
-  supervisor_a_aliado:  {label:'Registrar la calificación del Supervisor', corto:'Supervisor → Aliado (registro)', ayuda:'Captura la calificación oficial que el supervisor te puso, para compararla con los datos reales.'}
+  piso_a_aliado:        {label:'El piso me evalúa a mí (Aliado) como líder', corto:'Piso → Aliado', banco:'liderazgo', ayuda:'Tus encargados y auxiliares evalúan tu liderazgo: si eres claro, justo, si los apoyas y los escuchas.'},
+  aliado_a_supervisor:  {label:'Yo evalúo al Supervisor como líder', corto:'Aliado → Supervisor', banco:'liderazgo', ayuda:'Cómo ves el liderazgo y el apoyo de tu supervisor.'},
+  supervisor_a_aliado:  {label:'Registrar la evaluación operativa del Supervisor', corto:'Supervisor → Aliado (registro)', banco:'operacional', ayuda:'Captura la calificación oficial que el supervisor te puso (check de tienda), para compararla con los datos reales.'}
 };
+const EVAL_BANCOS_LABEL = { operacional:'Operativa (check de tienda)', liderazgo:'Liderazgo (al aliado y al supervisor)' };
+function evalBancoDe(tipo){ return (EVAL_TIPOS[tipo] && EVAL_TIPOS[tipo].banco) || 'operacional'; }
+function evalSeccionesDe(items){ const o=[]; items.forEach(it=>{ if(o.indexOf(it.seccion)<0) o.push(it.seccion); }); return o; }
+// Banco de LIDERAZGO: generado según las funciones de un líder (sirve para que
+// el piso evalúe al aliado, y para que el aliado evalúe al supervisor).
+function evalLiderazgoSeed(){
+  const Q=(seccion,pregunta)=>({seccion, bloque:'Liderazgo', responsable:'comisionista', pregunta});
+  const base=[
+    Q('Claridad y ejemplo','¿Tu líder explica con claridad qué hay que hacer en el turno?'),
+    Q('Claridad y ejemplo','¿Da el ejemplo con su propio trabajo?'),
+    Q('Claridad y ejemplo','¿Es justo al repartir el trabajo y las responsabilidades?'),
+    Q('Claridad y ejemplo','¿Trata al equipo con respeto?'),
+    Q('Apoyo y capacitación','¿Te apoya cuando hay un problema en la tienda?'),
+    Q('Apoyo y capacitación','¿Te enseña o capacita cuando no sabes hacer algo?'),
+    Q('Apoyo y capacitación','¿Se asegura de que tengas lo necesario para trabajar (material, insumos, herramientas)?'),
+    Q('Apoyo y capacitación','¿Está disponible cuando lo necesitas?'),
+    Q('Comunicación y reconocimiento','¿Escucha tus ideas, dudas o quejas?'),
+    Q('Comunicación y reconocimiento','¿Reconoce cuando haces un buen trabajo?'),
+    Q('Comunicación y reconocimiento','¿Te dice cómo vas y cómo puedes mejorar?'),
+    Q('Comunicación y reconocimiento','¿Resuelve a tiempo los problemas que dependen de él?')
+  ];
+  return base.map((it,i)=> Object.assign({id:'l'+(i+1), activo:true}, it));
+}
+function evalBancosSeed(){ return { operacional: evalChecklistSeed(), liderazgo: evalLiderazgoSeed() }; }
 function evalChecklistSeed(){
   const S = (seccion,bloque,responsable,pregunta)=>({seccion,bloque,responsable,pregunta});
   const base = [
@@ -4059,9 +4575,9 @@ function evalChecklistSeed(){
   ];
   return base.map((it,i)=> Object.assign({id:'e'+(i+1), activo:true}, it));
 }
-function evalItemsActivos(){ return evalChecklist.filter(i=> i.activo!==false); }
+function evalItemsActivos(tipo){ const banco = evalBancoDe(tipo||'supervisor_a_aliado'); return (evalBancos[banco]||[]).filter(i=> i.activo!==false); }
 function evalScore(run){
-  const items = evalItemsActivos();
+  const items = evalItemsActivos(run && run.tipo);
   let si=0, apl=0, siC=0, aplC=0, siS=0, aplS=0;
   items.forEach(it=>{
     const r = run.resp ? run.resp[it.id] : null;
@@ -4094,11 +4610,10 @@ function evalVistaResumen(){
   const per = semActualISO();
   const runs = evalRunsPeriodo(per);
   const prom = (tipo)=>{ const rs=runs.filter(r=>r.tipo===tipo); if(!rs.length) return null; const ps=rs.map(r=>evalScore(r).pct).filter(x=>x!==null); return ps.length?Math.round(ps.reduce((a,b)=>a+b,0)/ps.length):null; };
-  const aPiso = prom('piso_a_aliado'), aSup = prom('supervisor_a_aliado'), supAliado = prom('aliado_a_supervisor');
+  const liderPiso = prom('piso_a_aliado'), opSup = prom('supervisor_a_aliado'), liderSup = prom('aliado_a_supervisor');
   const tarjeta=(titulo,pct,sub)=>{ const c=evalColor(pct); return `<div class="eval-kpi"><div class="eval-kpi-t">${titulo}</div><div class="eval-kpi-n" style="color:${c}">${pct===null?'—':pct+'%'}</div><div class="eval-kpi-s">${sub}</div></div>`; };
-  let html = `<div class="catalog-note" style="margin-bottom:12px;">La evaluación va en cadena: el piso evalúa al aliado, el aliado al supervisor, y se registra la del supervisor — todo con datos reales como respaldo. Se reinicia cada semana.</div>`;
-  html += `<div class="eval-kpis">${tarjeta('Aliado · según el piso', aPiso, 'tu equipo')}${tarjeta('Aliado · según el supervisor', aSup, 'lo que él puso')}${tarjeta('Supervisor · según el aliado', supAliado, 'tu evaluación')}</div>`;
-  if(aPiso!==null && aSup!==null && aSup-aPiso>=10) html += `<div class="eval-alerta">⚠️ El supervisor te calificó <b>${aSup}%</b>, pero tu equipo (datos de piso) ve <b>${aPiso}%</b>. Usa las evidencias como respaldo.</div>`;
+  let html = `<div class="catalog-note" style="margin-bottom:12px;">Evaluación 360 en cadena, cada semana: tu equipo te evalúa a ti como líder, tú evalúas al supervisor, y se registra el check operativo del supervisor. Todo para mejorar la operación — con datos reales.</div>`;
+  html += `<div class="eval-kpis">${tarjeta('Mi liderazgo · según el piso', liderPiso, 'tu equipo te evalúa')}${tarjeta('Operativa · según el supervisor', opSup, 'check de tienda')}${tarjeta('Supervisor · según tú', liderSup, 'tú lo evalúas')}</div>`;
   html += `<div class="section-title" style="margin-top:14px;"><span>Evaluaciones de esta semana</span><span>${runs.length}</span></div>`;
   if(!runs.length){ html += `<div class="empty">Aún no hay evaluaciones esta semana. Toca "Nueva evaluación".</div>`; }
   else html += runs.slice().sort((a,b)=>(b.fecha||'').localeCompare(a.fecha||'')).map(r=>{ const sc=evalScore(r); const c=evalColor(sc.pct); const t=EVAL_TIPOS[r.tipo]||{corto:r.tipo}; const borr=esEncargado()?`<button type="button" class="del" data-evdel="${r.id}">✕</button>`:'';
@@ -4111,18 +4626,20 @@ function evalVistaNueva(){
     h += Object.entries(EVAL_TIPOS).map(([k,v])=> `<button type="button" class="eval-tipo" data-evtipo="${k}"><b>${v.label}</b><small>${v.ayuda}</small></button>`).join('');
     return h;
   }
-  const items = evalItemsActivos();
+  const items = evalItemsActivos(evalDraft.tipo);
   const resp = evalDraft.resp;
   const contestadas = items.filter(it=> resp[it.id]).length;
   const t = EVAL_TIPOS[evalDraft.tipo]||{label:evalDraft.tipo};
+  const esOperacional = evalBancoDe(evalDraft.tipo)==='operacional';
   let h = `<div class="eval-draft-top"><div><b>${cvEsc(t.label)}</b><div class="eval-prog">${contestadas}/${items.length} contestadas</div></div><button type="button" class="add-missing-btn" id="evalCancelar" style="width:auto;margin:0;">Cancelar</button></div>`;
-  EVAL_SECCIONES.forEach(sec=>{
+  evalSeccionesDe(items).forEach(sec=>{
     const its = items.filter(it=> it.seccion===sec); if(!its.length) return;
     h += `<div class="section-title" style="margin-top:14px;"><span>${cvEsc(sec)}</span><span>${its.filter(it=>resp[it.id]).length}/${its.length}</span></div>`;
     h += its.map(it=>{
       const r = resp[it.id]||'';
       const b=(val,txt)=>`<button type="button" class="eval-op ${r===val?('on-'+val):''}" data-evresp="${it.id}" data-evval="${val}">${txt}</button>`;
-      return `<div class="eval-q"><div class="eval-q-tx">${cvEsc(it.pregunta)} <span class="eval-q-b">${cvEsc(it.bloque)} · ${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</span></div><div class="eval-q-ops">${b('si','Sí')}${b('no','No')}${b('na','NA')}</div></div>`;
+      const tag = esOperacional ? ` <span class="eval-q-b">${cvEsc(it.bloque)} · ${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</span>` : '';
+      return `<div class="eval-q"><div class="eval-q-tx">${cvEsc(it.pregunta)}${tag}</div><div class="eval-q-ops">${b('si','Sí')}${b('no','No')}${b('na','NA')}</div></div>`;
     }).join('');
   });
   const sc = evalScore(evalDraft);
@@ -4132,16 +4649,22 @@ function evalVistaNueva(){
   return h;
 }
 function evalVistaPuntos(){
-  let h = `<div class="catalog-note" style="margin-bottom:10px;">Edita los puntos del check: actívalos/desactívalos, cambia de quién es (Comisionista/Supervisor) o agrega nuevos. Es la base que usarán todas las evaluaciones.</div>`;
+  const chip=(txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${txt}</button>`;
+  const esOp = evalBancoActivo==='operacional';
+  let h = `<div class="field-label" style="margin-top:4px;">¿Qué banco de preguntas editas?</div>`;
+  h += `<div class="comp-filtros" style="margin-bottom:10px;">${chip('Operativa (check de tienda)',esOp,'data-ebank="operacional"')}${chip('Liderazgo (al aliado / supervisor)',!esOp,'data-ebank="liderazgo"')}</div>`;
+  h += `<div class="catalog-note" style="margin-bottom:10px;">${esOp?'Es el check de tienda que usa el supervisor. Puedes cambiar de quién es cada punto (Comisionista/Supervisor).':'Son las preguntas con las que tu equipo te evalúa a ti como líder, y con las que tú evalúas al supervisor. Edítalas según las funciones que te toca cumplir.'}</div>`;
   h += `<button type="button" class="sis-principal has-ic" id="evalAddPunto" style="margin-bottom:12px;">${icBtn('plus')}<span class="bt-tx">Agregar punto</span></button>`;
-  EVAL_SECCIONES.forEach(sec=>{
-    const its = evalChecklist.filter(it=> it.seccion===sec); if(!its.length) return;
+  const banco = evalBancos[evalBancoActivo]||[];
+  evalSeccionesDe(banco).forEach(sec=>{
+    const its = banco.filter(it=> it.seccion===sec); if(!its.length) return;
     h += `<div class="section-title" style="margin-top:12px;"><span>${cvEsc(sec)}</span><span>${its.filter(i=>i.activo!==false).length}/${its.length}</span></div>`;
     h += its.map(it=>{
       const act = it.activo!==false;
+      const respBtn = esOp ? `<button type="button" class="eval-resp ${it.responsable!=='supervisor'?'on':''}" data-evresp2="${it.id}">${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</button>` : '';
       return `<div class="eval-edit ${act?'':'off'}"><div class="eval-edit-tx" data-evedit="${it.id}">${cvEsc(it.pregunta)}<span class="eval-q-b">${cvEsc(it.bloque)}</span></div>
         <div class="eval-edit-ops">
-          <button type="button" class="eval-resp ${it.responsable!=='supervisor'?'on':''}" data-evresp="${it.id}">${it.responsable==='supervisor'?'Supervisor':'Comisionista'}</button>
+          ${respBtn}
           <button type="button" class="eval-act ${act?'on':''}" data-evact="${it.id}">${act?'Activo':'Inactivo'}</button>
           <button type="button" class="del" data-evrm="${it.id}">🗑</button>
         </div></div>`;
@@ -4157,17 +4680,18 @@ function evalBindVista(){
   const nt=byId('evalNota'); if(nt) nt.onclick=()=> openTextKeypad('Nota / evidencia', evalDraft.nota||'', (v)=>{ evalDraft.nota=String(v||'').trim(); renderEval(); });
   const gg=byId('evalGuardar'); if(gg) gg.onclick=evalGuardar;
   body.querySelectorAll('[data-evdel]').forEach(b=> b.onclick=()=> evalBorrarRun(b.dataset.evdel));
-  // editor
-  body.querySelectorAll('[data-evresp]'); // (ya arriba para draft) — en editor usamos data-evresp distinto
-  body.querySelectorAll('[data-evact]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evact); if(it){ it.activo = it.activo===false; persistEvalChecklist(); renderEval(); } });
-  body.querySelectorAll('.eval-resp[data-evresp]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evresp); if(it){ it.responsable = it.responsable==='supervisor'?'comisionista':'supervisor'; persistEvalChecklist(); renderEval(); } });
-  body.querySelectorAll('[data-evedit]').forEach(b=> b.onclick=()=>{ const it=evalChecklist.find(x=>x.id===b.dataset.evedit); if(!it) return; openTextKeypad('Editar el punto', it.pregunta, (v)=>{ const t=String(v||'').trim(); if(t){ it.pregunta=t; persistEvalChecklist(); renderEval(); } }); });
-  body.querySelectorAll('[data-evrm]').forEach(b=> b.onclick=()=>{ openConfirm('¿Quitar este punto del check?', ()=>{ evalChecklist=evalChecklist.filter(x=>x.id!==b.dataset.evrm); persistEvalChecklist(); renderEval(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
+  // editor de puntos (opera sobre el banco activo)
+  const bancoRef = ()=> evalBancos[evalBancoActivo] || [];
+  body.querySelectorAll('[data-ebank]').forEach(b=> b.onclick=()=>{ evalBancoActivo=b.dataset.ebank; renderEval(); });
+  body.querySelectorAll('[data-evact]').forEach(b=> b.onclick=()=>{ const it=bancoRef().find(x=>x.id===b.dataset.evact); if(it){ it.activo = it.activo===false; persistEvalBancos(); renderEval(); } });
+  body.querySelectorAll('.eval-resp[data-evresp2]').forEach(b=> b.onclick=()=>{ const it=bancoRef().find(x=>x.id===b.dataset.evresp2); if(it){ it.responsable = it.responsable==='supervisor'?'comisionista':'supervisor'; persistEvalBancos(); renderEval(); } });
+  body.querySelectorAll('[data-evedit]').forEach(b=> b.onclick=()=>{ const it=bancoRef().find(x=>x.id===b.dataset.evedit); if(!it) return; openTextKeypad('Editar el punto', it.pregunta, (v)=>{ const t=String(v||'').trim(); if(t){ it.pregunta=t; persistEvalBancos(); renderEval(); } }); });
+  body.querySelectorAll('[data-evrm]').forEach(b=> b.onclick=()=>{ openConfirm('¿Quitar este punto?', ()=>{ evalBancos[evalBancoActivo]=bancoRef().filter(x=>x.id!==b.dataset.evrm); persistEvalBancos(); renderEval(); }, {yesLabel:'Quitar', noLabel:'Cancelar'}); });
   const ap=byId('evalAddPunto'); if(ap) ap.onclick=evalAddPunto;
 }
 function evalGuardar(){
   if(!evalDraft) return;
-  const items = evalItemsActivos();
+  const items = evalItemsActivos(evalDraft.tipo);
   const contestadas = items.filter(it=> evalDraft.resp[it.id]).length;
   const hacer = ()=>{
     evalRuns.push({ id:uid(), periodo:semActualISO(), tipo:evalDraft.tipo, evaluadorNombre: currentUser||'Sin nombre', fecha:new Date().toISOString(), resp:Object.assign({}, evalDraft.resp), nota:evalDraft.nota||'' });
@@ -4181,9 +4705,12 @@ function evalBorrarRun(id){ openConfirm('¿Borrar esta evaluación?', ()=>{ eval
 function evalAddPunto(){
   openTextKeypad('Escribe el nuevo punto a evaluar', '', (v)=>{
     const t=String(v||'').trim(); if(!t) return;
-    const n = evalChecklist.reduce((m,it)=>{ const k=parseInt(String(it.id).replace(/\D/g,''),10)||0; return Math.max(m,k); },0);
-    evalChecklist.push({id:'e'+(n+1), seccion:'Contraloría', bloque:'Personalizado', responsable:'comisionista', pregunta:t, activo:true});
-    persistEvalChecklist(); renderEval();
+    const banco = evalBancos[evalBancoActivo] || (evalBancos[evalBancoActivo]=[]);
+    const pref = evalBancoActivo==='liderazgo' ? 'l' : 'e';
+    const n = banco.reduce((m,it)=>{ const k=parseInt(String(it.id).replace(/\D/g,''),10)||0; return Math.max(m,k); },0);
+    const sec = evalBancoActivo==='liderazgo' ? 'Otros' : 'Contraloría';
+    banco.push({id:pref+(n+1), seccion:sec, bloque:'Personalizado', responsable:'comisionista', pregunta:t, activo:true});
+    persistEvalBancos(); renderEval();
   });
 }
 
@@ -5558,6 +6085,77 @@ function renderEtiSummary(){
     <div class="sum-card"><div class="n" style="color:var(--accent)">${totalEtiquetas}</div><div class="l">Etiquetas a imprimir</div></div>`;
 }
 $('etiCajaBtn').onclick = ()=> abrirCaja(etiquetas.map(e=>({descripcion:e.descripcion, codigo:e.codigo, barcode:e.barcode, cantidadTxt: e.cantidad > 1 ? `${e.cantidad} etiquetas` : ''})));
+const persistEtiCfg = ()=> lsSet('eti_cfg', JSON.stringify(etiCfg));
+function etiPrecioTxt(e){ try{ const d = (typeof preciosMap!=='undefined') && preciosMap[e.codigo]; return (d && d.precio) ? dinero(d.precio) : ''; }catch(_){ return ''; } }
+function etiPreviewInner(){
+  const m=etiCfg.mostrar; let h='';
+  if(m.descripcion) h+='<div class="eti-d">SALSA VALENTINA 370 ML</div>';
+  if(m.barcode) h+='<svg class="eti-prev-bc"></svg>';
+  if(m.codigo) h+='<div class="eti-c">AB1010005</div>';
+  if(m.precio) h+='<div class="eti-p">$18.50</div>';
+  if(!h) h='<div class="eti-c" style="color:#B0281A">Activa al menos un dato</div>';
+  return h;
+}
+function renderEtiCfg(){
+  const box = byId('etiCfgBox'); if(!box) return;
+  const chip=(txt,activo,attr)=>`<button type="button" class="comp-fchip ${activo?'active':''}" ${attr}>${txt}</button>`;
+  const tog=(txt,on,attr)=>`<button type="button" class="eti-tog ${on?'on':''}" ${attr}>${on?'✓ ':''}${txt}</button>`;
+  const m=etiCfg.mostrar;
+  box.innerHTML = `
+    <div class="field-label" style="margin-top:8px;">Tamaño</div>
+    <div class="comp-filtros">${chip('Chica',etiCfg.tam==='chica','data-etam="chica"')}${chip('Mediana',etiCfg.tam==='mediana','data-etam="mediana"')}${chip('Grande',etiCfg.tam==='grande','data-etam="grande"')}</div>
+    <div class="field-label" style="margin-top:10px;">Etiquetas por fila (al imprimir)</div>
+    <div class="comp-filtros">${chip('2',etiCfg.cols===2,'data-ecol="2"')}${chip('3',etiCfg.cols===3,'data-ecol="3"')}${chip('4',etiCfg.cols===4,'data-ecol="4"')}</div>
+    <div class="field-label" style="margin-top:10px;">Qué muestra</div>
+    <div class="comp-filtros">${tog('Nombre',m.descripcion,'data-emos="descripcion"')}${tog('Código',m.codigo,'data-emos="codigo"')}${tog('Código de barras',m.barcode,'data-emos="barcode"')}${tog('Precio',m.precio,'data-emos="precio"')}</div>
+    <div class="field-label" style="margin-top:12px;">Vista previa</div>
+    <div class="eti-preview"><div class="eti-prev-cell eti-${etiCfg.tam}">${etiPreviewInner()}</div></div>
+    ${m.precio?'<div class="catalog-note" style="margin-top:8px;">El precio sale del que hayas capturado en "Precios del conteo"; si no hay, esa etiqueta se imprime sin precio.</div>':''}`;
+  box.querySelectorAll('[data-etam]').forEach(b=> b.onclick=()=>{ etiCfg.tam=b.dataset.etam; persistEtiCfg(); renderEtiCfg(); });
+  box.querySelectorAll('[data-ecol]').forEach(b=> b.onclick=()=>{ etiCfg.cols=+b.dataset.ecol; persistEtiCfg(); renderEtiCfg(); });
+  box.querySelectorAll('[data-emos]').forEach(b=> b.onclick=()=>{ const k=b.dataset.emos; etiCfg.mostrar[k]=!etiCfg.mostrar[k]; persistEtiCfg(); renderEtiCfg(); });
+  const psvg=box.querySelector('.eti-prev-bc'); if(psvg) try{ dibujarBarcode(psvg, '2012345678907', {height: etiCfg.tam==='grande'?58:etiCfg.tam==='chica'?32:44, fontSize: m.codigo?0:11, margin:4, width: etiCfg.tam==='grande'?1.7:1.3}); }catch(_){}
+}
+function etiPrintCss(){
+  return `.eti-sheet{display:grid;gap:5mm;}
+  .eti-cell{border:.4pt dashed #999;border-radius:2mm;padding:3mm 2mm;text-align:center;page-break-inside:avoid;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1mm;}
+  .eti-cell .eti-d{font-size:8pt;font-weight:700;color:#000;line-height:1.15;}
+  .eti-cell .eti-c{font-size:8pt;color:#000;font-weight:700;letter-spacing:.3pt;}
+  .eti-cell .eti-p{font-size:12pt;font-weight:800;color:#000;}
+  .eti-cell .eti-bc{width:92%;height:auto;}
+  .eti-cell .eti-nobc{font-size:7pt;color:#B0281A;}
+  .eti-cell.eti-chica{min-height:18mm;}
+  .eti-cell.eti-mediana{min-height:26mm;}
+  .eti-cell.eti-grande{min-height:34mm;}`;
+}
+function imprimirEtiquetas(){
+  if(!etiquetas.length){ openConfirm('No hay etiquetas en la lista. Escanea primero los productos a etiquetar.', ()=>{}); return; }
+  const m=etiCfg.mostrar;
+  if(!m.descripcion && !m.codigo && !m.barcode && !m.precio){ openConfirm('La etiqueta no muestra ningún dato. Activa al menos uno en "Diseño de la etiqueta".', ()=>{}); return; }
+  const celdas=[];
+  etiquetas.forEach(e=>{ const n=Math.max(1, Number(e.cantidad)||1); for(let k=0;k<n;k++) celdas.push(e); });
+  let html = `<div class="eti-sheet" style="grid-template-columns:repeat(${etiCfg.cols},1fr);">`;
+  celdas.forEach((e,i)=>{
+    let c='';
+    if(m.descripcion) c+=`<div class="eti-d">${cotejoEsc(e.descripcion||'')}</div>`;
+    if(m.barcode && e.barcode) c+=`<svg class="eti-bc" data-i="${i}"></svg>`;
+    else if(m.barcode && !e.barcode) c+=`<div class="eti-nobc">sin código</div>`;
+    if(m.codigo) c+=`<div class="eti-c">${cotejoEsc(e.codigo||'')}</div>`;
+    if(m.precio){ const pt=etiPrecioTxt(e); if(pt) c+=`<div class="eti-p">${cotejoEsc(pt)}</div>`; }
+    html += `<div class="eti-cell eti-${etiCfg.tam}">${c}</div>`;
+  });
+  html += `</div>`;
+  const area=byId('printArea'); area.className='print-etiquetas';
+  area.innerHTML = `<style>${etiPrintCss()}</style>` + html;
+  let st=byId('printPageStyle'); if(!st){ st=document.createElement('style'); st.id='printPageStyle'; document.head.appendChild(st); }
+  st.textContent='@page{size:letter;margin:8mm;}';
+  celdas.forEach((e,i)=>{ if(!(m.barcode && e.barcode)) return; const svg=area.querySelector(`svg[data-i="${i}"]`); if(svg) try{ dibujarBarcode(svg, e.barcode, {height: etiCfg.tam==='grande'?64:etiCfg.tam==='chica'?34:48, fontSize: m.codigo?0:11, margin:4, width: etiCfg.tam==='grande'?1.8:1.3}); }catch(_){}
+  });
+  document.body.classList.add('imprimiendo');
+  const fin=()=>{ document.body.classList.remove('imprimiendo'); window.removeEventListener('afterprint', fin); };
+  window.addEventListener('afterprint', fin);
+  setTimeout(()=>{ try{ window.print(); }catch(e){} setTimeout(fin,1500); }, 180);
+}
 function renderEtiList(){
   $('etiCountLabel').textContent = etiquetas.length ? `${etiquetas.length} productos` : '';
   const listEl = $('etiList');
@@ -5571,8 +6169,8 @@ function renderEtiList(){
         <button class="del" data-idx="${idx}">✕</button>
       </div>
       ${e.barcode
-        ? `<svg class="eti-barcode" data-barcode="${e.barcode}"></svg>`
-        : `<div class="empty" style="padding:8px 0;">Sin código de barras registrado · usa el código interno ${e.codigo} en el punto de venta.</div>`}
+        ? `<svg class="eti-barcode" data-barcode="${e.barcode}"></svg>${esCodigoInterno(e.barcode)?'<div class="eti-interno">código interno de tienda (para escanear en el inventario)</div>':''}`
+        : `<div class="empty" style="padding:8px 0;">Sin código de barras.</div><button type="button" class="add-missing-btn eti-gen" data-etigen="${e.codigo}" style="margin-top:6px;">Generar código interno para imprimirlo</button>`}
     </div>`;
   }).join('');
   // Dibuja cada código de barras como imagen escaneable (formato inteligente según longitud)
@@ -5591,6 +6189,16 @@ function renderEtiList(){
         break;
       }catch(err){ /* intenta el siguiente formato */ }
     }
+  });
+  listEl.querySelectorAll('.eti-gen').forEach(btn=>{
+    btn.onclick = ()=>{
+      const codigo = btn.dataset.etigen;
+      openConfirm('¿Generar un código interno para este producto e imprimirlo?\n\nSirve para escanearlo en el inventario. Es un código para TU sistema, no para el punto de venta.', ()=>{
+        const bc = asignarCodigoInterno(codigo);
+        const et = etiquetas.find(x=> x.codigo===codigo); if(et) et.barcode = bc;
+        persistEtiquetas(); renderEtiList();
+      }, {yesLabel:'Generar', noLabel:'Cancelar'});
+    };
   });
   listEl.querySelectorAll('.del').forEach(btn=>{
     btn.onclick = ()=>{
@@ -5613,6 +6221,8 @@ $('etiResetBtn').onclick = ()=>{
     etiquetas = []; persistEtiquetas(); renderEtiList(); resetEtiStage(); etiLookupResult.innerHTML = '';
   });
 };
+$('etiPrintBtn').onclick = imprimirEtiquetas;
+(function(){ const d=byId('etiCfgDet'); if(d) d.addEventListener('toggle', ()=>{ if(d.open) renderEtiCfg(); }); })();
 
 const seqList=$('seqList'), sisFilter=$('sisFilter'), sisSummary=$('sisSummary');
 
@@ -5855,12 +6465,18 @@ function renderSeqList(){
       e.stopPropagation();
       const codigo = btn.dataset.editcod;
       const it = list.find(x=>x.codigo===codigo);
-      openKeypad(`Código de barras · ${codigo}`, it.barcode || '', (val)=>{
+      const abrirManual = ()=> openKeypad(`Código de barras · ${codigo}`, it.barcode || '', (val)=>{
         if(val === ''){ delete barcodeOverrides[codigo]; }
         else { barcodeOverrides[codigo] = String(val); }
         persistOverrides();
         renderSeqList();
       }, {asString:true});
+      if(!it.barcode){
+        openConfirm(`"${it.descripcion||codigo}" no tiene código de barras.\n\n¿Que la app le genere uno interno? Sirve para imprimir una etiqueta y escanear el producto en el inventario.\n\nNota: es un código para TU sistema, no para el punto de venta de la tienda.`, ()=>{
+          const bc = asignarCodigoInterno(codigo); renderSeqList();
+          openConfirm(`Listo. Código interno asignado:\n${bc}\n\nAgrégalo en la pestaña Etiquetas para imprimir la etiqueta y pégala en el producto o anaquel. Ya queda compartido con el equipo.`, ()=>{}, {yesLabel:'Entendido'});
+        }, {yesLabel:'Generar automático', noLabel:'Escribir a mano', onNo: abrirManual});
+      } else abrirManual();
     });
   });
 
@@ -7388,6 +8004,14 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="objOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Objetivos y plan de reacción<small>Meta de ventas y las estrategias que todo el equipo sigue.</small></div>
+    <div class="cotejo-body" id="objBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="objCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="evalOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">Evaluación operativa<small>Check de tienda en cadena 360, con calificación semanal y datos reales.</small></div>
@@ -7569,6 +8193,11 @@ byId('masCerrar').onclick = cerrarMas;
 (function(){ const btn=byId('perfilBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirPerfil(); };
   const x=byId('perfilCerrar'); if(x) x.onclick = cerrarPerfil;
   const ov=byId('perfilOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='perfilOverlay') cerrarPerfil(); });
+})();
+// Objetivos y plan de reacción
+(function(){ const btn=byId('objBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirObjetivos(); };
+  const x=byId('objCerrar'); if(x) x.onclick = cerrarObjetivos;
+  const ov=byId('objOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='objOverlay') cerrarObjetivos(); });
 })();
 // Evaluación operativa
 (function(){ const btn=byId('evalBtn'); if(btn) btn.onclick = ()=>{ cerrarMas(); abrirEval(); };
