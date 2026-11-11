@@ -1265,7 +1265,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 19:45 · movimientos pendientes que se suman al recargar</div>
+    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 20:10 · botón de cargar Excel visible y con nombre</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -2243,7 +2243,7 @@ async function authRevisarAcceso(user, forzar){
   byId('unidadBtn').style.display = misUnidades().length > 1 ? '' : 'none';
   byId('tableroBtn').style.display = esDueno() ? '' : 'none';
   byId('traspasosBtn').style.display = miEmpresa ? '' : 'none';
-  aplicarVistaRol();
+  if(typeof aplicarVistaRol === 'function') aplicarVistaRol();
   if(miEmpresa){ const tp = tipoUnidad(TIENDA_ID); byId('unidadSub').textContent = `Estás en: ${TIENDA_NOMBRE}${tp ? ' · ' + (tp === 'almacen' ? 'Almacén' : 'Sucursal') : ''}`; }
   authOcultar();
 
@@ -7732,16 +7732,23 @@ function renderPrefixCfg(){
       </div>
     </div>`;
   }).join('');
-  prefixCfgList.querySelectorAll('.prefix-cfg-btns').forEach(group=>{
-    group.querySelectorAll('button').forEach(btn=>{
-      btn.onclick = ()=>{
-        prefixCriticidad[group.dataset.prefix] = btn.dataset.set;
-        persistPrefixCfg();
-        renderPrefixCfg();
-        renderCapList();
-      };
-    });
-  });
+  // Delegación: un solo manejador en el contenedor (se instala una vez). Así los
+  // botones responden aunque la lista se vuelva a dibujar por sincronización.
+  if(!prefixCfgList.dataset.wired){
+    prefixCfgList.dataset.wired = '1';
+    const handler = (ev)=>{
+      const btn = ev.target.closest('button[data-set]');
+      if(!btn || !prefixCfgList.contains(btn)) return;
+      const group = btn.closest('.prefix-cfg-btns[data-prefix]');
+      if(!group) return;
+      ev.preventDefault();
+      prefixCriticidad[group.dataset.prefix] = btn.dataset.set;
+      persistPrefixCfg();
+      renderPrefixCfg();
+      renderCapList();
+    };
+    prefixCfgList.addEventListener('click', handler);
+  }
 }
 
 $('capExportBtn').onclick = ()=>{
