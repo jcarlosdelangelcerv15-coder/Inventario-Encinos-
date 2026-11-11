@@ -1265,7 +1265,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 9 nov 2026 · 20:10 · botón de cargar Excel visible y con nombre</div>
+    <div class="version-app">Tiquenda · Versión 11 nov 2026 · 15:10 · arreglo de selección de criticidad (toque más confiable)</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1401,8 +1401,13 @@
     <div class="summary" id="capSummary"></div>
 
     <div class="section-title"><span>Registrar lote</span></div>
+    <div class="field-label">Escanear con el lector</div>
     <div class="filter-row">
-      <input type="text" id="capFilter" placeholder="Escanea o toca para buscar el producto…" autocomplete="off">
+      <input type="text" id="capScan" inputmode="none" autocomplete="off" placeholder="Escanea el código aquí…">
+    </div>
+    <div class="field-label" style="margin-top:8px;">Buscar por nombre o código (teclado)</div>
+    <div class="filter-row">
+      <input type="text" id="capFilter" readonly placeholder="Toca para escribir nombre o alfanumérico…" autocomplete="off">
     </div>
     <div id="capProductPick"></div>
     <div id="capForm"></div>
@@ -3724,7 +3729,7 @@ document.querySelectorAll('.tab').forEach(t=>{
     if(t.dataset.tab === 'comparativo') renderComparativo();
     if(t.dataset.tab === 'conteo') setTimeout(()=> $('barcodeInput').focus(), 60);
     if(t.dataset.tab === 'sistema') setTimeout(()=> sisFilter.focus(), 60);
-    if(t.dataset.tab === 'caducidades'){ renderCapList(); renderPrefixCfg(); if(!capPendingItem) setTimeout(()=> $('capFilter').focus(), 60); }
+    if(t.dataset.tab === 'caducidades'){ renderCapList(); renderPrefixCfg(); if(!capPendingItem) setTimeout(()=> $('capScan').focus(), 60); }
     if(t.dataset.tab === 'etiquetas'){ setTimeout(()=> $('etiInput').focus(), 60); }
     if(t.dataset.tab === 'dashboard') renderDashboard();
     if(t.dataset.tab === 'cobertura') renderCobertura();
@@ -7475,6 +7480,29 @@ capFilter.addEventListener('click', ()=>{
     capFilter.value = liveVal; renderCapProductPick();
   });
 });
+
+// Campo de ESCANEO (lector físico): no abre teclado (inputmode=none). Al llegar
+// el Enter del lector, busca el producto y abre directo el formulario del lote.
+const capScan = $('capScan');
+function capScanSubmit(){
+  const raw = (capScan.value || '').trim();
+  if(!raw) return;
+  const item = findProduct(raw);
+  capScan.value = '';
+  if(item){
+    const { all } = buildIndexes();
+    capPendingItem = all.find(x=>x.codigo===item.codigo) || item;
+    capPendingFecha = ''; capPendingArea = MODES[0]; capPendingCritOverride = null;
+    capFilter.value = ''; capProductPick.innerHTML = '';
+    renderCapForm();
+  } else {
+    // No está en catálogo: lo mando al buscador para que lo elija o lo dé de alta.
+    capFilter.value = raw; renderCapProductPick();
+    openConfirm('No encontré ese código en el catálogo. Búscalo por nombre o agrégalo desde el conteo.', ()=>{}, {yesLabel:'Entendido'});
+  }
+  setTimeout(()=>{ try{ capScan.focus(); }catch(e){} }, 40);
+}
+capScan.addEventListener('keydown', (e)=>{ if(e.key==='Enter'){ e.preventDefault(); capScanSubmit(); } });
 
 function renderCapProductPick(){
   const q = capFilter.value.trim().toLowerCase();
