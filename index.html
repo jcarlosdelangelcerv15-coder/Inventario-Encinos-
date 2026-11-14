@@ -302,7 +302,7 @@
     width:100%;max-width:340px;background:#fff;border-radius:22px;padding:22px;
     text-align:center;box-shadow:var(--shadow-lg);
   }
-  .cv-overlay{position:fixed;inset:0;z-index:1120;background:var(--paper,#f4f1ea);display:none;flex-direction:column;}
+  .cv-overlay{position:fixed;inset:0;z-index:1050;background:var(--paper,#f4f1ea);display:none;flex-direction:column;}
   .cv-top{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#143A3C;color:#fff;padding-top:max(12px, env(safe-area-inset-top));}
   .cv-back,.cv-exp{background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;font-family:inherit;white-space:nowrap;}
   .cv-titles{flex:1;min-width:0;}
@@ -1281,7 +1281,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 14 nov 2026 · 02:00 · arreglos cierre de periodo: sí limpia conteos, el detalle abre encima del panel, y reintento si falla la señal</div>
+    <div class="version-app">Tiquenda · Versión 14 nov 2026 · 00:55 · catálogo maestro CEDIS con cobertura + conteos físicos + editar catálogo</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -3947,33 +3947,20 @@ async function ejecutarCerrarPeriodo(nombre, resumen){
     periodosArchivo.unshift(archivo);
     persistPeriodos();
     try{ await tCol('inventario_periodos_items').doc(archivo.id).set({ meta: archivo, cierres: cierresConteo || [] }); }catch(_){}
-    // Borra cada colección POR SEPARADO: si una falla, las demás igual se limpian
-    // (antes, si fallaba "registros" se quedaban sin borrar los cierres).
-    let fallo = 0;
     for(const nombreCol of ['inventario_registros_items','inventario_historial_items','inventario_cierres_items','inventario_actual']){
-      try{
-        const snap = await tCol(nombreCol).get();
-        const docs = snap.docs;
-        for(let i=0;i<docs.length;i+=450){
-          try{ const b=fsDb.batch(); docs.slice(i,i+450).forEach(d=> b.delete(d.ref)); await b.commit(); }
-          catch(e){ fallo++; }
-        }
-      }catch(e){ fallo++; }
+      let snap; try{ snap = await tCol(nombreCol).get(); }catch(e){ continue; }
+      const docs = snap.docs;
+      for(let i=0;i<docs.length;i+=450){ const b=fsDb.batch(); docs.slice(i,i+450).forEach(d=> b.delete(d.ref)); await b.commit(); }
     }
-    // Limpia local pase lo que pase (los listeners confirman al volver la señal).
     records = []; persistRecordsLocal();
     historialConteo = []; persistHistorial();
     cierresConteo = []; persistCierresLocal();
     periodoActual = { nombre: mesNombre(), desde: hoyISO() };
     persistPeriodoActual();
     renderSummary(); renderLog(); renderDashboard(); if(typeof renderCierresList==='function') renderCierresList();
-    fsSyncBadge(fallo?'error':'ok');
+    fsSyncBadge('ok');
     renderPeriodos();
-    if(fallo){
-      openConfirm(`Periodo "${nombre}" archivado y el panel quedó en cero. Algunas cosas no se alcanzaron a borrar de la nube (seguramente por la señal); vuelve a tocar "Cerrar periodo" cuando tengas buen internet para terminar de limpiar.`, ()=>{}, {yesLabel:'Entendido'});
-    } else {
-      openConfirm(`✅ Periodo "${nombre}" archivado. El panel quedó en cero y el nuevo periodo empieza hoy (${fechaCorta(hoyISO())}). Lo archivado lo ves aquí mismo, abajo.`, ()=>{}, {yesLabel:'Entendido'});
-    }
+    openConfirm(`✅ Periodo "${nombre}" archivado. El panel quedó en cero y el nuevo periodo empieza hoy (${fechaCorta(hoyISO())}). Lo archivado lo ves aquí mismo, abajo.`, ()=>{}, {yesLabel:'Entendido'});
   }catch(err){
     fsSyncBadge('error');
     openConfirm('No se pudo cerrar el periodo por completo (revisa tu internet). Lo que sí se archivó quedó guardado; vuelve a intentar para limpiar lo que falte.', ()=>{}, {yesLabel:'Entendido'});
@@ -4139,10 +4126,9 @@ function verProveedorDash(nombre){
   let html = `<button type="button" class="add-missing-btn" id="catProvVolver" style="margin-bottom:10px;">← Volver a proveedores</button>`;
   html += `<div class="section-title"><span>${cvEsc(nombre)}</span><span>${total} producto(s)</span></div>`;
   if(contacto) html += `<div class="catalog-note" style="margin-bottom:8px;">${cvEsc(contacto)}</div>`;
-  html += `<div class="cierre-acc" style="margin-bottom:10px;flex-wrap:wrap;">
+  html += `<div class="cierre-acc" style="margin-bottom:10px;">
     <button type="button" class="edit-bar-btn" id="catProvDashCargar">${total?'Actualizar catálogo':'Cargar catálogo'}</button>
     ${total?`<button type="button" class="edit-bar-btn" id="catProvDashEdit">Editar catálogo</button>`:''}
-    ${total?`<button type="button" class="edit-bar-btn" id="catProvDashExport">📤 Exportar</button>`:''}
     <button type="button" class="edit-bar-btn danger" id="catProvDashDel">Quitar proveedor</button>
   </div>`;
   html += `<div class="catprov-bar" style="margin-bottom:8px;"><span style="width:${pct}%"></span></div>`;
@@ -4153,11 +4139,7 @@ function verProveedorDash(nombre){
     <div class="cptile"><b>${sinDato.length}</b><span>Sin dato</span></div>
   </div>`;
   html += `<div class="section-title" style="margin-top:14px;"><span>🛒 Para pedir (en 0)</span><span>${en0.length}</span></div>`;
-  const conVentas = !!(typeof surtidoCfg!=='undefined' && surtidoCfg.ventasCargadas);
-  let sugMap = {};
-  if(conVentas && en0.length){ try{ cobLista().forEach(x=>{ if(x.sug>0) sugMap[x.codigo]=x.sug; }); }catch(e){} }
-  const filaPedir = (cod)=>{ const it=byCodigo[cod]||{}; const s=sugMap[cod]; return `<div class="en0-fila"><div class="en0-cod">${cvEsc(cod)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}${s?` <span class="en0-vende">pedir ${s} pz</span>`:''}</div></div>`; };
-  html += en0.length ? en0.map(filaPedir).join('') : '<div class="empty">Nada en 0 de este proveedor ahora mismo. 👍</div>';
+  html += en0.length ? en0.map(fila).join('') : '<div class="empty">Nada en 0 de este proveedor ahora mismo. 👍</div>';
   if(sinDato.length){
     html += `<div class="section-title" style="margin-top:14px;"><span>Sin existencia cargada</span><span>${sinDato.length}</span></div>`;
     html += `<div class="catalog-note" style="margin-bottom:6px;">Están en su catálogo pero aún no cargas su existencia. Carga tu reporte del POS para completarlos.</div>`;
@@ -4168,35 +4150,7 @@ function verProveedorDash(nombre){
   byId('catProvVolver').onclick = renderCatProv;
   byId('catProvDashCargar').onclick = ()=> catProvCargar(nombre);
   { const be=byId('catProvDashEdit'); if(be) be.onclick = ()=> editarCatalogoProv(nombre); }
-  { const bx=byId('catProvDashExport'); if(bx) bx.onclick = ()=> exportarProveedor(nombre); }
   byId('catProvDashDel').onclick = ()=> catProvEliminar(nombre);
-}
-// Exporta a Excel/CSV el catálogo de un proveedor con su existencia y estado,
-// y arriba lo que hay que pedir (en 0). Sirve para mandárselo al vendedor.
-function exportarProveedor(nombre){
-  const cat = catalogosProveedor[nombre]; if(!cat || !cat.codigos.length){ openConfirm('Este proveedor no tiene catálogo cargado.', ()=>{}); return; }
-  const { byCodigo } = buildIndexes(); const cm = contadoMap();
-  const conVentas = !!(typeof surtidoCfg!=='undefined' && surtidoCfg.ventasCargadas);
-  // Estado (con venta/día y sugerido) de todo el catálogo, por código.
-  const est = {}; try{ cobLista().forEach(x=> est[x.codigo]=x); }catch(e){}
-  const fmtVd = (vd)=> vd==null ? '' : (vd>=10 ? Math.round(vd) : Math.round(vd*10)/10);
-  const filas = cat.codigos.slice().map(cod=>{
-    const it = byCodigo[cod]||{}; const e = est[cod];
-    const ex = e ? e.ex : existenciaEfectiva(cod, cm);
-    const estado = ex===null ? 'Sin dato' : (ex>0 ? 'Con existencia' : 'PEDIR (en 0)');
-    const vd = e ? e.vd : null; const sug = e ? e.sug : 0;
-    return { cod, desc: it.descripcion||'', barcode: it.barcode||'', ex: ex===null?'':ex, estado, vd, sug, orden: ex===null?2:(ex>0?1:0) };
-  }).sort((a,b)=> a.orden-b.orden || (b.sug||0)-(a.sug||0) || a.cod.localeCompare(b.cod,'es',{numeric:true}));
-  const cab = ['Proveedor','Codigo','Descripcion','Codigo de Barras','Existencia','Estado'];
-  if(conVentas) cab.push('Venta_x_dia','Sugerido_pzs');
-  const lineas = [cab.join(',')];
-  filas.forEach(f=>{
-    const base = [csvSafe(nombre), f.cod, csvSafe(f.desc), f.barcode, f.ex, f.estado];
-    if(conVentas) base.push(fmtVd(f.vd), f.sug || 0);
-    lineas.push(base.join(','));
-  });
-  downloadCsv(lineas.join('\n'), 'cobertura_'+String(nombre).replace(/[^A-Za-z0-9]/g,'').slice(0,24)+'_'+hoyISO());
-  if(!conVentas) openConfirm('Exporté existencias y estado. Si cargas tu reporte de ventas, el export también traerá la venta por día y el sugerido de cuánto pedir.', ()=>{}, {yesLabel:'Entendido'});
 }
 // Editar el catálogo: quitar productos que el proveedor ya no surte.
 let catEditBusqueda = '';
@@ -4257,14 +4211,8 @@ function renderPeriodos(){
 async function verPeriodoArchivado(id){
   const a = periodosArchivo.find(x=>x.id===id); if(!a) return;
   const body = byId('periodosBody'); if(body) body.innerHTML = '<div class="empty">Cargando inventarios del periodo…</div>';
-  let cierres = null;
-  try{ const d = await tCol('inventario_periodos_items').doc(id).get(); if(d && d.exists){ const data=d.data(); cierres = (data && data.cierres) || []; } else { cierres = []; } }
-  catch(e){ cierres = null; } // null = no se pudo leer (señal)
-  if(cierres === null){
-    if(body){ body.innerHTML = `<button type="button" class="add-missing-btn" id="perVolver2" style="margin-bottom:10px;">← Volver a periodos</button><div class="empty">No se pudo leer el detalle (revisa tu internet).<br><button type="button" class="add-missing-btn" id="perReintentar" style="margin-top:10px;">Reintentar</button></div>`;
-      const v=byId('perVolver2'); if(v) v.onclick = renderPeriodos; const r=byId('perReintentar'); if(r) r.onclick = ()=> verPeriodoArchivado(id); }
-    return;
-  }
+  let cierres = [];
+  try{ const d = await tCol('inventario_periodos_items').doc(id).get(); if(d && d.exists){ const data=d.data(); cierres = (data && data.cierres) || []; } }catch(e){}
   cierresArchivoView = cierres;
   renderPeriodoDetalle(a, cierres);
 }
