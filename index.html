@@ -302,7 +302,7 @@
     width:100%;max-width:340px;background:#fff;border-radius:22px;padding:22px;
     text-align:center;box-shadow:var(--shadow-lg);
   }
-  .cv-overlay{position:fixed;inset:0;z-index:1050;background:var(--paper,#f4f1ea);display:none;flex-direction:column;}
+  .cv-overlay{position:fixed;inset:0;z-index:1120;background:var(--paper,#f4f1ea);display:none;flex-direction:column;}
   .cv-top{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#143A3C;color:#fff;padding-top:max(12px, env(safe-area-inset-top));}
   .cv-back,.cv-exp{background:rgba(255,255,255,.12);color:#fff;border:none;border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;font-family:inherit;white-space:nowrap;}
   .cv-titles{flex:1;min-width:0;}
@@ -358,6 +358,14 @@
   .cob-item .qty{min-width:44px;text-align:right;}
   .catprov-bar{height:8px;border-radius:5px;background:#e6e6e6;overflow:hidden;}
   .catprov-bar span{display:block;height:100%;background:#1e7d4f;border-radius:5px;}
+  .cob-tabs{display:flex;gap:8px;margin-bottom:12px;}
+  .cob-tabs button{flex:1;padding:11px 6px;border:1.5px solid #d9d9d9;background:#f6f6f6;border-radius:12px;font-weight:700;font-size:14px;color:#555;}
+  .cob-tabs button.on{background:#0f5132;border-color:#0f5132;color:#fff;}
+  .prov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;}
+  .prov-tile{text-align:left;background:#fff;border:1.5px solid #e2e2e2;border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:7px;}
+  .prov-tile .pt-nom{font-weight:800;font-size:15px;color:#0d2b22;}
+  .prov-tile .pt-meta{font-size:11px;color:#666;}
+  .prov-tile .pt-en0{color:#b0281a;font-weight:700;}
   .catprov-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
   .cptile{background:#f2f2f2;border-radius:10px;padding:9px 4px;text-align:center;}
   .cptile b{display:block;font-size:18px;line-height:1.1;}
@@ -1273,7 +1281,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 13 nov 2026 · 23:40 · catálogos de proveedores (alta + carga de catálogo + cobertura por proveedor) y tarjeta de ceros sin proveedor</div>
+    <div class="version-app">Tiquenda · Versión 14 nov 2026 · 02:00 · arreglos cierre de periodo: sí limpia conteos, el detalle abre encima del panel, y reintento si falla la señal</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1486,7 +1494,7 @@
       <button class="btn btn-export" id="cobVendedorBtn">📤 WhatsApp</button>
     </div>
     <button type="button" class="add-missing-btn" id="en0PanelBtn" data-ic="clipboard" style="margin-top:10px;">Productos en 0 — por categoría y por proveedor</button>
-    <button type="button" class="add-missing-btn" id="catProvBtn" data-ic="truck" style="margin-top:8px;">Catálogos de proveedores — tu cobertura por proveedor</button>
+    <button type="button" class="add-missing-btn" id="catProvBtn" data-ic="truck" style="margin-top:8px;">Cobertura por surtido — CEDIS y proveedores directos</button>
     <input type="file" id="catProvFile" accept=".xlsx,.xls,.csv" style="display:none;">
     <div class="cob-pie" id="cobVentasInfo"></div>
     <div class="cob-pie" id="cobDatos"></div>
@@ -3939,20 +3947,33 @@ async function ejecutarCerrarPeriodo(nombre, resumen){
     periodosArchivo.unshift(archivo);
     persistPeriodos();
     try{ await tCol('inventario_periodos_items').doc(archivo.id).set({ meta: archivo, cierres: cierresConteo || [] }); }catch(_){}
+    // Borra cada colección POR SEPARADO: si una falla, las demás igual se limpian
+    // (antes, si fallaba "registros" se quedaban sin borrar los cierres).
+    let fallo = 0;
     for(const nombreCol of ['inventario_registros_items','inventario_historial_items','inventario_cierres_items','inventario_actual']){
-      let snap; try{ snap = await tCol(nombreCol).get(); }catch(e){ continue; }
-      const docs = snap.docs;
-      for(let i=0;i<docs.length;i+=450){ const b=fsDb.batch(); docs.slice(i,i+450).forEach(d=> b.delete(d.ref)); await b.commit(); }
+      try{
+        const snap = await tCol(nombreCol).get();
+        const docs = snap.docs;
+        for(let i=0;i<docs.length;i+=450){
+          try{ const b=fsDb.batch(); docs.slice(i,i+450).forEach(d=> b.delete(d.ref)); await b.commit(); }
+          catch(e){ fallo++; }
+        }
+      }catch(e){ fallo++; }
     }
+    // Limpia local pase lo que pase (los listeners confirman al volver la señal).
     records = []; persistRecordsLocal();
     historialConteo = []; persistHistorial();
     cierresConteo = []; persistCierresLocal();
     periodoActual = { nombre: mesNombre(), desde: hoyISO() };
     persistPeriodoActual();
     renderSummary(); renderLog(); renderDashboard(); if(typeof renderCierresList==='function') renderCierresList();
-    fsSyncBadge('ok');
+    fsSyncBadge(fallo?'error':'ok');
     renderPeriodos();
-    openConfirm(`✅ Periodo "${nombre}" archivado. El panel quedó en cero y el nuevo periodo empieza hoy (${fechaCorta(hoyISO())}). Lo archivado lo ves aquí mismo, abajo.`, ()=>{}, {yesLabel:'Entendido'});
+    if(fallo){
+      openConfirm(`Periodo "${nombre}" archivado y el panel quedó en cero. Algunas cosas no se alcanzaron a borrar de la nube (seguramente por la señal); vuelve a tocar "Cerrar periodo" cuando tengas buen internet para terminar de limpiar.`, ()=>{}, {yesLabel:'Entendido'});
+    } else {
+      openConfirm(`✅ Periodo "${nombre}" archivado. El panel quedó en cero y el nuevo periodo empieza hoy (${fechaCorta(hoyISO())}). Lo archivado lo ves aquí mismo, abajo.`, ()=>{}, {yesLabel:'Entendido'});
+    }
   }catch(err){
     fsSyncBadge('error');
     openConfirm('No se pudo cerrar el periodo por completo (revisa tu internet). Lo que sí se archivó quedó guardado; vuelve a intentar para limpiar lo que falte.', ()=>{}, {yesLabel:'Entendido'});
@@ -3967,13 +3988,10 @@ function abrirCatProv(){ byId('catProvOverlay').style.display = 'flex'; renderCa
 function cerrarCatProv(){ byId('catProvOverlay').style.display = 'none'; }
 function coberturaDeProveedor(nombre){
   const cat = catalogosProveedor[nombre]; if(!cat) return {total:0,conEx:0,en0:0,sinDato:0,pct:0};
-  const map = activeExistenciasMap();
+  const cm = contadoMap();
   let total=cat.codigos.length, conEx=0, en0=0, sinDato=0;
   cat.codigos.forEach(cod=>{
-    const e = map[cod];
-    let ex = null;
-    if(e && e.cantidad!==undefined) ex = Number(e.cantidad);
-    else { const cob=coberturaMap[cod]; if(cob && cob.exPOS!=null) ex = Number(cob.exPOS); }
+    const ex = existenciaEfectiva(cod, cm);
     if(ex===null) sinDato++; else if(ex>0) conEx++; else en0++;
   });
   return {total, conEx, en0, sinDato, pct: total? Math.round(conEx/total*100):0};
@@ -4014,12 +4032,13 @@ function catProvArchivo(e){
         if(codigos.length) break;
       }
       if(!codigos.length){ openConfirm('No encontré códigos válidos en el archivo. Necesita una columna con el Código o Artículo.', ()=>{}); e.target.value=''; return; }
-      // Guarda el catálogo (acumula, sin duplicar) y enlaza cada código a este proveedor como DIRECTO.
+      // Guarda el catálogo (acumula, sin duplicar) y enlaza cada código a su distribución.
       const cat = catalogosProveedor[nombre];
+      const esCedisCat = cat.dist === 'CEDIS';
       const set = new Set(cat.codigos); codigos.forEach(c=> set.add(c));
       cat.codigos = [...set]; cat.fecha = hoyISO();
       persistCatProv();
-      const cambios={}; codigos.forEach(c=>{ cambios[c] = { proveedor: nombre, distribucion: 'DIRECTO' }; });
+      const cambios={}; codigos.forEach(c=>{ cambios[c] = esCedisCat ? { proveedor:'Cedis', distribucion:'CEDIS' } : { proveedor: nombre, distribucion: 'DIRECTO' }; });
       cobGuardar(cambios);
       renderCatProv(); if(typeof renderCobertura==='function') renderCobertura();
       const cv = coberturaDeProveedor(nombre);
@@ -4034,42 +4053,81 @@ function catProvEliminar(nombre){
     delete catalogosProveedor[nombre]; persistCatProv(); renderCatProv();
   }, {yesLabel:'Quitar', noLabel:'Cancelar'});
 }
+let catProvTab = 'directos'; // 'directos' | 'cedis'
+// Productos que surte CEDIS y están en 0 (faltantes a reclamar/pedir a CEDIS).
+function cedisFaltantes(){ return en0Items().filter(it=> it.esCedis); }
 function renderCatProv(){
   const body = byId('catProvBody'); if(!body) return;
-  let html = `<button type="button" class="sis-principal has-ic" id="catProvAltaBtn" style="margin:4px 0 10px;">${icBtn('plus')}<span class="bt-tx">Dar de alta proveedor</span></button>`;
-  const nombres = Object.keys(catalogosProveedor).sort((a,b)=> a.localeCompare(b,'es'));
-  if(!nombres.length){
-    html += '<div class="empty">Aún no hay proveedores. Da de alta un proveedor directo y carga su catálogo (Excel con una columna de Código o Artículo). La app calculará tu cobertura de ese proveedor y enlazará sus productos.</div>';
-  } else {
-    html += nombres.map(n=>{
-      const cat = catalogosProveedor[n]; const cv = coberturaDeProveedor(n);
-      const barra = cat.codigos.length ? `<div class="catprov-bar"><span style="width:${cv.pct}%"></span></div>` : '';
-      const meta = cat.codigos.length
-        ? `${cat.codigos.length} producto(s) · <b>${cv.pct}%</b> con existencia · <span style="color:#b0281a">${cv.en0} en 0</span>${cv.sinDato?` · ${cv.sinDato} sin dato`:''}`
-        : 'Sin catálogo cargado todavía';
-      const contacto = [cat.contacto, cat.dia].filter(Boolean).join(' · ');
-      return `<div class="log-item" style="flex-direction:column;align-items:stretch;gap:6px;">
-        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="desc">${cvEsc(n)}</div>${cat.codigos.length?`<span class="chip">${cv.conEx}/${cat.codigos.length}</span>`:''}</div>
-        <div class="meta">${meta}${contacto?'<br>'+cvEsc(contacto):''}</div>
-        ${barra}
-        <div class="cierre-acc">
-          <button type="button" class="edit-bar-btn" data-catcargar="${cvEsc(n)}">${cat.codigos.length?'Actualizar catálogo':'Cargar catálogo'}</button>
-          ${cat.codigos.length?`<button type="button" class="edit-bar-btn" data-catver="${cvEsc(n)}">Ver panel</button>`:''}
-          <button type="button" class="edit-bar-btn danger" data-catdel="${cvEsc(n)}">Quitar</button>
-        </div>
+  const nDir = Object.keys(catalogosProveedor).filter(n=> catalogosProveedor[n].dist!=='CEDIS').length;
+  const cedisCat = catalogosProveedor['CEDIS'];
+  const nCedis = (cedisCat && cedisCat.codigos.length) ? coberturaDeProveedor('CEDIS').en0 : cedisFaltantes().length;
+  let html = `<div class="cob-tabs">
+    <button class="${catProvTab==='cedis'?'on':''}" data-ptab="cedis">🔴 CEDIS${nCedis?` (${nCedis})`:''}</button>
+    <button class="${catProvTab==='directos'?'on':''}" data-ptab="directos">🚚 Directos${nDir?` (${nDir})`:''}</button>
+  </div>`;
+  if(catProvTab === 'cedis'){
+    html += `<button type="button" class="add-missing-btn" id="cedisCargarBtn" data-ic="upload" style="margin-bottom:10px;">${cedisCat&&cedisCat.codigos.length?'Actualizar catálogo maestro CEDIS':'Cargar catálogo maestro CEDIS'}</button>`;
+    if(cedisCat && cedisCat.codigos.length){
+      const cv = coberturaDeProveedor('CEDIS'); const cm = contadoMap(); const { byCodigo } = buildIndexes();
+      html += `<div class="catprov-bar" style="margin-bottom:8px;"><span style="width:${cv.pct}%"></span></div>`;
+      html += `<div class="catprov-tiles">
+        <div class="cptile"><b>${cv.pct}%</b><span>Cobertura</span></div>
+        <div class="cptile ok"><b>${cv.conEx}</b><span>Con existencia</span></div>
+        <div class="cptile bad"><b>${cv.en0}</b><span>En 0</span></div>
+        <div class="cptile"><b>${cv.sinDato}</b><span>Sin dato</span></div>
       </div>`;
-    }).join('');
+      const en0 = cedisCat.codigos.filter(cod=>{ const ex=existenciaEfectiva(cod,cm); return ex!==null && ex<=0; }).map(cod=>({codigo:cod, descripcion:(byCodigo[cod]||{}).descripcion||''}));
+      html += `<div class="section-title" style="margin-top:14px;"><span>🛒 Para pedir / reclamar a CEDIS (en 0)</span><span>${en0.length}</span></div>`;
+      if(!en0.length){ html += '<div class="empty">Nada de CEDIS en 0 ahora. 👍</div>'; }
+      else { const grupos = en0PorCategoria(en0); html += grupos.map(g=> `<div class="section-title" style="margin-top:10px;"><span>${cvEsc(g.nombre)}</span><span>${g.items.length}</span></div>`
+        + g.items.map(it=> `<div class="en0-fila"><div class="en0-cod">${cvEsc(it.codigo)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}</div></div>`).join('')).join(''); }
+      html += `<div class="cierre-acc" style="margin-top:10px;"><button type="button" class="edit-bar-btn" id="cedisEdit">Editar catálogo</button></div>`;
+    } else {
+      html += `<div class="catalog-note" style="margin-bottom:8px;">Carga el catálogo maestro de CEDIS (el listado de todo lo que te surte CEDIS) para ver tu cobertura. Mientras, aquí abajo salen los faltantes CEDIS que detecta tu reporte del POS.</div>`;
+      const falt = cedisFaltantes();
+      if(!falt.length){ html += '<div class="empty">No hay productos CEDIS en 0. 👍<br><small>Carga el catálogo maestro CEDIS, o el reporte del POS (trae proveedor y distribución).</small></div>'; }
+      else {
+        const grupos = en0PorCategoria(falt);
+        html += grupos.map(g=> `<div class="section-title" style="margin-top:10px;"><span>${cvEsc(g.nombre)}</span><span>${g.items.length}</span></div>`
+          + g.items.map(it=> `<div class="en0-fila"><div class="en0-cod">${cvEsc(it.codigo)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}${it.quiebre?' <span class="en0-vende">se vende</span>':''}</div></div>`).join('')).join('');
+      }
+    }
+  } else {
+    html += `<button type="button" class="sis-principal has-ic" id="catProvAltaBtn" style="margin:0 0 12px;">${icBtn('plus')}<span class="bt-tx">Dar de alta proveedor directo</span></button>`;
+    const nombres = Object.keys(catalogosProveedor).filter(n=> catalogosProveedor[n].dist!=='CEDIS').sort((a,b)=> a.localeCompare(b,'es'));
+    if(!nombres.length){
+      html += '<div class="empty">Aún no hay proveedores directos. Da de alta uno (Bimbo, Sabritas…) y carga su catálogo (Excel con una columna de Código o Artículo). La app calcula tu cobertura de ese proveedor y enlaza sus productos.</div>';
+    } else {
+      html += `<div class="prov-grid">` + nombres.map(n=>{
+        const cat = catalogosProveedor[n]; const cv = coberturaDeProveedor(n);
+        const barra = cat.codigos.length ? `<div class="catprov-bar"><span style="width:${cv.pct}%"></span></div>` : '';
+        const meta = cat.codigos.length
+          ? `${cv.pct}% cobertura · <span class="pt-en0">${cv.en0} en 0</span>`
+          : 'Sin catálogo — toca para cargar';
+        return `<button type="button" class="prov-tile" data-catver="${cvEsc(n)}">
+          <div class="pt-nom">${cvEsc(n)}</div>
+          ${barra}
+          <div class="pt-meta">${meta}</div>
+        </button>`;
+      }).join('') + `</div>`;
+    }
   }
   body.innerHTML = html;
-  byId('catProvAltaBtn').onclick = altaProveedor;
-  body.querySelectorAll('[data-catcargar]').forEach(b=> b.onclick = ()=> catProvCargar(b.dataset.catcargar));
+  body.querySelectorAll('[data-ptab]').forEach(b=> b.onclick = ()=>{ catProvTab = b.dataset.ptab; renderCatProv(); });
+  const alta = byId('catProvAltaBtn'); if(alta) alta.onclick = altaProveedor;
   body.querySelectorAll('[data-catver]').forEach(b=> b.onclick = ()=> verProveedorDash(b.dataset.catver));
-  body.querySelectorAll('[data-catdel]').forEach(b=> b.onclick = ()=> catProvEliminar(b.dataset.catdel));
+  { const cc=byId('cedisCargarBtn'); if(cc) cc.onclick = cargarCatalogoCedis; }
+  { const ce=byId('cedisEdit'); if(ce) ce.onclick = ()=> editarCatalogoProv('CEDIS'); }
+}
+// Catálogo maestro de CEDIS: su cobertura funciona igual que un proveedor directo.
+function cargarCatalogoCedis(){
+  if(!catalogosProveedor['CEDIS']) catalogosProveedor['CEDIS'] = { nombre:'CEDIS', dist:'CEDIS', codigos:[], contacto:'', dia:'', fecha:hoyISO() };
+  catProvCargar('CEDIS');
 }
 function verProveedorDash(nombre){
   const cat = catalogosProveedor[nombre]; if(!cat) return;
-  const map = activeExistenciasMap(); const { byCodigo } = buildIndexes();
-  const exDe = (cod)=>{ const e=map[cod]; if(e && e.cantidad!==undefined) return Number(e.cantidad); const cob=coberturaMap[cod]; if(cob && cob.exPOS!=null) return Number(cob.exPOS); return null; };
+  const { byCodigo } = buildIndexes(); const cm = contadoMap();
+  const exDe = (cod)=> existenciaEfectiva(cod, cm);
   const en0=[], sinDato=[]; let conEx=0;
   cat.codigos.forEach(cod=>{ const ex=exDe(cod); if(ex===null) sinDato.push(cod); else if(ex>0) conEx++; else en0.push(cod); });
   en0.sort((a,b)=> a.localeCompare(b,'es',{numeric:true}));
@@ -4081,6 +4139,12 @@ function verProveedorDash(nombre){
   let html = `<button type="button" class="add-missing-btn" id="catProvVolver" style="margin-bottom:10px;">← Volver a proveedores</button>`;
   html += `<div class="section-title"><span>${cvEsc(nombre)}</span><span>${total} producto(s)</span></div>`;
   if(contacto) html += `<div class="catalog-note" style="margin-bottom:8px;">${cvEsc(contacto)}</div>`;
+  html += `<div class="cierre-acc" style="margin-bottom:10px;flex-wrap:wrap;">
+    <button type="button" class="edit-bar-btn" id="catProvDashCargar">${total?'Actualizar catálogo':'Cargar catálogo'}</button>
+    ${total?`<button type="button" class="edit-bar-btn" id="catProvDashEdit">Editar catálogo</button>`:''}
+    ${total?`<button type="button" class="edit-bar-btn" id="catProvDashExport">📤 Exportar</button>`:''}
+    <button type="button" class="edit-bar-btn danger" id="catProvDashDel">Quitar proveedor</button>
+  </div>`;
   html += `<div class="catprov-bar" style="margin-bottom:8px;"><span style="width:${pct}%"></span></div>`;
   html += `<div class="catprov-tiles">
     <div class="cptile"><b>${pct}%</b><span>Cobertura</span></div>
@@ -4089,7 +4153,11 @@ function verProveedorDash(nombre){
     <div class="cptile"><b>${sinDato.length}</b><span>Sin dato</span></div>
   </div>`;
   html += `<div class="section-title" style="margin-top:14px;"><span>🛒 Para pedir (en 0)</span><span>${en0.length}</span></div>`;
-  html += en0.length ? en0.map(fila).join('') : '<div class="empty">Nada en 0 de este proveedor ahora mismo. 👍</div>';
+  const conVentas = !!(typeof surtidoCfg!=='undefined' && surtidoCfg.ventasCargadas);
+  let sugMap = {};
+  if(conVentas && en0.length){ try{ cobLista().forEach(x=>{ if(x.sug>0) sugMap[x.codigo]=x.sug; }); }catch(e){} }
+  const filaPedir = (cod)=>{ const it=byCodigo[cod]||{}; const s=sugMap[cod]; return `<div class="en0-fila"><div class="en0-cod">${cvEsc(cod)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}${s?` <span class="en0-vende">pedir ${s} pz</span>`:''}</div></div>`; };
+  html += en0.length ? en0.map(filaPedir).join('') : '<div class="empty">Nada en 0 de este proveedor ahora mismo. 👍</div>';
   if(sinDato.length){
     html += `<div class="section-title" style="margin-top:14px;"><span>Sin existencia cargada</span><span>${sinDato.length}</span></div>`;
     html += `<div class="catalog-note" style="margin-bottom:6px;">Están en su catálogo pero aún no cargas su existencia. Carga tu reporte del POS para completarlos.</div>`;
@@ -4098,6 +4166,63 @@ function verProveedorDash(nombre){
   }
   body.innerHTML = html;
   byId('catProvVolver').onclick = renderCatProv;
+  byId('catProvDashCargar').onclick = ()=> catProvCargar(nombre);
+  { const be=byId('catProvDashEdit'); if(be) be.onclick = ()=> editarCatalogoProv(nombre); }
+  { const bx=byId('catProvDashExport'); if(bx) bx.onclick = ()=> exportarProveedor(nombre); }
+  byId('catProvDashDel').onclick = ()=> catProvEliminar(nombre);
+}
+// Exporta a Excel/CSV el catálogo de un proveedor con su existencia y estado,
+// y arriba lo que hay que pedir (en 0). Sirve para mandárselo al vendedor.
+function exportarProveedor(nombre){
+  const cat = catalogosProveedor[nombre]; if(!cat || !cat.codigos.length){ openConfirm('Este proveedor no tiene catálogo cargado.', ()=>{}); return; }
+  const { byCodigo } = buildIndexes(); const cm = contadoMap();
+  const conVentas = !!(typeof surtidoCfg!=='undefined' && surtidoCfg.ventasCargadas);
+  // Estado (con venta/día y sugerido) de todo el catálogo, por código.
+  const est = {}; try{ cobLista().forEach(x=> est[x.codigo]=x); }catch(e){}
+  const fmtVd = (vd)=> vd==null ? '' : (vd>=10 ? Math.round(vd) : Math.round(vd*10)/10);
+  const filas = cat.codigos.slice().map(cod=>{
+    const it = byCodigo[cod]||{}; const e = est[cod];
+    const ex = e ? e.ex : existenciaEfectiva(cod, cm);
+    const estado = ex===null ? 'Sin dato' : (ex>0 ? 'Con existencia' : 'PEDIR (en 0)');
+    const vd = e ? e.vd : null; const sug = e ? e.sug : 0;
+    return { cod, desc: it.descripcion||'', barcode: it.barcode||'', ex: ex===null?'':ex, estado, vd, sug, orden: ex===null?2:(ex>0?1:0) };
+  }).sort((a,b)=> a.orden-b.orden || (b.sug||0)-(a.sug||0) || a.cod.localeCompare(b.cod,'es',{numeric:true}));
+  const cab = ['Proveedor','Codigo','Descripcion','Codigo de Barras','Existencia','Estado'];
+  if(conVentas) cab.push('Venta_x_dia','Sugerido_pzs');
+  const lineas = [cab.join(',')];
+  filas.forEach(f=>{
+    const base = [csvSafe(nombre), f.cod, csvSafe(f.desc), f.barcode, f.ex, f.estado];
+    if(conVentas) base.push(fmtVd(f.vd), f.sug || 0);
+    lineas.push(base.join(','));
+  });
+  downloadCsv(lineas.join('\n'), 'cobertura_'+String(nombre).replace(/[^A-Za-z0-9]/g,'').slice(0,24)+'_'+hoyISO());
+  if(!conVentas) openConfirm('Exporté existencias y estado. Si cargas tu reporte de ventas, el export también traerá la venta por día y el sugerido de cuánto pedir.', ()=>{}, {yesLabel:'Entendido'});
+}
+// Editar el catálogo: quitar productos que el proveedor ya no surte.
+let catEditBusqueda = '';
+function editarCatalogoProv(nombre){
+  const cat = catalogosProveedor[nombre]; if(!cat) return;
+  const { byCodigo } = buildIndexes();
+  const q = catEditBusqueda.trim().toLowerCase();
+  let cods = cat.codigos.slice().sort((a,b)=> a.localeCompare(b,'es',{numeric:true}));
+  if(q) cods = cods.filter(cod=>{ const it=byCodigo[cod]||{}; return cod.toLowerCase().includes(q) || String(it.descripcion||'').toLowerCase().includes(q); });
+  const body = byId('catProvBody');
+  let html = `<button type="button" class="add-missing-btn" id="catEditVolver" style="margin-bottom:10px;">← Volver al panel</button>`;
+  html += `<div class="section-title"><span>Editar catálogo · ${cvEsc(nombre)}</span><span>${cat.codigos.length}</span></div>`;
+  html += `<div class="catalog-note" style="margin-bottom:8px;">Quita los productos que este proveedor ya no te surte. Toca ✕ para sacarlos del catálogo (no borra el producto de la app).</div>`;
+  html += `<button type="button" class="add-missing-btn" id="catEditBuscar" data-ic="search" style="margin-bottom:10px;">${q?('Filtro: '+cvEsc(catEditBusqueda)+' · tocar para cambiar'):'Buscar producto a quitar'}</button>`;
+  if(!cods.length){ html += '<div class="empty">Sin resultados.</div>'; }
+  else { html += cods.map(cod=>{ const it=byCodigo[cod]||{}; return `<div class="log-item"><div class="info"><div class="desc">${cvEsc(cod)}</div><div class="meta">${cvEsc(it.descripcion||'(sin nombre)')}</div></div><button type="button" class="del" data-quitarcod="${cvEsc(cod)}">✕</button></div>`; }).join(''); }
+  body.innerHTML = html;
+  byId('catEditVolver').onclick = ()=>{ catEditBusqueda=''; verProveedorDash(nombre); };
+  byId('catEditBuscar').onclick = ()=> openTextKeypad('Buscar producto a quitar', catEditBusqueda, (v)=>{ catEditBusqueda = String(v||''); editarCatalogoProv(nombre); });
+  body.querySelectorAll('[data-quitarcod]').forEach(b=> b.onclick = ()=>{
+    const cod = b.dataset.quitarcod; const it=byCodigo[cod]||{};
+    openConfirm(`¿Quitar ${cvEsc(cod)} (${cvEsc(it.descripcion||'sin nombre')}) del catálogo de ${cvEsc(nombre)}? Ya no contará para su cobertura.`, ()=>{
+      cat.codigos = cat.codigos.filter(x=> x!==cod);
+      persistCatProv(); editarCatalogoProv(nombre);
+    }, {yesLabel:'Quitar', noLabel:'Cancelar'});
+  });
 }
 function renderPeriodos(){
   const body = byId('periodosBody'); if(!body) return;
@@ -4132,8 +4257,14 @@ function renderPeriodos(){
 async function verPeriodoArchivado(id){
   const a = periodosArchivo.find(x=>x.id===id); if(!a) return;
   const body = byId('periodosBody'); if(body) body.innerHTML = '<div class="empty">Cargando inventarios del periodo…</div>';
-  let cierres = [];
-  try{ const d = await tCol('inventario_periodos_items').doc(id).get(); if(d && d.exists){ const data=d.data(); cierres = (data && data.cierres) || []; } }catch(e){}
+  let cierres = null;
+  try{ const d = await tCol('inventario_periodos_items').doc(id).get(); if(d && d.exists){ const data=d.data(); cierres = (data && data.cierres) || []; } else { cierres = []; } }
+  catch(e){ cierres = null; } // null = no se pudo leer (señal)
+  if(cierres === null){
+    if(body){ body.innerHTML = `<button type="button" class="add-missing-btn" id="perVolver2" style="margin-bottom:10px;">← Volver a periodos</button><div class="empty">No se pudo leer el detalle (revisa tu internet).<br><button type="button" class="add-missing-btn" id="perReintentar" style="margin-top:10px;">Reintentar</button></div>`;
+      const v=byId('perVolver2'); if(v) v.onclick = renderPeriodos; const r=byId('perReintentar'); if(r) r.onclick = ()=> verPeriodoArchivado(id); }
+    return;
+  }
   cierresArchivoView = cierres;
   renderPeriodoDetalle(a, cierres);
 }
@@ -5773,6 +5904,28 @@ $('cvBuscar').addEventListener('input', ()=>{ cierreBusqueda = $('cvBuscar').val
    Los datos se acumulan: cada carga suma, nunca borra. */
 const fsCoberturaCol = tCol('inventario_cobertura_items');
 let coberturaMap = {};
+let _contado = {}; // suma de lo contado físicamente por código (se recalcula al render)
+// Suma de los conteos físicos por código (áreas reales, no Movimientos Pendientes).
+function contadoMap(){
+  const m = {};
+  (typeof records !== 'undefined' ? records : []).forEach(r=>{
+    if(r.area === 'Movimientos Pendientes') return;
+    const c = String(r.codigo||'').toUpperCase(); if(!c) return;
+    m[c] = (m[c]||0) + (Number(r.cantidad)||0);
+  });
+  return m;
+}
+// Existencia efectiva de un código: 1) existencias cargadas, 2) lo que contaste,
+// 3) el disponible del POS en cobertura. Null si no hay ningún dato.
+function existenciaEfectiva(cod, contado){
+  const c = (contado || _contado) || {};
+  const e = (typeof existenciasMap !== 'undefined' ? existenciasMap : {})[cod];
+  if(e && e.cantidad !== undefined) return Number(e.cantidad);
+  if(c[cod] !== undefined) return c[cod];
+  const cob = coberturaMap[cod];
+  if(cob && cob.exPOS != null) return Number(cob.exPOS);
+  return null;
+}
 try{ const c = lsGet('cobertura'); if(c) coberturaMap = JSON.parse(c); }catch(e){}
 let catalogosProveedor = {}; // { nombreProveedor: {nombre, codigos:[...], contacto, dia, fecha} }
 try{ const cp = lsGet('catalogos_proveedor'); if(cp) catalogosProveedor = JSON.parse(cp); }catch(e){}
@@ -5862,9 +6015,7 @@ function aFechaISO(v){
 function cobEstado(c){
   const cob = coberturaMap[c.codigo] || {};
   if(cob.descatalogado) return null;
-  const ex = (existenciasMap[c.codigo] && existenciasMap[c.codigo].cantidad !== undefined)
-    ? Number(existenciasMap[c.codigo].cantidad)
-    : (cob.exPOS !== undefined && cob.exPOS !== null ? Number(cob.exPOS) : null);
+  const ex = existenciaEfectiva(c.codigo, _contado);
   const fechasEnt = Object.keys(cob.entregas || {}).sort();
   const ultimaEnt = fechasEnt[fechasEnt.length-1] || '';
   const dias = diasDesde(ultimaEnt);
@@ -5897,6 +6048,7 @@ function cobEstado(c){
     sinmov: vd === 0 && ex !== null && ex > 0};
 }
 function cobLista(){
+  _contado = contadoMap();
   const {all} = buildIndexes();
   const vistos = new Set(all.map(i=>i.codigo));
   const base = all.slice();
@@ -8337,7 +8489,7 @@ loadState();
 
 <div class="cotejo-overlay" id="catProvOverlay">
   <div class="cotejo-card">
-    <div class="cotejo-head">Catálogos de proveedores<small>Carga el catálogo de cada proveedor directo. La app te dice tu cobertura (cuántos de sus productos tienes y cuántos en 0) y enlaza solas las existencias a su proveedor.</small></div>
+    <div class="cotejo-head">Cobertura por surtido<small>CEDIS: tus faltantes que surte CEDIS. Directos: cada proveedor (Bimbo, Sabritas…) con su catálogo, tu cobertura y qué pedirle.</small></div>
     <div class="cotejo-body" id="catProvBody"></div>
     <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="catProvCerrar">Cerrar</button></div></div>
   </div>
