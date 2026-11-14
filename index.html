@@ -356,6 +356,13 @@
   #panel-cobertura #cobBuscar{font-family:inherit !important;font-size:15px !important;letter-spacing:0;}
   .cob-item{cursor:pointer;}
   .cob-item .qty{min-width:44px;text-align:right;}
+  .catprov-bar{height:8px;border-radius:5px;background:#e6e6e6;overflow:hidden;}
+  .catprov-bar span{display:block;height:100%;background:#1e7d4f;border-radius:5px;}
+  .catprov-tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+  .cptile{background:#f2f2f2;border-radius:10px;padding:9px 4px;text-align:center;}
+  .cptile b{display:block;font-size:18px;line-height:1.1;}
+  .cptile span{font-size:10px;color:#666;}
+  .cptile.ok b{color:#1e7d4f;} .cptile.bad b{color:#b0281a;}
   .cob-acciones{display:flex;gap:8px;margin-top:12px;}
   .cob-acciones .btn{flex:1;margin:0;}
   .cob-acciones #cobSurtidoBtn{flex:1.6;}
@@ -1253,6 +1260,7 @@
       <button type="button" class="sheet-item" id="fotoLogBtn" data-ic="image" style="display:none;"><span></span><div><b>Histórico de fotos</b><small>Quién toma fotos · para retroalimentar</small></div></button>
       <button type="button" class="sheet-item" id="respaldoBtn" data-ic="save" style="display:none;"><span></span><div><b>Respaldo de la tienda</b><small id="respaldoSub">Descarga todo en un Excel</small></div></button>
       <button type="button" class="sheet-item" id="nipBtn" data-ic="lock" style="display:none;"><span></span><div><b>Seguridad / NIP</b><small>Tu NIP y candados (consultar inventarios)</small></div></button>
+      <button type="button" class="sheet-item" id="periodosBtn" data-ic="calendar" style="display:none;"><span></span><div><b>Periodos de inventario</b><small>Archiva el periodo y empieza en cero</small></div></button>
       <button type="button" class="sheet-item" id="papeleraBtn" data-ic="trash"><span></span><div><b>Papelera</b><small>Lo borrado se guarda 30 días</small></div></button>
       <button type="button" class="sheet-item" id="unidadBtn" data-ic="building" style="display:none;"><span></span><div><b>Cambiar de unidad</b><small id="unidadSub">Almacén y sucursales</small></div></button>
       <button type="button" class="sheet-item" id="tableroBtn" data-ic="grid" style="display:none;"><span></span><div><b>Mis unidades</b><small>Resumen de almacén y sucursales</small></div></button>
@@ -1265,7 +1273,7 @@
       <button type="button" class="sheet-item" id="sesionBtn" data-ic="user"><span></span><div><b id="sesionNombre">Mi sesión</b><small id="sesionDetalle"></small></div></button>
     </div>
     <button type="button" class="sheet-close" id="masCerrar">Cerrar</button>
-    <div class="version-app">Tiquenda · Versión 11 nov 2026 · 15:10 · arreglo de selección de criticidad (toque más confiable)</div>
+    <div class="version-app">Tiquenda · Versión 13 nov 2026 · 23:40 · catálogos de proveedores (alta + carga de catálogo + cobertura por proveedor) y tarjeta de ceros sin proveedor</div>
     <div class="version-app" style="opacity:.6;font-size:11px;">© 2026 Juan Carlos del Ángel Gallegos Cervantes · Todos los derechos reservados</div>
   </div>
 </div>
@@ -1478,6 +1486,8 @@
       <button class="btn btn-export" id="cobVendedorBtn">📤 WhatsApp</button>
     </div>
     <button type="button" class="add-missing-btn" id="en0PanelBtn" data-ic="clipboard" style="margin-top:10px;">Productos en 0 — por categoría y por proveedor</button>
+    <button type="button" class="add-missing-btn" id="catProvBtn" data-ic="truck" style="margin-top:8px;">Catálogos de proveedores — tu cobertura por proveedor</button>
+    <input type="file" id="catProvFile" accept=".xlsx,.xls,.csv" style="display:none;">
     <div class="cob-pie" id="cobVentasInfo"></div>
     <div class="cob-pie" id="cobDatos"></div>
     <div style="display:none;">
@@ -1754,12 +1764,15 @@ let prefixCriticidad = {};
 let capPendingItem = null;
 let capPendingFecha = '';
 let capPendingArea = '';
+let capPendingQty = ''; // la cantidad del lote vive aquí para que no se borre al redibujar
 let capPendingCritOverride = null; // null = automático; 'alta'|'media'|'baja' = elegido a mano para este lote
 let historialConteo = [];
 let logFiltro = ''; // texto del buscador del historial de conteo
 let compFiltroTexto = '';      // buscador de la comparativa (Físico vs. sistema)
 let compFiltroEstado = 'todos'; // 'todos' | 'OK' | 'Faltante' | 'Sobrante'
 let cierresConteo = []; // conteos anteriores ya cerrados (al "Vaciar conteo"), con fecha
+let periodosArchivo = []; // periodos de inventario archivados (resúmenes)
+let periodoActual = {};   // { nombre, desde } del periodo en curso
 let etiquetas = [];
 function uid(){ return Date.now()+'_'+Math.random().toString(36).slice(2,7); }
 let pendingItem = null;
@@ -1852,7 +1865,10 @@ const FS_KEYS_TO_VARS = {
   objetivo_ventas:         (v)=>{ objetivoVentas = (v && typeof v==='object') ? v : {}; persistObjetivoVentasLocal(); if(byId('objOverlay') && byId('objOverlay').style.display==='flex') renderObjetivos(); },
   estrategias:             (v)=>{ estrategias = Array.isArray(v) ? v : []; persistEstrategiasLocal(); if(byId('objOverlay') && byId('objOverlay').style.display==='flex') renderObjetivos(); },
   eval_bancos:             (v)=>{ if(v && typeof v==='object'){ if(Array.isArray(v.operacional)) evalBancos.operacional=v.operacional; if(Array.isArray(v.liderazgo)) evalBancos.liderazgo=v.liderazgo; if(!evalBancos.liderazgo.length) evalBancos.liderazgo=evalLiderazgoSeed(); persistEvalBancosLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); } },
-  eval_runs:               (v)=>{ evalRuns = Array.isArray(v) ? v : []; persistEvalRunsLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); if(byId('perfilOverlay') && byId('perfilOverlay').style.display==='flex') renderPerfil(); }
+  eval_runs:               (v)=>{ evalRuns = Array.isArray(v) ? v : []; persistEvalRunsLocal(); if(byId('evalOverlay') && byId('evalOverlay').style.display==='flex') renderEval(); if(byId('perfilOverlay') && byId('perfilOverlay').style.display==='flex') renderPerfil(); },
+  periodos_archivo:        (v)=>{ periodosArchivo = Array.isArray(v) ? v : []; persistPeriodosLocal(); if(byId('periodosOverlay') && byId('periodosOverlay').style.display==='flex') renderPeriodos(); },
+  periodo_actual:          (v)=>{ periodoActual = (v && typeof v==='object') ? v : {}; persistPeriodoActualLocal(); if(byId('periodosOverlay') && byId('periodosOverlay').style.display==='flex') renderPeriodos(); },
+  catalogos_proveedor:     (v)=>{ catalogosProveedor = (v && typeof v==='object') ? v : {}; persistCatProvLocal(); if(byId('catProvOverlay') && byId('catProvOverlay').style.display==='flex') renderCatProv(); }
 };
 
 const FS_LOCAL_GETTERS = {
@@ -1870,7 +1886,10 @@ const FS_LOCAL_GETTERS = {
   objetivo_ventas:         ()=> objetivoVentas,
   estrategias:             ()=> estrategias,
   eval_bancos:             ()=> evalBancos,
-  eval_runs:               ()=> evalRuns
+  eval_runs:               ()=> evalRuns,
+  periodos_archivo:        ()=> periodosArchivo,
+  periodo_actual:          ()=> periodoActual,
+  catalogos_proveedor:     ()=> catalogosProveedor
 };
 function fsHasData(val){
   if(Array.isArray(val)) return val.length > 0;
@@ -2245,6 +2264,7 @@ async function authRevisarAcceso(user, forzar){
   byId('tiendasBtn').style.display = esAdmin() ? '' : 'none';
   byId('nipBtn').style.display = esEncargado() ? '' : 'none';
   byId('respaldoBtn').style.display = esEncargado() ? '' : 'none';
+  { const pb = byId('periodosBtn'); if(pb) pb.style.display = esEncargado() ? '' : 'none'; }
   byId('unidadBtn').style.display = misUnidades().length > 1 ? '' : 'none';
   byId('tableroBtn').style.display = esDueno() ? '' : 'none';
   byId('traspasosBtn').style.display = miEmpresa ? '' : 'none';
@@ -3487,6 +3507,8 @@ function loadState(){
   try{ const pc = lsGet('prefijo_criticidad'); if(pc) prefixCriticidad = JSON.parse(pc); }catch(e){}
   try{ const h = lsGet('historial_conteo'); if(h) historialConteo = JSON.parse(h); }catch(e){}
   try{ const cc = lsGet('cierres_conteo'); if(cc) cierresConteo = JSON.parse(cc); }catch(e){}
+  try{ const pa = lsGet('periodos_archivo'); if(pa) periodosArchivo = JSON.parse(pa); }catch(e){}
+  try{ const px = lsGet('periodo_actual'); if(px) periodoActual = JSON.parse(px); }catch(e){}
   try{ const et = lsGet('etiquetas_pendientes'); if(et) etiquetas = JSON.parse(et); }catch(e){}
   try{ const pf = lsGet('pendientes_fijos'); if(pf) pendientesFijos = JSON.parse(pf); }catch(e){}
   try{ const vc = lsGet('vision_cfg'); if(vc) visionCfg = Object.assign({key:'',limiteMes:950}, JSON.parse(vc)); }catch(e){}
@@ -3551,6 +3573,10 @@ const persistCaducidadesLocal = ()=> lsSet('caducidades_lotes', JSON.stringify(c
 const persistPrefixCfgLocal   = ()=> lsSet('prefijo_criticidad', JSON.stringify(prefixCriticidad));
 const persistHistorialLocal   = ()=> lsSet('historial_conteo', JSON.stringify(historialConteo));
 const persistCierresLocal     = ()=> lsSet('cierres_conteo', JSON.stringify(cierresConteo));
+const persistPeriodosLocal       = ()=> lsSet('periodos_archivo', JSON.stringify(periodosArchivo));
+const persistPeriodos            = ()=>{ persistPeriodosLocal(); fsSet('periodos_archivo', periodosArchivo); };
+const persistPeriodoActualLocal  = ()=> lsSet('periodo_actual', JSON.stringify(periodoActual));
+const persistPeriodoActual       = ()=>{ persistPeriodoActualLocal(); fsSet('periodo_actual', periodoActual); };
 const persistEtiquetasLocal   = ()=> lsSet('etiquetas_pendientes', JSON.stringify(etiquetas));
 const persistPendientesFijosLocal = ()=> lsSet('pendientes_fijos', JSON.stringify(pendientesFijos));
 const persistPendientesFijos  = ()=>{ persistPendientesFijosLocal(); fsSet('pendientes_fijos', pendientesFijos); };
@@ -3876,6 +3902,264 @@ function cargarPendientesFijos(){
 }
 function abrirFijos(){ byId('fijosOverlay').style.display = 'flex'; renderFijos(); }
 function cerrarFijos(){ byId('fijosOverlay').style.display = 'none'; }
+
+// ===== Periodos de inventario: archivar y reiniciar =====
+function mesNombre(iso){ const d = new Date((iso||hoyISO())+'T00:00:00'); const M=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre']; return M[d.getMonth()] + ' ' + d.getFullYear(); }
+function periodoResumenActual(){
+  const personas = {};
+  (cierresConteo||[]).forEach(c=>{ (c.registros||[]).forEach(r=>{ const n=r.capturista||'Sin nombre'; personas[n]=(personas[n]||0)+1; }); });
+  (records||[]).forEach(r=>{ const n=r.capturista||'Sin nombre'; personas[n]=(personas[n]||0)+1; });
+  const cierresRes = (cierresConteo||[]).map(c=>({ categoria:c.categoriaNombre||'', fecha:c.fecha||'', escaneos:(c.registros||[]).length, piezas:(c.registros||[]).reduce((s,r)=>s+(Number(r.cantidad)||0),0) }));
+  return {
+    conteosEnCurso: (records||[]).length,
+    inventariosCerrados: (cierresConteo||[]).length,
+    totalEscaneos: cierresRes.reduce((s,c)=>s+c.escaneos,0) + (records||[]).length,
+    personas: Object.entries(personas).map(([nombre,conteos])=>({nombre,conteos})).sort((a,b)=>b.conteos-a.conteos),
+    cierres: cierresRes
+  };
+}
+function cerrarPeriodo(){
+  if(!esAdmin()){ openConfirm('Solo el aliado puede cerrar el periodo.', ()=>{}, {yesLabel:'Entendido'}); return; }
+  const defName = (periodoActual && periodoActual.nombre) || mesNombre();
+  openTextKeypad('Nombre del periodo que vas a archivar', defName, (nombre)=>{
+    nombre = String(nombre||'').trim() || defName;
+    const resumen = periodoResumenActual();
+    if(!resumen.totalEscaneos && !resumen.inventariosCerrados){
+      openConfirm('No hay conteos ni inventarios cerrados en este periodo. No hay nada que archivar todavía.', ()=>{}, {yesLabel:'Entendido'});
+      return;
+    }
+    const msg = `Vas a CERRAR el periodo "${nombre}" para TODO el equipo:\n\n• ${resumen.inventariosCerrados} inventario(s) cerrado(s)\n• ${resumen.totalEscaneos} escaneo(s) en total\n• ${resumen.personas.length} persona(s)\n\nTodo esto se ARCHIVA y el panel queda en cero para empezar fresco desde hoy. Se conservan catálogo, existencias, cobertura, pendientes fijos, evaluaciones, tareas y objetivos.\n\n¿Cerrar el periodo?`;
+    openConfirm(msg, ()=> ejecutarCerrarPeriodo(nombre, resumen), {yesLabel:'Sí, cerrar periodo', noLabel:'Cancelar'});
+  });
+}
+async function ejecutarCerrarPeriodo(nombre, resumen){
+  fsSyncBadge('sync');
+  const archivo = { id: uid(), nombre, desde: (periodoActual && periodoActual.desde) || '', hasta: hoyISO(), cerradoEl: new Date().toISOString(), cerradoPor: currentUser || '', resumen };
+  try{
+    periodosArchivo.unshift(archivo);
+    persistPeriodos();
+    try{ await tCol('inventario_periodos_items').doc(archivo.id).set({ meta: archivo, cierres: cierresConteo || [] }); }catch(_){}
+    for(const nombreCol of ['inventario_registros_items','inventario_historial_items','inventario_cierres_items','inventario_actual']){
+      let snap; try{ snap = await tCol(nombreCol).get(); }catch(e){ continue; }
+      const docs = snap.docs;
+      for(let i=0;i<docs.length;i+=450){ const b=fsDb.batch(); docs.slice(i,i+450).forEach(d=> b.delete(d.ref)); await b.commit(); }
+    }
+    records = []; persistRecordsLocal();
+    historialConteo = []; persistHistorial();
+    cierresConteo = []; persistCierresLocal();
+    periodoActual = { nombre: mesNombre(), desde: hoyISO() };
+    persistPeriodoActual();
+    renderSummary(); renderLog(); renderDashboard(); if(typeof renderCierresList==='function') renderCierresList();
+    fsSyncBadge('ok');
+    renderPeriodos();
+    openConfirm(`✅ Periodo "${nombre}" archivado. El panel quedó en cero y el nuevo periodo empieza hoy (${fechaCorta(hoyISO())}). Lo archivado lo ves aquí mismo, abajo.`, ()=>{}, {yesLabel:'Entendido'});
+  }catch(err){
+    fsSyncBadge('error');
+    openConfirm('No se pudo cerrar el periodo por completo (revisa tu internet). Lo que sí se archivó quedó guardado; vuelve a intentar para limpiar lo que falte.', ()=>{}, {yesLabel:'Entendido'});
+  }
+}
+function abrirPeriodos(){ byId('periodosOverlay').style.display = 'flex'; renderPeriodos(); }
+function cerrarPeriodosPanel(){ byId('periodosOverlay').style.display = 'none'; }
+
+// ===== Catálogos de proveedores: dar de alta y cargar catálogo =====
+let catProvCargandoPara = null; // proveedor al que se le está cargando el Excel
+function abrirCatProv(){ byId('catProvOverlay').style.display = 'flex'; renderCatProv(); }
+function cerrarCatProv(){ byId('catProvOverlay').style.display = 'none'; }
+function coberturaDeProveedor(nombre){
+  const cat = catalogosProveedor[nombre]; if(!cat) return {total:0,conEx:0,en0:0,sinDato:0,pct:0};
+  const map = activeExistenciasMap();
+  let total=cat.codigos.length, conEx=0, en0=0, sinDato=0;
+  cat.codigos.forEach(cod=>{
+    const e = map[cod];
+    let ex = null;
+    if(e && e.cantidad!==undefined) ex = Number(e.cantidad);
+    else { const cob=coberturaMap[cod]; if(cob && cob.exPOS!=null) ex = Number(cob.exPOS); }
+    if(ex===null) sinDato++; else if(ex>0) conEx++; else en0++;
+  });
+  return {total, conEx, en0, sinDato, pct: total? Math.round(conEx/total*100):0};
+}
+function altaProveedor(){
+  openTextKeypad('Nombre del proveedor directo', '', (nombre)=>{
+    nombre = String(nombre||'').trim(); if(!nombre) return;
+    if(catalogosProveedor[nombre]){ openConfirm('Ya existe un proveedor con ese nombre. Puedes cargarle o actualizar su catálogo desde su tarjeta.', ()=>{}, {yesLabel:'Entendido'}); renderCatProv(); return; }
+    openTextKeypad('Contacto del vendedor (teléfono o nombre) — opcional', '', (contacto)=>{
+      openTextKeypad('¿Qué día pasa? — opcional (ej. Martes)', '', (dia)=>{
+        catalogosProveedor[nombre] = { nombre, codigos: [], contacto: String(contacto||'').trim(), dia: String(dia||'').trim(), fecha: hoyISO() };
+        persistCatProv(); renderCatProv();
+        openConfirm(`Proveedor "${nombre}" dado de alta. Ahora carga su catálogo desde su tarjeta con "Cargar catálogo".`, ()=>{}, {yesLabel:'Entendido'});
+      });
+    });
+  });
+}
+function catProvCargar(nombre){ catProvCargandoPara = nombre; byId('catProvFile').click(); }
+function catProvArchivo(e){
+  const file=e.target.files[0]; if(!file){ catProvCargandoPara=null; return; }
+  const nombre = catProvCargandoPara; catProvCargandoPara=null;
+  if(!nombre || !catalogosProveedor[nombre]){ e.target.value=''; return; }
+  if(typeof XLSX==='undefined'){ openConfirm('No se pudo cargar el motor de Excel. Verifica tu internet.', ()=>{}); e.target.value=''; return; }
+  const reader=new FileReader();
+  reader.onload=(ev)=>{
+    try{
+      const wb=XLSX.read(ev.target.result,{type:'array'});
+      const norm=s=>String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').trim();
+      let codigos=[];
+      for(const sn of wb.SheetNames){
+        const aoa=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:'',blankrows:false});
+        let hi=-1, cols=[];
+        for(let i=0;i<Math.min(aoa.length,10);i++){ const f=(aoa[i]||[]).map(norm); if(f.some(x=> ['codigo','articulo','alfanumerico','clave','sku'].includes(x) || x.includes('codigo')||x.includes('articulo')||x.includes('alfanum'))){ hi=i; cols=f; break; } }
+        let cCod=0, start=0;
+        if(hi>=0){ cCod = cols.findIndex(x=> ['codigo','articulo','alfanumerico','clave','sku'].includes(x)); if(cCod<0) cCod = cols.findIndex(x=> x.includes('codigo')||x.includes('articulo')||x.includes('alfanum')); if(cCod<0) cCod=0; start=hi+1; }
+        const seen=new Set();
+        for(let i=start;i<aoa.length;i++){ const r=aoa[i]||[]; const cod=String(r[cCod]==null?'':r[cCod]).trim().toUpperCase(); if(cod && isValidCodigo(cod) && !seen.has(cod)){ seen.add(cod); codigos.push(cod); } }
+        if(codigos.length) break;
+      }
+      if(!codigos.length){ openConfirm('No encontré códigos válidos en el archivo. Necesita una columna con el Código o Artículo.', ()=>{}); e.target.value=''; return; }
+      // Guarda el catálogo (acumula, sin duplicar) y enlaza cada código a este proveedor como DIRECTO.
+      const cat = catalogosProveedor[nombre];
+      const set = new Set(cat.codigos); codigos.forEach(c=> set.add(c));
+      cat.codigos = [...set]; cat.fecha = hoyISO();
+      persistCatProv();
+      const cambios={}; codigos.forEach(c=>{ cambios[c] = { proveedor: nombre, distribucion: 'DIRECTO' }; });
+      cobGuardar(cambios);
+      renderCatProv(); if(typeof renderCobertura==='function') renderCobertura();
+      const cv = coberturaDeProveedor(nombre);
+      openConfirm(`Catálogo de "${nombre}" cargado: ${cat.codigos.length} producto(s) en total.\n\nTu cobertura: ${cv.conEx} con existencia, ${cv.en0} en 0, ${cv.sinDato} sin dato. (${cv.pct}%)\n\nYa quedaron enlazados a este proveedor; al cargar existencias se clasifican solos.`, ()=>{}, {yesLabel:'Entendido'});
+    }catch(err){ openConfirm('No se pudo leer el archivo. Revisa que sea Excel (.xlsx) o CSV con una columna de Código.', ()=>{}); }
+    e.target.value='';
+  };
+  reader.readAsArrayBuffer(file);
+}
+function catProvEliminar(nombre){
+  openConfirm(`¿Quitar el proveedor "${nombre}" y su catálogo? No borra las existencias ni los productos, solo este catálogo y su cálculo de cobertura.`, ()=>{
+    delete catalogosProveedor[nombre]; persistCatProv(); renderCatProv();
+  }, {yesLabel:'Quitar', noLabel:'Cancelar'});
+}
+function renderCatProv(){
+  const body = byId('catProvBody'); if(!body) return;
+  let html = `<button type="button" class="sis-principal has-ic" id="catProvAltaBtn" style="margin:4px 0 10px;">${icBtn('plus')}<span class="bt-tx">Dar de alta proveedor</span></button>`;
+  const nombres = Object.keys(catalogosProveedor).sort((a,b)=> a.localeCompare(b,'es'));
+  if(!nombres.length){
+    html += '<div class="empty">Aún no hay proveedores. Da de alta un proveedor directo y carga su catálogo (Excel con una columna de Código o Artículo). La app calculará tu cobertura de ese proveedor y enlazará sus productos.</div>';
+  } else {
+    html += nombres.map(n=>{
+      const cat = catalogosProveedor[n]; const cv = coberturaDeProveedor(n);
+      const barra = cat.codigos.length ? `<div class="catprov-bar"><span style="width:${cv.pct}%"></span></div>` : '';
+      const meta = cat.codigos.length
+        ? `${cat.codigos.length} producto(s) · <b>${cv.pct}%</b> con existencia · <span style="color:#b0281a">${cv.en0} en 0</span>${cv.sinDato?` · ${cv.sinDato} sin dato`:''}`
+        : 'Sin catálogo cargado todavía';
+      const contacto = [cat.contacto, cat.dia].filter(Boolean).join(' · ');
+      return `<div class="log-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;"><div class="desc">${cvEsc(n)}</div>${cat.codigos.length?`<span class="chip">${cv.conEx}/${cat.codigos.length}</span>`:''}</div>
+        <div class="meta">${meta}${contacto?'<br>'+cvEsc(contacto):''}</div>
+        ${barra}
+        <div class="cierre-acc">
+          <button type="button" class="edit-bar-btn" data-catcargar="${cvEsc(n)}">${cat.codigos.length?'Actualizar catálogo':'Cargar catálogo'}</button>
+          ${cat.codigos.length?`<button type="button" class="edit-bar-btn" data-catver="${cvEsc(n)}">Ver panel</button>`:''}
+          <button type="button" class="edit-bar-btn danger" data-catdel="${cvEsc(n)}">Quitar</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+  body.innerHTML = html;
+  byId('catProvAltaBtn').onclick = altaProveedor;
+  body.querySelectorAll('[data-catcargar]').forEach(b=> b.onclick = ()=> catProvCargar(b.dataset.catcargar));
+  body.querySelectorAll('[data-catver]').forEach(b=> b.onclick = ()=> verProveedorDash(b.dataset.catver));
+  body.querySelectorAll('[data-catdel]').forEach(b=> b.onclick = ()=> catProvEliminar(b.dataset.catdel));
+}
+function verProveedorDash(nombre){
+  const cat = catalogosProveedor[nombre]; if(!cat) return;
+  const map = activeExistenciasMap(); const { byCodigo } = buildIndexes();
+  const exDe = (cod)=>{ const e=map[cod]; if(e && e.cantidad!==undefined) return Number(e.cantidad); const cob=coberturaMap[cod]; if(cob && cob.exPOS!=null) return Number(cob.exPOS); return null; };
+  const en0=[], sinDato=[]; let conEx=0;
+  cat.codigos.forEach(cod=>{ const ex=exDe(cod); if(ex===null) sinDato.push(cod); else if(ex>0) conEx++; else en0.push(cod); });
+  en0.sort((a,b)=> a.localeCompare(b,'es',{numeric:true}));
+  sinDato.sort((a,b)=> a.localeCompare(b,'es',{numeric:true}));
+  const total = cat.codigos.length; const pct = total? Math.round(conEx/total*100):0;
+  const contacto = [cat.contacto, cat.dia].filter(Boolean).join(' · ');
+  const body = byId('catProvBody');
+  const fila = (cod)=>{ const it=byCodigo[cod]||{}; return `<div class="en0-fila"><div class="en0-cod">${cvEsc(cod)}</div><div class="en0-desc">${cvEsc(it.descripcion||'(sin nombre)')}</div></div>`; };
+  let html = `<button type="button" class="add-missing-btn" id="catProvVolver" style="margin-bottom:10px;">← Volver a proveedores</button>`;
+  html += `<div class="section-title"><span>${cvEsc(nombre)}</span><span>${total} producto(s)</span></div>`;
+  if(contacto) html += `<div class="catalog-note" style="margin-bottom:8px;">${cvEsc(contacto)}</div>`;
+  html += `<div class="catprov-bar" style="margin-bottom:8px;"><span style="width:${pct}%"></span></div>`;
+  html += `<div class="catprov-tiles">
+    <div class="cptile"><b>${pct}%</b><span>Cobertura</span></div>
+    <div class="cptile ok"><b>${conEx}</b><span>Con existencia</span></div>
+    <div class="cptile bad"><b>${en0.length}</b><span>En 0</span></div>
+    <div class="cptile"><b>${sinDato.length}</b><span>Sin dato</span></div>
+  </div>`;
+  html += `<div class="section-title" style="margin-top:14px;"><span>🛒 Para pedir (en 0)</span><span>${en0.length}</span></div>`;
+  html += en0.length ? en0.map(fila).join('') : '<div class="empty">Nada en 0 de este proveedor ahora mismo. 👍</div>';
+  if(sinDato.length){
+    html += `<div class="section-title" style="margin-top:14px;"><span>Sin existencia cargada</span><span>${sinDato.length}</span></div>`;
+    html += `<div class="catalog-note" style="margin-bottom:6px;">Están en su catálogo pero aún no cargas su existencia. Carga tu reporte del POS para completarlos.</div>`;
+    html += sinDato.slice(0,60).map(fila).join('');
+    if(sinDato.length>60) html += `<div class="catalog-note">…y ${sinDato.length-60} más</div>`;
+  }
+  body.innerHTML = html;
+  byId('catProvVolver').onclick = renderCatProv;
+}
+function renderPeriodos(){
+  const body = byId('periodosBody'); if(!body) return;
+  const desde = (periodoActual && periodoActual.desde) ? fechaCorta(periodoActual.desde) : '—';
+  const nom = (periodoActual && periodoActual.nombre) || mesNombre();
+  const r = periodoResumenActual();
+  let html = `<div class="section-title"><span>Periodo en curso: ${cvEsc(nom)}</span><span>desde ${desde}</span></div>`;
+  html += `<div class="catalog-note" style="margin-bottom:8px;">${r.inventariosCerrados} inventario(s) cerrado(s) · ${r.totalEscaneos} escaneo(s) · ${r.personas.length} persona(s).</div>`;
+  if(esAdmin()){
+    html += `<button type="button" class="btn btn-reset" id="cerrarPeriodoBtn" style="margin-bottom:12px;">Cerrar periodo y empezar en cero</button>`;
+  }
+  if(!periodosArchivo.length){
+    html += '<div class="empty">Aún no hay periodos archivados. Cuando cierres el periodo, aquí queda su resumen.</div>';
+  } else {
+    html += `<div class="section-title"><span>Periodos archivados</span><span>${periodosArchivo.length}</span></div>`;
+    html += periodosArchivo.map(a=>{
+      const rs = a.resumen || {};
+      const per = (a.desde?fechaCorta(a.desde):'—') + ' → ' + (a.hasta?fechaCorta(a.hasta):'—');
+      const top = (rs.personas||[]).slice(0,3).map(p=> `${cvEsc(p.nombre)} (${p.conteos})`).join(', ');
+      return `<div class="log-item" style="flex-direction:column;align-items:stretch;gap:6px;"><div class="info">
+          <div class="desc">${cvEsc(a.nombre)}</div>
+          <div class="meta">${per}<br>${rs.inventariosCerrados||0} inventario(s) · ${rs.totalEscaneos||0} escaneo(s)${top?'<br>Personas: '+top:''}</div>
+        </div>
+        <div class="cierre-acc"><button type="button" class="edit-bar-btn" data-verper="${a.id}">Ver inventarios</button></div>
+      </div>`;
+    }).join('');
+  }
+  body.innerHTML = html;
+  const cp = byId('cerrarPeriodoBtn'); if(cp) cp.onclick = cerrarPeriodo;
+  body.querySelectorAll('[data-verper]').forEach(btn=> btn.onclick = ()=> verPeriodoArchivado(btn.dataset.verper));
+}
+async function verPeriodoArchivado(id){
+  const a = periodosArchivo.find(x=>x.id===id); if(!a) return;
+  const body = byId('periodosBody'); if(body) body.innerHTML = '<div class="empty">Cargando inventarios del periodo…</div>';
+  let cierres = [];
+  try{ const d = await tCol('inventario_periodos_items').doc(id).get(); if(d && d.exists){ const data=d.data(); cierres = (data && data.cierres) || []; } }catch(e){}
+  cierresArchivoView = cierres;
+  renderPeriodoDetalle(a, cierres);
+}
+function renderPeriodoDetalle(a, cierres){
+  const body = byId('periodosBody'); if(!body) return;
+  let html = `<button type="button" class="add-missing-btn" id="perVolver" style="margin-bottom:10px;">← Volver a periodos</button>`;
+  html += `<div class="section-title"><span>${cvEsc(a.nombre)}</span><span>${cierres.length} inventario(s)</span></div>`;
+  if(!cierres.length){
+    html += '<div class="empty">No se encontró el detalle a nivel producto de este periodo (quizá se archivó sin conexión). El resumen sí quedó guardado.</div>';
+  } else {
+    html += cierres.map(c=>{
+      const esc=(c.registros||[]).length;
+      const areasResumen = (typeof MODES!=='undefined'?MODES:[]).filter(m=> c.totales&&c.totales[m]).map(m=>`${m}: ${c.totales[m]}`).join(' · ');
+      return `<div class="log-item" style="flex-direction:column;align-items:stretch;gap:6px;">
+        <div class="desc">${c.categoriaNombre?cvEsc(c.categoriaNombre)+' · ':''}${fechaLabel(c.fecha)}</div>
+        <div class="meta">${esc} escaneo(s)${areasResumen?' · '+areasResumen:''}${c.totales?' · Total: '+c.totales.total:''}</div>
+        <div class="cierre-acc"><button type="button" class="edit-bar-btn" data-verarch="${c.id}">Ver detalle</button>
+          <button type="button" class="edit-bar-btn" data-printarch="${c.id}" title="Imprimir hoja">🖨️</button></div>
+      </div>`;
+    }).join('');
+  }
+  body.innerHTML = html;
+  const bv = byId('perVolver'); if(bv) bv.onclick = ()=>{ cierresArchivoView=[]; renderPeriodos(); };
+  body.querySelectorAll('[data-verarch]').forEach(btn=> btn.onclick = ()=> abrirCierreViewer(btn.dataset.verarch));
+  body.querySelectorAll('[data-printarch]').forEach(btn=> btn.onclick = ()=>{ const c=cierrePorId(btn.dataset.printarch); if(c) imprimirCierre(c); });
+}
 function fijoFila(f, idx){
   return `<div class="log-item"><div class="info">
       <div class="desc">${cvEsc(f.codigo)}</div>
@@ -5360,6 +5644,9 @@ let cierreViendoId = null;
 let cierreTab = 'dif';
 let cierreBusqueda = '';
 let cierresDesbloqueado = false;  // una vez puesto el NIP en la sesión, no lo vuelve a pedir
+let cierresArchivoView = [];      // cierres de un periodo archivado que se están consultando
+// Busca el cierre tanto en los vivos como en el periodo archivado que se esté viendo.
+function cierrePorId(id){ return cierresConteo.find(x=>x.id===id) || cierresArchivoView.find(x=>x.id===id) || null; }
 function abrirCierreViewer(id){
   if(nipConfig.lockCierres && !cierresDesbloqueado){
     pedirNip('consultar los inventarios realizados', ()=>{ cierresDesbloqueado = true; abrirCierreViewer(id); });
@@ -5369,7 +5656,7 @@ function abrirCierreViewer(id){
   cierreTab = 'dif';
   cierreBusqueda = '';
   $('cvBuscar').value = '';
-  const c = cierresConteo.find(x=>x.id===id);
+  const c = cierrePorId(id);
   if(c && (!c.comparativo || !c.comparativo.some(x=>x.sistema !== null))) cierreTab = 'esc';
   $('cierreViewer').style.display = 'flex';
   document.body.style.overflow = 'hidden';
@@ -5382,7 +5669,7 @@ function cerrarCierreViewer(){
   document.body.style.overflow = '';
 }
 function renderCierreViewer(){
-  const c = cierresConteo.find(x=>x.id===cierreViendoId);
+  const c = cierrePorId(cierreViendoId);
   if(!c){ cerrarCierreViewer(); return; }
   const comp = c.comparativo || [];
   const comparados = comp.filter(x=>x.sistema !== null);
@@ -5456,7 +5743,7 @@ function renderCierreViewer(){
   $('cvLista').innerHTML = html;
 }
 function exportarCierreViewer(){
-  const c = cierresConteo.find(x=>x.id===cierreViendoId);
+  const c = cierrePorId(cierreViendoId);
   if(!c) return;
   const lineas = [['Codigo','Descripcion','Codigo de Barras','Fisico','Sistema','Diferencia','Estatus'].join(',')];
   (c.comparativo||[]).forEach(x=> lineas.push([x.codigo, csvSafe(x.descripcion), x.barcode||'', x.fisico, x.sistema===null?'':x.sistema, x.diferencia===null?'':x.diferencia, x.estatus].join(',')));
@@ -5468,8 +5755,8 @@ function exportarCierreViewer(){
 }
 $('cvCerrar').onclick = cerrarCierreViewer;
 $('cvExportar').onclick = exportarCierreViewer;
-$('cvPron').onclick = ()=>{ const c = cierresConteo.find(x=> x.id === cierreViendoId); if(c) abrirPronostico(c); };
-$('cvPrint').onclick = ()=>{ const c = cierresConteo.find(x=> x.id === cierreViendoId); if(c) imprimirCierre(c); };
+$('cvPron').onclick = ()=>{ const c = cierrePorId(cierreViendoId); if(c) abrirPronostico(c); };
+$('cvPrint').onclick = ()=>{ const c = cierrePorId(cierreViendoId); if(c) imprimirCierre(c); };
 $('cvBuscar').addEventListener('input', ()=>{ cierreBusqueda = $('cvBuscar').value; renderCierreViewer(); });
 /* ============ COBERTURA (abasto Cedis vs proveedor directo) ============
    Detecta lo que DEBERÍAS tener y no tienes, sin esperar a que un cliente
@@ -5487,6 +5774,10 @@ $('cvBuscar').addEventListener('input', ()=>{ cierreBusqueda = $('cvBuscar').val
 const fsCoberturaCol = tCol('inventario_cobertura_items');
 let coberturaMap = {};
 try{ const c = lsGet('cobertura'); if(c) coberturaMap = JSON.parse(c); }catch(e){}
+let catalogosProveedor = {}; // { nombreProveedor: {nombre, codigos:[...], contacto, dia, fecha} }
+try{ const cp = lsGet('catalogos_proveedor'); if(cp) catalogosProveedor = JSON.parse(cp); }catch(e){}
+const persistCatProvLocal = ()=> lsSet('catalogos_proveedor', JSON.stringify(catalogosProveedor));
+const persistCatProv = ()=>{ persistCatProvLocal(); fsSet('catalogos_proveedor', catalogosProveedor); };
 const persistCoberturaLocal = ()=> lsSet('cobertura', JSON.stringify(coberturaMap));
 let cobFiltro = 'desabasto', cobProveedor = 'todos', cobBusqueda = '';
 // Días de surtido y estado de las ventas cargadas (por tienda)
@@ -5633,14 +5924,15 @@ const COB_ESTADOS = {
   directo:   {label:'🔵 Directo en 0', color:'#2a6fb8', ayuda:'Proveedor directo: pídeselo al vendedor cuando pase. Elige el proveedor y usa "Lista para el vendedor".'},
   riesgo:    {label:'🟡 En riesgo', color:'#b8722a', ayuda:'Le quedan 1–2 piezas y Cedis no lo manda hace 4 semanas o más.'},
   negativo:  {label:'⚠️ Negativos', color:'#8b3fa6', ayuda:'El sistema trae menos de cero: venta con otro código, entrada sin registrar o insumo que se descuenta de más.'},
-  sinhist:   {label:'🟠 Cedis sin historial', color:'#d35400', ayuda:'Lo surte Cedis y está en 0, pero nunca se le vio entrega ni existencia. Revisa si de verdad te corresponde.'}
+  sinhist:   {label:'🟠 Cedis sin historial', color:'#d35400', ayuda:'Lo surte Cedis y está en 0, pero nunca se le vio entrega ni existencia. Revisa si de verdad te corresponde.'},
+  sindist:   {label:'⚪ En 0 — falta proveedor', color:'#777', ayuda:'Está en 0 pero todavía no tiene proveedor/distribución asignado, por eso antes no aparecía en ningún lado. Asígnale proveedor: carga tu reporte del POS (trae proveedor y distribución) o el catálogo de proveedores, y ya sabrá si lo escalas a Cedis o lo pides directo.'}
 };
 
 function renderCobertura(){
   const lista = cobLista();
   const nNo = Object.values(coberturaMap).filter(c=>c.descatalogado).length;
   $('cobNoManejoBtn').textContent = `🚫 Ya no manejo (${nNo}) · ver y reactivar`;
-  const cont = {desabasto:0, directo:0, riesgo:0, negativo:0, sinhist:0};
+  const cont = {desabasto:0, directo:0, riesgo:0, negativo:0, sinhist:0, sindist:0};
   lista.forEach(x=>{ if(cont[x.estado] !== undefined) cont[x.estado]++; if(x.negativo) cont.negativo++; });
   const grupoVentas = !!COB_VENTAS[cobFiltro];
   document.querySelectorAll('#cobSeg [data-cobgrupo]').forEach(b=> b.classList.toggle('on', (b.dataset.cobgrupo === 'ventas') === grupoVentas));
@@ -5749,11 +6041,11 @@ function cobLeerHojas(wb){
     let hi = -1, cols = null;
     for(let i=0;i<Math.min(8, filas.length);i++){
       const h = filas[i].map(norm);
-      if(h.some(x=> ['codigo','codigo pos','alfanumerico','codigo interno'].includes(x))){ hi = i; cols = h; break; }
+      if(h.some(x=> ['codigo','codigo pos','alfanumerico','codigo interno','articulo','clave','sku'].includes(x))){ hi = i; cols = h; break; }
     }
     if(hi < 0) return;
     const idx = (...ns)=>{ for(const n of ns){ const k = cols.indexOf(n); if(k>=0) return k; } return -1; };
-    const cCod = idx('codigo pos','codigo','alfanumerico','codigo interno');
+    const cCod = idx('codigo pos','codigo','alfanumerico','codigo interno','articulo','clave','sku');
     const cDesc = idx('descripcion','descripcion (documento)','producto');
     const cUpc = idx('codigo de barras','upc','barcode');
     const cProv = idx('proveedor');
@@ -6700,7 +6992,7 @@ $('sisImportFile').addEventListener('change', (e)=>{
       let agregados=0, actualizados=0, choques=0, invalidos=0;
       const choqueDetalle = [];
       rows.forEach(row=>{
-        const codCol = findCol(row, ['codigo','código','codigo interno','clave','sku','alfanumerico','alfanumérico']);
+        const codCol = findCol(row, ['codigo','código','codigo interno','clave','sku','alfanumerico','alfanumérico','articulo','artículo']);
         const descCol = findCol(row, ['descripcion','descripción','producto','nombre']);
         const barCol = findCol(row, ['codigo de barras','código de barras','barcode','barras','upc']);
         const codigo = codCol ? String(row[codCol]).trim().toUpperCase() : '';
@@ -6750,7 +7042,7 @@ $('sisProvFile').addEventListener('change', (e)=>{
       const findCol = (row, cands)=>{ const ks=Object.keys(row); for(const c of cands){ const k=ks.find(k2=>norm(k2)===c); if(k) return k; } return null; };
       const cambios = {}; let conProv=0, directos=0, cedis=0, invalidos=0, sinDist=0;
       rows.forEach(row=>{
-        const codCol  = findCol(row, ['codigo','codigo interno','clave','sku','alfanumerico']);
+        const codCol  = findCol(row, ['codigo','codigo interno','clave','sku','alfanumerico','articulo','artículo']);
         const provCol = findCol(row, ['proveedor']);
         const distCol = findCol(row, ['distribucion','canal','tipo']);
         const contCol = findCol(row, ['contacto','encargado','telefono','vendedor']);
@@ -6834,7 +7126,7 @@ function hojaARenglones(sheet){
   if(typeof XLSX === 'undefined' || !sheet) return [];
   const aoa = XLSX.utils.sheet_to_json(sheet, {header:1, defval:'', blankrows:false});
   const norm = s => String(s==null?'':s).toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[_\s]+/g,' ').trim();
-  const CODIGO = ['codigo','codigo interno','sku','alfanumerico','clave'];
+  const CODIGO = ['codigo','codigo interno','sku','alfanumerico','clave','articulo','artículo'];
   const DATO = ['existencia','existencias','existencia sistema','exis','cantidad','stock','disponible',
     'descripcion','producto','nombre','codigo de barras','barcode','barras','upc','ean',
     'proveedor','distribucion','venta','ventas','vendidas','piezas','conteo fisico'];
@@ -7458,10 +7750,25 @@ function addDaysISO(n){
   return d.toISOString().slice(0,10);
 }
 function parseDateDigits(str){
-  if(!/^\d{8}$/.test(str)) return null;
-  const dd = str.slice(0,2), mm = str.slice(2,4), yyyy = str.slice(4,8);
+  // Tolerante: acepta separadores (2/11/2026), y falta del cero inicial del día
+  // (2112026 → 02/11/2026). Formatos: DDMMAAAA (8), DMMAAAA (7→pone 0 al día),
+  // DDMMAA (6→año 20AA), DMMAA (5→día con 0 y año 20AA).
+  let dd, mm, yyyy;
+  const sep = String(str).trim().split(/[^\d]+/).filter(Boolean);
+  if(sep.length === 3){
+    // Escrito con separadores: día, mes, año tal cual.
+    dd = sep[0].padStart(2,'0'); mm = sep[1].padStart(2,'0');
+    yyyy = sep[2].length <= 2 ? '20'+sep[2].padStart(2,'0') : sep[2];
+  } else {
+    let d = String(str).replace(/\D/g,'');
+    if(d.length === 7) d = '0'+d;         // faltó el cero del día
+    if(d.length === 5) d = '0'+d;         // faltó el cero del día (año corto)
+    if(d.length === 8){ dd=d.slice(0,2); mm=d.slice(2,4); yyyy=d.slice(4,8); }
+    else if(d.length === 6){ dd=d.slice(0,2); mm=d.slice(2,4); yyyy='20'+d.slice(4,6); }
+    else return null;
+  }
   const d = Number(dd), m = Number(mm), y = Number(yyyy);
-  if(m<1||m>12||d<1||d>31) return null;
+  if(!dd || !mm || !yyyy || m<1 || m>12 || d<1 || d>31 || y<2000 || y>2100) return null;
   const iso = `${yyyy}-${mm}-${dd}`;
   const check = new Date(iso+'T00:00:00');
   if(isNaN(check.getTime()) || check.getDate()!==d || (check.getMonth()+1)!==m) return null;
@@ -7492,7 +7799,7 @@ function capScanSubmit(){
   if(item){
     const { all } = buildIndexes();
     capPendingItem = all.find(x=>x.codigo===item.codigo) || item;
-    capPendingFecha = ''; capPendingArea = MODES[0]; capPendingCritOverride = null;
+    capPendingFecha = ''; capPendingArea = MODES[0]; capPendingQty = ''; capPendingCritOverride = null;
     capFilter.value = ''; capProductPick.innerHTML = '';
     renderCapForm();
   } else {
@@ -7529,6 +7836,7 @@ function renderCapProductPick(){
       capPendingItem = all.find(x=>x.codigo===codigo);
       capPendingFecha = '';
       capPendingArea = MODES[0];
+      capPendingQty = '';
       capPendingCritOverride = null;
       capFilter.value = '';
       capProductPick.innerHTML = '';
@@ -7560,7 +7868,7 @@ function renderCapForm(){
       <div class="modes" id="capModes"></div>
 
       <div class="field-label" style="margin-top:8px;">Cantidad de este lote</div>
-      <input type="number" inputmode="numeric" readonly id="capQty" placeholder="Toca para escribir" value="">
+      <input type="number" inputmode="numeric" readonly id="capQty" placeholder="Toca para escribir" value="${capPendingQty!==''?capPendingQty:''}">
 
       <div class="field-label" style="margin-top:8px;">Fecha de caducidad</div>
       <div class="quickdate-row">
@@ -7593,14 +7901,14 @@ function renderCapForm(){
   });
 
   $('capQty').addEventListener('click', ()=>{
-    openKeypad('Cantidad del lote', $('capQty').value, (val)=>{ $('capQty').value = val; });
+    openKeypad('Cantidad del lote', capPendingQty, (val)=>{ capPendingQty = val; $('capQty').value = val; });
   });
 
   $('capFecha').value = capPendingFecha ? fechaDisplay(capPendingFecha) : '';
   $('capFecha').addEventListener('click', ()=>{
-    openKeypad('Fecha de caducidad (8 dígitos: DDMMAAAA)', '', (val)=>{
+    openKeypad('Fecha de caducidad · día, mes y año (ej. 2 11 2026)', '', (val)=>{
       const iso = parseDateDigits(String(val));
-      if(!iso){ $('capSaveErr').textContent = 'Fecha inválida. Escribe 8 dígitos en formato DDMMAAAA, ej. 25122026.'; $('capSaveErr').style.display = 'block'; return; }
+      if(!iso){ $('capSaveErr').textContent = 'Fecha inválida. Escribe día, mes y año, ej. 02112026 o 2112026 (2 de nov 2026).'; $('capSaveErr').style.display = 'block'; return; }
       capPendingFecha = iso;
       renderCapForm();
     }, {asString:true});
@@ -7614,13 +7922,13 @@ function renderCapForm(){
   });
 
   $('capCancel').onclick = ()=>{
-    capPendingItem = null; capPendingFecha = ''; capPendingArea = ''; capPendingCritOverride = null;
+    capPendingItem = null; capPendingFecha = ''; capPendingArea = ''; capPendingQty = ''; capPendingCritOverride = null;
     renderCapForm();
   };
 
   $('capSaveLote').onclick = ()=>{
     const errEl = $('capSaveErr');
-    const qty = Number($('capQty').value);
+    const qty = Number(capPendingQty);
     if(!qty || qty <= 0){ errEl.textContent = 'Falta capturar la cantidad de este lote.'; errEl.style.display = 'block'; return; }
     if(!capPendingFecha){ errEl.textContent = 'Falta capturar la fecha de caducidad.'; errEl.style.display = 'block'; return; }
     errEl.style.display = 'none';
@@ -7633,6 +7941,7 @@ function renderCapForm(){
     });
     persistCaducidades();
     capPendingFecha = '';
+    capPendingQty = '';
     capPendingCritOverride = null;
     renderCapForm();
     renderCapList();
@@ -7658,25 +7967,31 @@ function renderCapForm(){
         <button class="lote-del-btn" data-dellote="${l.id}">🗑</button>
       </div>`;
     }).join('');
-    box.querySelectorAll('[data-dellote]').forEach(btn=>{
-      btn.onclick = ()=>{
+  }
+  // Delegación en capForm (contenedor estable): borrar y criticidad de los lotes
+  // ya registrados responden siempre, aunque el formulario se redibuje.
+  if(!capForm.dataset.wiredLotes){
+    capForm.dataset.wiredLotes = '1';
+    capForm.addEventListener('click', (ev)=>{
+      const del = ev.target.closest('[data-dellote]');
+      if(del){
+        const id = del.dataset.dellote;
         openConfirm('¿Eliminar este lote registrado?', ()=>{
-          caducidades = caducidades.filter(l=>l.id !== btn.dataset.dellote);
+          caducidades = caducidades.filter(l=>l.id !== id);
           persistCaducidades();
           renderCapForm();
           renderCapList();
-        });
-      };
-    });
-    box.querySelectorAll('[data-critlote]').forEach(group=>{
-      group.querySelectorAll('button').forEach(btn=>{
-        btn.onclick = ()=>{
-          const lote = caducidades.find(x=>x.id===group.dataset.critlote);
-          if(lote){ lote.criticidadManual = btn.dataset.critset || null; persistCaducidades(); }
-          renderCapForm();
-          renderCapList();
-        };
-      });
+        }, {yesLabel:'Eliminar', noLabel:'Cancelar'});
+        return;
+      }
+      const critBtn = ev.target.closest('[data-critlote] button[data-critset]');
+      if(critBtn){
+        const group = critBtn.closest('[data-critlote]');
+        const lote = caducidades.find(x=>x.id===group.dataset.critlote);
+        if(lote){ lote.criticidadManual = critBtn.dataset.critset || null; persistCaducidades(); }
+        renderCapForm();
+        renderCapList();
+      }
     });
   }
 }
@@ -7721,27 +8036,32 @@ function renderCapList(){
     </div>`;
   }).join('');
 
-  capList.querySelectorAll('[data-dellote]').forEach(btn=>{
-    btn.onclick = ()=>{
-      openConfirm('¿Eliminar este lote registrado?', ()=>{
-        caducidades = caducidades.filter(l=>l.id !== btn.dataset.dellote);
-        persistCaducidades();
-        renderCapList();
-        if(capPendingItem) renderCapForm();
-      });
-    };
-  });
-
-  capList.querySelectorAll('[data-critlote]').forEach(group=>{
-    group.querySelectorAll('button').forEach(btn=>{
-      btn.onclick = ()=>{
+  // Delegación en el contenedor estable: borrar y cambiar criticidad responden
+  // siempre, aunque la lista se vuelva a dibujar por la sincronización.
+  if(!capList.dataset.wired){
+    capList.dataset.wired = '1';
+    capList.addEventListener('click', (ev)=>{
+      const del = ev.target.closest('[data-dellote]');
+      if(del){
+        const id = del.dataset.dellote;
+        openConfirm('¿Eliminar este lote registrado?', ()=>{
+          caducidades = caducidades.filter(l=>l.id !== id);
+          persistCaducidades();
+          renderCapList();
+          if(capPendingItem) renderCapForm();
+        }, {yesLabel:'Eliminar', noLabel:'Cancelar'});
+        return;
+      }
+      const critBtn = ev.target.closest('[data-critlote] button[data-critset]');
+      if(critBtn){
+        const group = critBtn.closest('[data-critlote]');
         const lote = caducidades.find(x=>x.id===group.dataset.critlote);
-        if(lote){ lote.criticidadManual = btn.dataset.critset || null; persistCaducidades(); }
+        if(lote){ lote.criticidadManual = critBtn.dataset.critset || null; persistCaducidades(); }
         renderCapList();
         if(capPendingItem) renderCapForm();
-      };
+      }
     });
-  });
+  }
 }
 
 function renderPrefixCfg(){
@@ -8015,6 +8335,22 @@ loadState();
   </div>
 </div>
 
+<div class="cotejo-overlay" id="catProvOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Catálogos de proveedores<small>Carga el catálogo de cada proveedor directo. La app te dice tu cobertura (cuántos de sus productos tienes y cuántos en 0) y enlaza solas las existencias a su proveedor.</small></div>
+    <div class="cotejo-body" id="catProvBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="catProvCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
+<div class="cotejo-overlay" id="periodosOverlay">
+  <div class="cotejo-card">
+    <div class="cotejo-head">Periodos de inventario<small>Archiva lo del periodo (conteos, inventarios cerrados y desempeño) y deja el panel en cero. Se conservan catálogo, existencias, cobertura, pendientes fijos, evaluaciones, tareas y objetivos.</small></div>
+    <div class="cotejo-body" id="periodosBody"></div>
+    <div class="cotejo-foot"><div class="confirm-actions"><button class="confirm-no" id="periodosCerrar">Cerrar</button></div></div>
+  </div>
+</div>
+
 <div class="cotejo-overlay" id="fotoLogOverlay">
   <div class="cotejo-card">
     <div class="cotejo-head">Histórico de fotos<small>Quién toma fotos y cómo le salen. Para dar retroalimentación.</small></div>
@@ -8243,6 +8579,11 @@ byId('masCerrar').onclick = cerrarMas;
 (function(){ const btn=byId('en0PanelBtn'); if(btn) btn.onclick = abrirEn0Panel;
   const x=byId('en0Cerrar'); if(x) x.onclick = cerrarEn0Panel;
   const ov=byId('en0Overlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='en0Overlay') cerrarEn0Panel(); });
+})();
+(function(){ const btn=byId('catProvBtn'); if(btn) btn.onclick = abrirCatProv;
+  const ff=byId('catProvFile'); if(ff) ff.onchange = catProvArchivo;
+  const x=byId('catProvCerrar'); if(x) x.onclick = cerrarCatProv;
+  const ov=byId('catProvOverlay'); if(ov) ov.addEventListener('click', (e)=>{ if(e.target.id==='catProvOverlay') cerrarCatProv(); });
 })();
 // Seguridad / NIP
 (function(){ const x=byId('segCerrar'); if(x) x.onclick = cerrarSeguridad;
@@ -8859,6 +9200,7 @@ function pintarRespaldoSub(){
   el.textContent = `Último: ${fechaCorta(u)}${d >= 7 ? ' · ⚠️ hace ' + d + ' días, haz uno nuevo' : ''}`;
 }
 byId('respaldoBtn').onclick = ()=>{ cerrarMas(); hacerRespaldo(); };
+{ const pb=byId('periodosBtn'); if(pb) pb.onclick = ()=>{ cerrarMas(); abrirPeriodos(); }; const px=byId('periodosCerrar'); if(px) px.onclick = cerrarPeriodosPanel; }
 byId('masBtn').addEventListener('click', pintarRespaldoSub);
 
 
